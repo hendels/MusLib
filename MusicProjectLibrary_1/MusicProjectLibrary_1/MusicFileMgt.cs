@@ -307,11 +307,15 @@ namespace MusicProjectLibrary_1
                         if ((tagArtistFilled == true) & (firstElementArtist != ""))
                         {
                             idAlbum = updateAlbumsTableInDB(3, itemUQC, firstElementArtist, true, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja Artist]
-                        }                            
+                            //////////////////////////////////////////////////////////////[<fill Artists]//////////////////////////////////////////////////////////////////
+                            updateArtistsTableInDB(firstElementArtist, idAlbum); // first commit
+                            //////////////////////////////////////////////////////////////[fill Artists>]//////////////////////////////////////////////////////////////////
+                        }
                         else
                         {
                             idAlbum = updateAlbumsTableInDB(4, itemUQC, "heterogeneous", false, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze niepoprawnie [sekcja Artist]
-                        }                            
+                        }
+                        
                         break;
 
                     case 2:
@@ -337,6 +341,7 @@ namespace MusicProjectLibrary_1
                         {
                             idAlbum = updateAlbumsTableInDB(10, itemUQC, "", false, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze jest niepoprawnie [sekcja Index]
                         }
+
                         break;
                     case 4:
                         idAlbum = updateAlbumsTableInDB(11, itemUQC, "", false, 0, AlbumReleaseYear);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja Index]
@@ -388,9 +393,7 @@ namespace MusicProjectLibrary_1
             //////////////////////////////////////////////////////////////[<fill tracks]//////////////////////////////////////////////////////////////////
             updateTracksTableInDB(LMA, idAlbum);
             //////////////////////////////////////////////////////////////[fill tracks>]//////////////////////////////////////////////////////////////////
-            //////////////////////////////////////////////////////////////[<fill Artists]//////////////////////////////////////////////////////////////////
-            updateTracksTableInDB(LMA, idAlbum); // first commit
-            //////////////////////////////////////////////////////////////[fill Artists>]//////////////////////////////////////////////////////////////////
+
             if (GlobalVariables.globalModifyFIles)
             {
                 bool testPassed = true; // hardcoding! << ostatni test ma sie tu spelniac, jak jest spelniony, pozwalaj na zmiane calego albumu
@@ -408,33 +411,8 @@ namespace MusicProjectLibrary_1
             //    updateAlbumsTableInDB(7, itemUQC, itemUQC.ToString(), false); //zwróć błąd do bazki że nie wszystkie tagi są uzupełnione
             //}
         }
-        static int updateAlbumsSwitch(DBFunctions db, int updateCase, uniqueCatalogs itemUQC, string updateStringDB, bool checkValue, decimal updateDecimalDB, int updateIntDB)
-        {
-            int AlbumID = 0;
-            switch (updateCase)
-            {
-                case 1: case 2:
-                    AlbumID = db.UpdateAlbumCheck(itemUQC.uniqeDirectory, checkValue, updateStringDB);
-                    return AlbumID;  
-                case 3: case 4:
-                    AlbumID = db.UpdateArtistCheck(itemUQC.uniqeDirectory, checkValue, updateStringDB);
-                    return AlbumID;                    
-                case 5: case 6:
-                    AlbumID = db.UpdateGenreCheck(itemUQC.uniqeDirectory, checkValue, updateStringDB);
-                    return AlbumID;                    
-                case 7: case 8:
-                    AlbumID = db.UpdateRatingCheck(itemUQC.uniqeDirectory, checkValue, updateDecimalDB, updateStringDB);
-                    return AlbumID;
-                case 9: case 10:
-                    AlbumID = db.UpdateIndexCheck(itemUQC.uniqeDirectory, checkValue);
-                    return AlbumID;
-                case 11:
-                    AlbumID = db.UpdateAlbumReleaseYear(itemUQC.uniqeDirectory, updateIntDB);
-                    return AlbumID;
-            }
-            return 0;
-        }
-        static int updateAlbumsTableInDB(int updateCase, uniqueCatalogs itemUQC, string updateStringDB, bool checkValue, decimal updateDoubleDB, int updateIntDB)
+        
+        static int updateAlbumsTableInDB(int updateCase, uniqueCatalogs itemUQC, string updateStringDB, bool checkValue, decimal updateDecimalDB, int updateIntDB)
         {
             List<SQLAlbumTable> DirectoryList = new List<SQLAlbumTable>(); //sqlprzemy
             DBFunctions db = new DBFunctions();
@@ -442,7 +420,7 @@ namespace MusicProjectLibrary_1
             int DLcount = DirectoryList.Count;
             if (DLcount == 1) //exist in sql => update
             {
-                int idAlbum = updateAlbumsSwitch(db, updateCase, itemUQC, updateStringDB, checkValue, updateDoubleDB, updateIntDB);
+                int idAlbum = updateAlbumsSwitch(db, updateCase, itemUQC, updateStringDB, checkValue, updateDecimalDB, updateIntDB);
                 return idAlbum;
             }
             else
@@ -450,7 +428,7 @@ namespace MusicProjectLibrary_1
                 if (DLcount == 0)
                 {
                     db.InsertAlbum("<albumName>", itemUQC.uniqeDirectory, "<artistName>", 0, "<genreName>"); //string AlbumNamee, string AlbumDir, string ArtistName, int releaseYear, string AlbumGenre
-                    int idAlbum = updateAlbumsSwitch(db, updateCase, itemUQC, updateStringDB, checkValue, updateDoubleDB, updateIntDB);
+                    int idAlbum = updateAlbumsSwitch(db, updateCase, itemUQC, updateStringDB, checkValue, updateDecimalDB, updateIntDB);
                     return idAlbum;
                 }
                 else
@@ -458,6 +436,37 @@ namespace MusicProjectLibrary_1
                     return 0;
             }           
 
+        }
+        static int updateAlbumsSwitch(DBFunctions db, int updateCase, uniqueCatalogs itemUQC, string updateStringDB, bool checkValue, decimal updateDecimalDB, int updateIntDB)
+        {
+            int AlbumID = 0;
+            switch (updateCase)
+            {
+                case 1:
+                case 2:
+                    AlbumID = db.UpdateAlbumCheck(itemUQC.uniqeDirectory, checkValue, updateStringDB);
+                    return AlbumID;
+                case 3:
+                case 4:
+                    AlbumID = db.UpdateArtistCheck(itemUQC.uniqeDirectory, checkValue, updateStringDB);
+                    return AlbumID;
+                case 5:
+                case 6:
+                    AlbumID = db.UpdateGenreCheck(itemUQC.uniqeDirectory, checkValue, updateStringDB);
+                    return AlbumID;
+                case 7:
+                case 8:
+                    AlbumID = db.UpdateRatingCheck(itemUQC.uniqeDirectory, checkValue, updateDecimalDB, updateStringDB);
+                    return AlbumID;
+                case 9:
+                case 10:
+                    AlbumID = db.UpdateIndexCheck(itemUQC.uniqeDirectory, checkValue);
+                    return AlbumID;
+                case 11:
+                    AlbumID = db.UpdateAlbumReleaseYear(itemUQC.uniqeDirectory, updateIntDB);
+                    return AlbumID;
+            }
+            return 0;
         }
         static void updateTracksTableInDB(List<MusicFileDetails> LMA, int AlbumID)
         {
@@ -501,9 +510,43 @@ namespace MusicProjectLibrary_1
                 
             }
         }
-        static void updateArtistsTableInDB(List<MusicFileDetails> LMA, int AlbumID)
+        static string countRatedAlbums()
         {
+            return "3/3";
+        }
+        static void updateArtistsTableInDB(string ArtistName, int AlbumID)
+        {
+            if (ArtistName != "")
+            {
+                List<SQLArtistTable> ListArtistLib = new List<SQLArtistTable>(); //sqlprzemy
+                DBFunctions db = new DBFunctions();
+                ListArtistLib = db.GetAllByArtists(ArtistName);
+                if (ListArtistLib.Count == 1)
+                {
+                    //update artist
+                    decimal VarDecimal = 0;
+                    try
+                    {
+                        //CalcAlbumRate = Math.Round(AlbumStarSum / AlbumStarExist, 2);
+                        db.UpdateRatedAlbums(ArtistName, countRatedAlbums());
+                    }
+                    catch (DivideByZeroException e)
+                    {
 
+                    }
+                }
+                else if (ListArtistLib.Count == 0)
+                {
+                    decimal VarDecimal = 0;
+                    
+                    db.InsertArtist(ArtistName, "0/0", "0/0", VarDecimal, VarDecimal, 0, 0);
+                }
+                else if (ListArtistLib.Count > 1)
+                {
+                    MessageBox.Show("artist duplicates!");
+                }
+            }
+            
         }
         static void checkTagRating(MusicFileDetails MFD, List<int> ListCheckRating, List<RatingInformation>  ListRatingInformation)
         {

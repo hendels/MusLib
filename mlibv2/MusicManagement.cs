@@ -114,6 +114,13 @@ namespace MusicProjectLibrary_1
             var watch = System.Diagnostics.Stopwatch.StartNew();
             GlobalChecker.TestSqlAlbumIdQuery = 0;
             MusicFileMgt.readFiles(BoxListConsole.Items, progBar, tbxPickedPath.Text, lblProgress);
+
+            int countRecordAlbum = DBFunctions.AutoSearchDatabaseAlbums("", AlbumsDataGridView);
+            int countRecordArtist = DBFunctions.AutoSearchDatabaseArtists("", dgvArtists);
+            BoxListConsole.Items.Add("Album table updated: " + countRecordAlbum.ToString());
+            BoxListConsole.Items.Add("Artist table updated: " + countRecordArtist.ToString());
+            BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
+
             BoxListConsole.Items.Add("Total SQL query [album id] = " + GlobalChecker.TestSqlAlbumIdQuery.ToString());
             watch.Stop();
             double elapsedMs = watch.ElapsedMilliseconds;
@@ -278,12 +285,7 @@ namespace MusicProjectLibrary_1
             foreach (DataGridViewRow r in AlbumsDataGridView.Rows)
             {
                 r.Cells["AlbumDirectory"] = new DataGridViewLinkCell();
-
-                // Note that if I want a different link colour for example it must go here
-                //DataGridViewLinkCell c = r.Cells["AlbumDirectory"] as DataGridViewLinkCell;
-                //c.LinkColor = Color.Green;
-                //c.LinkColor = Color.AliceBlue;
-                //}
+                
             }
         }
 

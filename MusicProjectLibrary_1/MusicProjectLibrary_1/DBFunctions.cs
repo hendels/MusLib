@@ -339,7 +339,52 @@ namespace MusicProjectLibrary_1
             }
 
         }
+        // [ARTIST TABLE]
+        //[GET from Albums table]
+        public List<SQLArtistTable> GetAllByArtists(string ArtistNameP)
+        {
+            //throw new NotImplementedException();
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
+            {
 
+                var output = connection.Query<SQLArtistTable>("dbo.spArtists_GetAllByArtist @ArtistName", new { ArtistName = ArtistNameP }).ToList();
+                GlobalChecker.TestSqlAlbumIdQuery += 1;
+                return output;
+            }
+        }
+        public List<SQLArtistTable> GetAllArtists()
+        {
+            //throw new NotImplementedException();
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
+            {
+
+                var output = connection.Query<SQLArtistTable>("dbo.spArtists_GetAll").ToList();
+                GlobalChecker.TestSqlAlbumIdQuery += 1;
+                return output;
+            }
+        }
+        // [insert Artist table]
+        public void InsertArtist(string ArtistNameP, string AlbumCountP, string ProceedToTotalP, decimal ArtistLibraryPercentP, decimal ProceedPercentP, int RatedSongsP, int GeneralRankingP)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
+            {
+                List<SQLArtistTable> SqlArtist = new List<SQLArtistTable>();
+                SqlArtist.Add(new SQLArtistTable { ArtistName = ArtistNameP, AlbumCount = AlbumCountP, ProceedToTotal = ProceedToTotalP, ArtistLibraryPercent = ArtistLibraryPercentP, ProceedPercent = ProceedPercentP, RatedSongs = RatedSongsP, GeneralRanking = GeneralRankingP });
+                connection.Execute("dbo.spArtists_InsertArtist @ArtistName, @AlbumCount, @ProceedToTotal, @ArtistLibraryPercent, @ProceedPercent, @RatedSongs, @GeneralRanking", SqlArtist);
+                GlobalChecker.TestSqlAlbumIdQuery += 1;
+            }
+        }
+        // [UPDATE Artist table]
+        public void UpdateRatedAlbums(string ArtistNameP, string AlbumCountP)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
+            {
+                connection.Execute("dbo.spArtists_UpdateRatedAlbums @ArtistName, @AlbumCount", new { ArtistName = ArtistNameP, AlbumCount = AlbumCountP });
+                GlobalChecker.TestSqlAlbumIdQuery += 1;
+            }
+
+        }
+        // [misc functions]
         public static int AutoSearchDatabaseAlbums(string SearchString, DataGridView DGV)
         {
             List<SQLAlbumTable> AlbumList = new List<SQLAlbumTable>(); //sqlprzemy - table : Albums
@@ -356,6 +401,23 @@ namespace MusicProjectLibrary_1
         private static void UpdateBindingAlbums(DataGridView DGV, List<SQLAlbumTable> AlbumList)
         {
             DGV.DataSource = AlbumList;
+        }
+        public static int AutoSearchDatabaseArtists(string SearchString, DataGridView DGV)
+        {
+            List<SQLArtistTable> ArtistList = new List<SQLArtistTable>(); //sqlprzemy - table : Albums
+            DBFunctions db = new DBFunctions();
+            if (SearchString != "")
+                ArtistList = db.GetAllByArtists(SearchString);
+            else
+                ArtistList = db.GetAllArtists();
+
+            UpdateBindingAlbums(DGV, ArtistList);
+            int countRecord = ArtistList.Count;
+            return countRecord;
+        }
+        private static void UpdateBindingAlbums(DataGridView DGV, List<SQLArtistTable> ArtistList)
+        {
+            DGV.DataSource = ArtistList;
         }
     }
     public class SQLAlbumTable
@@ -428,6 +490,26 @@ namespace MusicProjectLibrary_1
 
         }
     }
+    public class SQLArtistTable
+    {
+        public int IdArtist { get; set; }
+        public int RatedSongs { get; set; }
+        public int GeneralRanking { get; set; }
 
-    
+        public string ArtistName { get; set; }
+        public string AlbumCount { get; set; }
+        public string ProceedToTotal { get; set; }
+
+        public decimal ArtistLibraryPercent { get; set; }
+        public decimal ProceedPercent { get; set; }
+        public string FullInfoArtists
+        {
+            get
+            {
+                return $"{IdArtist} {RatedSongs} {GeneralRanking} {ArtistName} {ArtistName} {AlbumCount} {ProceedToTotal}{ArtistLibraryPercent}{ProceedPercent}"; // [pobiera sie tu z sql'a - nazwy musza byc takie same jak w sql tabeli inaczej nic nie pokaze
+            }
+
+        }
+    }
+
 }

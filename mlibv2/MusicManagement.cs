@@ -349,7 +349,10 @@ namespace MusicProjectLibrary_1
 
         private void btnDiscogs_Click(object sender, EventArgs e)
         {
-            DiscogsManagement.startDiscogs();
+            
+            //this.Close();
+            DiscogsManagement.startDiscogs(BoxListConsole.Items);
+            //this.Show();
         }
 
         private void AlbumsDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)

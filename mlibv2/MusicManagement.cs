@@ -42,6 +42,9 @@ namespace MusicProjectLibrary_1
             BoxListConsole.Items.Add("Tracks count: " + countRecord.ToString());
             countRecord = AutoSearchDatabaseAlbums(tbxSearchAlbums.Text);
             BoxListConsole.Items.Add("Album count: " + countRecord.ToString());
+            int countRecordArtist = DBFunctions.AutoSearchDatabaseArtists("", dgvArtists);
+    
+            BoxListConsole.Items.Add("Artist table updated: " + countRecordArtist.ToString());
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
             GlobalVariables globalProcCatalog = new GlobalVariables();
         }
@@ -349,9 +352,10 @@ namespace MusicProjectLibrary_1
 
         private void btnDiscogs_Click(object sender, EventArgs e)
         {
-            
-            //this.Close();
-            DiscogsManagement.startDiscogs(BoxListConsole.Items);
+
+            string SearchArtist = "";
+            string SearchRelease = "";
+            DiscogsManagement.startDiscogs(BoxListConsole.Items, SearchArtist, SearchRelease, 0);
             //this.Show();
         }
 

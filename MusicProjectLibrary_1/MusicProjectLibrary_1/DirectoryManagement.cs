@@ -14,8 +14,12 @@ namespace MusicProjectLibrary_1
         public static void OpenDirectoryFolder(DataGridView DGV, PickGenre pickGenreForm, ListBox boxListConsole, int AlbumRowIndex)
         {
             DGV.MultiSelect = false;
+            int colAlbumID = 0;
             int colAlbumDirectory = 2;
-            int colAlbumDirectoryGenre = 7;            
+            int colAlbumArtist = 3;
+            int colAlbumRelease = 4;
+            int colAlbumDirectoryGenre = 7;
+            int colAlbumGeneralGenre = 5;
             int AlbumColIndex = DGV.CurrentCell.ColumnIndex; // [przemy knowledge - select column in data grid view]
             string GridValueString = "";
 
@@ -43,6 +47,18 @@ namespace MusicProjectLibrary_1
                 DGV.CurrentCell = DGV.Rows[AlbumRowIndex].Cells[0]; //[przemy knowledge - zaznaczanie data grid view]
                 DGV.Rows[AlbumRowIndex].Selected = true;            //[przemy knowledge - zaznaczanie data grid view]
             }   
+            else if (AlbumColIndex == colAlbumGeneralGenre)
+            {
+                DialogResult res = MessageBox.Show("Download Genres from Discogs?", "Discogs API", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                if (res == DialogResult.OK)
+                {
+                    string ArtistGrid = DGV.Rows[AlbumRowIndex].Cells[colAlbumArtist].Value.ToString();
+                    string ReleaseGrid = DGV.Rows[AlbumRowIndex].Cells[colAlbumRelease].Value.ToString();
+                    int AlbumID = Convert.ToInt32(DGV.Rows[AlbumRowIndex].Cells[colAlbumID].Value);
+
+                    DiscogsManagement.startDiscogs(boxListConsole.Items, ArtistGrid, ReleaseGrid, AlbumID);
+                }
+            }
         }
         public static void OpenPairOfFolders(DataGridView DGV, int AlbumRowIndex)
         {
@@ -88,7 +104,8 @@ namespace MusicProjectLibrary_1
                 LSQTT = db.GetTrackByAlbumId(AlbumId);
                 int AlbumTransaction = 0;
 
-                string dateString = DateTime.Now.ToString("dd/mm/yyyy");
+                DateTime dateNow = DateTime.Now;
+                string dateString = String.Format("{0:MM/dd/yyyy}", dateNow);
                 string trackDirectory = "";
                 string movedAlbumDirectory = "";
                 foreach (SQLTrackTable item in LSQTT)

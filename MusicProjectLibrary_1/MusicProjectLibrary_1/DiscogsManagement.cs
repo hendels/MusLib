@@ -22,17 +22,18 @@ namespace MusicProjectLibrary_1
         {
             public string title { get; set; }
             public string type { get; set; }
+            public string genre { get; set; }
             public int year { get; set; }
         }
-        public async static void startDiscogs(ListBox.ObjectCollection listBoxConsole)
+        public static void startDiscogs(ListBox.ObjectCollection listBoxConsole, string SearchArtist, string SearchRelease, int AlbumID)
         {
             var tokenInformation = new TokenAuthenticationInformation("QWgIjbVsUoULLGCvqwpQZUvsTEFZlmRALsOJJrLv");
             var discogsClient = new DiscogsClient.DiscogsClient(tokenInformation);
 
             var discogsSearch = new DiscogsSearch()
             {
-                artist = "wisp",
-                release_title = "Building Dragons"
+                artist = SearchArtist,
+                release_title = SearchRelease
             };
 
             //Retrieve observable result from search
@@ -53,6 +54,10 @@ namespace MusicProjectLibrary_1
                 SRD.title = x.title;
                 SRD.type = x.type.ToString();
                 SRD.year = Convert.ToInt32(x.year);
+
+                string[] test = new string[2];
+                var array = x.genre;                
+                SRD.genre = string.Join(",", array);
                 LSRD.Add(SRD);
                 //listBoxConsole.Add(LSRD.Count.ToString());
                 //throw LSRD();
@@ -63,13 +68,67 @@ namespace MusicProjectLibrary_1
             //sub1.Dispose();
 
             MessageBox.Show("click ok...");
+            int masterReleases = 0;
             foreach (SearchResultsDiscogs itemSRD in LSRD)
             {
                 if (itemSRD.type == "master")
                 {
-                    listBoxConsole.Add(itemSRD.title + "/" + itemSRD.year);
+                    masterReleases += 1;
+                    listBoxConsole.Add(itemSRD.title + "/" + itemSRD.year + "/" + itemSRD.genre);
+                    DialogResult res = MessageBox.Show("Downloaded genres:" + "\n" + itemSRD.genre, "Discogs API", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                    if (res == DialogResult.OK)
+                    {
+                        List<SQLTrackTable> queryGetAllTracksByAlbumID = new List<SQLTrackTable>();
+                        DBFunctions db = new DBFunctions();
+                        queryGetAllTracksByAlbumID = db.GetTrackByAlbumId(AlbumID);
+                        MusicFileDetails MFD = new MusicFileDetails();
+                        foreach (SQLTrackTable itemTrack in queryGetAllTracksByAlbumID)
+                        {
+                            MusicFileMgt.QuickRead(itemTrack.TrackDirectory, MFD);
+                            MFD.pickedAFile.GENRE = itemSRD.genre;
+                            MFD.pickedAFile.Save(true);
+                            listBoxConsole.Add("......changed Genre in file:" + itemTrack.TrackDirectory);
+                        }
+
+
+                        db.UpdateAlbumGenreByAlbumID(AlbumID, itemSRD.genre);
+                        db.UpdateTrackGenreByAlbumID(AlbumID, itemSRD.genre);
+
+                        listBoxConsole.Add("...updated Album & Related Tracks");
+                    }
+                }                
+            }
+            if (masterReleases == 0)
+            {
+                foreach (SearchResultsDiscogs itemSRD in LSRD)
+                {
+                    masterReleases += 1;
+                    listBoxConsole.Add(itemSRD.title + "/" + itemSRD.year + "/" + itemSRD.genre);
+                    DialogResult res = MessageBox.Show("NO MASTER genres:" + "\n" + itemSRD.genre, "Discogs API", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                    if (res == DialogResult.OK)
+                    {
+                        List<SQLTrackTable> queryGetAllTracksByAlbumID = new List<SQLTrackTable>();
+                        DBFunctions db = new DBFunctions();
+                        queryGetAllTracksByAlbumID = db.GetTrackByAlbumId(AlbumID);
+                        MusicFileDetails MFD = new MusicFileDetails();
+                        foreach(SQLTrackTable itemTrack in queryGetAllTracksByAlbumID)
+                        {
+                            MusicFileMgt.QuickRead(itemTrack.TrackDirectory, MFD);
+                            MFD.pickedAFile.GENRE = itemSRD.genre;
+                            MFD.pickedAFile.Save(true);
+                            listBoxConsole.Add("......changed Genre in file:" + itemTrack.TrackDirectory);
+                        }
+                        
+
+                        db.UpdateAlbumGenreByAlbumID(AlbumID, itemSRD.genre);
+                        db.UpdateTrackGenreByAlbumID(AlbumID, itemSRD.genre);
+                        
+                        listBoxConsole.Add("...updated Album & Related Tracks");
+                    }
+                    
                 }
-                
+                if (LSRD.Count == 0)
+                    listBoxConsole.Add("...Discogs Search = null, attempting another cycle...");
             }
 
 

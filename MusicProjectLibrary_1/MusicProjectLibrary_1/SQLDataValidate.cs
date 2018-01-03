@@ -221,6 +221,7 @@ namespace MusicProjectLibrary_1
             for (int rows = 0; rows < DGV.Rows.Count; rows++)
             {
                 validationPoints = 0;
+                bool withoutGenre = false;
                 for (int col = 0; col < DGV.Rows[rows].Cells.Count; col++)
                 {
                     if (col == colIndexAlbum)
@@ -277,6 +278,11 @@ namespace MusicProjectLibrary_1
                             validationPoints += 1;
                             FolderGenre = GridValueString;
                         }
+                        else
+                        {
+                            withoutGenre = true;
+                        }
+                            
                         //else
                             //ErrorPicker.Add($"error [no Directory Genre declared]: Album ID: {CurrentIndex}");
                     }
@@ -330,6 +336,10 @@ namespace MusicProjectLibrary_1
                 if (validationPoints == expectedPoints)
                 {
                     DGV.Rows[rows].DefaultCellStyle.BackColor = Color.LightGreen;
+                }
+                else if(withoutGenre & validationPoints == expectedPoints - 1)
+                {
+                    DGV.Rows[rows].DefaultCellStyle.BackColor = Color.PeachPuff;
                 }
                 else
                     boxListConsole.Add($"=========[Test Failed IDX: {CurrentIndex}]=========");

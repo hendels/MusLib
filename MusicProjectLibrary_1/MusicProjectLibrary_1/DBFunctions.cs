@@ -163,6 +163,15 @@ namespace MusicProjectLibrary_1
             }
             
         }
+        public void UpdateAlbumGenreByAlbumID(int idAlbumP, string AlbumGenreP)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
+            {
+                connection.Execute("dbo.spAlbums_UpdateAlbumGenre @idAlbum, @AlbumGenre", new { idAlbum = idAlbumP, AlbumGenre = AlbumGenreP });
+                GlobalChecker.TestSqlAlbumIdQuery += 1;
+            }
+
+        }
         public void UpdateDirectoryPathByAlbumID(int idAlbumP, string AlbumDirectoryP)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
@@ -302,6 +311,15 @@ namespace MusicProjectLibrary_1
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
             {
                 connection.Execute("dbo.spTracks_UpdateTrackFileDateProceed @IndexLib, @DateProceed", new { IndexLib = IndexLibP, DateProceed = DateProceedP });
+                GlobalChecker.TestSqlAlbumIdQuery += 1;
+            }
+
+        }
+        public void UpdateTrackGenreByAlbumID(int idAlbumP, string TrackGenreP)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
+            {
+                connection.Execute("dbo.spTracks_UpdateGenreByAlbumID @idAlbum, @TrackGenre", new { idAlbum = idAlbumP, TrackGenre = TrackGenreP });
                 GlobalChecker.TestSqlAlbumIdQuery += 1;
             }
 

@@ -436,7 +436,26 @@ namespace MusicProjectLibrary_1
         private static void UpdateBindingAlbums(DataGridView DGV, List<SQLArtistTable> ArtistList)
         {
             DGV.DataSource = ArtistList;
+        }        
+        
+        public static int AutoSearchDatabaseTracks(DataGridView DGV, string SearchString)
+        {
+            List<SQLTrackTable> TrackList = new List<SQLTrackTable>(); //sqlprzemy - table : Albums
+            DBFunctions db = new DBFunctions();
+            if (SearchString != "")
+                TrackList = db.GetTrack(SearchString);
+            else
+                TrackList = db.GetAllTracks();
+
+            UpdateBindingTracks(DGV, TrackList);
+            int countRecord = TrackList.Count;
+            return countRecord;
         }
+        private static void UpdateBindingTracks(DataGridView DGV, List<SQLTrackTable> TrackList)
+        {
+            DGV.DataSource = TrackList;
+        }
+
     }
     public class SQLAlbumTable
     {

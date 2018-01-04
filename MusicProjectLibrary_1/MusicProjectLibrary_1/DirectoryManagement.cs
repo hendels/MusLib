@@ -11,7 +11,7 @@ namespace MusicProjectLibrary_1
 {
     class DirectoryManagement
     {
-        public static void OpenDirectoryFolder(DataGridView DGV, PickGenre pickGenreForm, ListBox boxListConsole, int AlbumRowIndex)
+        public static void DoubleClickOnGridCallBack(DataGridView DGV, PickGenre pickGenreForm, ListBox boxListConsole, int AlbumRowIndex)
         {
             DGV.MultiSelect = false;
             int colAlbumID = 0;

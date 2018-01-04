@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -12,24 +13,29 @@ namespace MusicProjectLibrary_1
     class SQLDataValidate
     {
         public static List<string> ErrorPicker = new List<string>();
+
+        public class dataGridColumns
+        {
+            /////////////////////////////////////
+            public int expectedPoints = 8;
+            /////////////////////////////////////
+            public int colIndexAlbum = 0;
+            public int colAbumReleaseYear = 1;
+            public int colAlbumDirectory = 2;
+            public int colArtistName = 3;
+            public int colAlbumName = 4;
+            public int colDirectoryGenre = 7;
+            public int colArtistCheck = 10;
+            public int colAlbumCheck = 11;
+            public int colGenreCheck = 12;
+            public int colRatingCheck = 13;
+            public int colIndexCheck = 14;
+        }
         public static void ReadDataGrid(DataGridView DGV, ListBox.ObjectCollection boxListConsole, TextBox tbxPurgPath, TextBox tbxGeneralPath, int AlbumRowIndex)
         {
             ErrorPicker.Clear();
-            /////////////////////////////////////
-            int expectedPoints = 8;
-            /////////////////////////////////////
-            int colIndexAlbum = 0;
-            int colAbumReleaseYear = 1;
-            int colAlbumDirectory = 2;
-            int colArtistName = 3;
-            int colAlbumName = 4;
-            int colDirectoryGenre = 7;
-            int colArtistCheck = 10;
-            int colAlbumCheck = 11;
-            int colGenreCheck = 12;
-            int colRatingCheck = 13;
-            int colIndexCheck = 14;
-
+            dataGridColumns DGC = new dataGridColumns();
+     
             int validationPoints = 0;            
 
             int CurrentIndex = 0;
@@ -49,11 +55,11 @@ namespace MusicProjectLibrary_1
                 {
                     for (int col = 0; col < DGV.Rows[rows].Cells.Count; col++)
                     {
-                        if (col == colIndexAlbum)
+                        if (col == DGC.colIndexAlbum)
                         {
                             CurrentIndex = Convert.ToInt32(DGV.Rows[rows].Cells[col].Value);
                         }
-                        else if (col == colAbumReleaseYear)
+                        else if (col == DGC.colAbumReleaseYear)
                         {
                             try
                             {
@@ -68,7 +74,7 @@ namespace MusicProjectLibrary_1
                             else
                                 ErrorPicker.Add($"error [no Album Release Year]: Album ID: {CurrentIndex}");
                         }
-                        else if (col == colAlbumDirectory) // check if exist
+                        else if (col == DGC.colAlbumDirectory) // check if exist
                         {
                             try
                             {
@@ -86,7 +92,7 @@ namespace MusicProjectLibrary_1
                             else
                                 ErrorPicker.Add($"error [FAILED to find PATH]: Album ID: {CurrentIndex}");
                         }
-                        else if (col == colDirectoryGenre) // check if directory Genre is filled
+                        else if (col == DGC.colDirectoryGenre) // check if directory Genre is filled
                         {
                             
                             try
@@ -106,7 +112,7 @@ namespace MusicProjectLibrary_1
                             else
                                 ErrorPicker.Add($"error [no Directory Genre declared]: Album ID: {CurrentIndex}");
                         }
-                        else if (col == colArtistCheck || col == colAlbumCheck || col == colGenreCheck || col == colRatingCheck || col == colIndexCheck)
+                        else if (col == DGC.colArtistCheck || col == DGC.colAlbumCheck || col == DGC.colGenreCheck || col == DGC.colRatingCheck || col == DGC.colIndexCheck)
                         {
                             try
                             {
@@ -118,14 +124,14 @@ namespace MusicProjectLibrary_1
                             }
                             if (GridValueBool != false)
                             {
-                                if (col == colArtistCheck)
+                                if (col == DGC.colArtistCheck)
                                 {
-                                    ArtistName = DGV.Rows[rows].Cells[colArtistName].Value.ToString();
+                                    ArtistName = DGV.Rows[rows].Cells[DGC.colArtistName].Value.ToString();
                                     validationPoints += 1;
                                 }
-                                else if (col == colAlbumCheck)
+                                else if (col == DGC.colAlbumCheck)
                                 {
-                                    AlbumName = DGV.Rows[rows].Cells[colAlbumName].Value.ToString();
+                                    AlbumName = DGV.Rows[rows].Cells[DGC.colAlbumName].Value.ToString();
                                     validationPoints += 1;
                                 }
                                 else
@@ -134,15 +140,15 @@ namespace MusicProjectLibrary_1
                                 
                             else
                             {
-                                if (col == colArtistCheck)
+                                if (col == DGC.colArtistCheck)
                                     ErrorPicker.Add($"error [ArtistCheck test FAILED]: Album ID: {CurrentIndex}");
-                                if (col == colAlbumCheck)
+                                if (col == DGC.colAlbumCheck)
                                     ErrorPicker.Add($"error [AlbumCheck test FAILED]: Album ID: {CurrentIndex}");
-                                if (col == colGenreCheck)
+                                if (col == DGC.colGenreCheck)
                                     ErrorPicker.Add($"error [GenreCheck test FAILED]: Album ID: {CurrentIndex}");
-                                if (col == colRatingCheck)
+                                if (col == DGC.colRatingCheck)
                                     ErrorPicker.Add($"error [RatingCheck test FAILED]: Album ID: {CurrentIndex}");
-                                if (col == colIndexCheck)
+                                if (col == DGC.colIndexCheck)
                                     ErrorPicker.Add($"error [IndexCheck test FAILED]: Album ID: {CurrentIndex}");
                             }                                
                         }    
@@ -157,7 +163,7 @@ namespace MusicProjectLibrary_1
             //
             //[stage two]
             //
-            if( validationPoints == expectedPoints)
+            if(validationPoints == DGC.expectedPoints)
             {
                 //tworz foldery gatunkowe - jeżeli ich nie ma na dysku docelowym
                 
@@ -182,32 +188,37 @@ namespace MusicProjectLibrary_1
                 }
                 else
                 {
-                    
+                   
                 }
             }
             else
                 boxListConsole.Add($"=========[Test Failed IDX: {CurrentIndex}]=========");
         }
-        public static void ReadDataGridForAll(DataGridView DGV, ListBox.ObjectCollection boxListConsole, TextBox tbxPurgPath, TextBox tbxGeneralPath, int AlbumRowIndex)
+
+        public static void bw_ReadDataGridForAll(object sender, DataGridView DGV, ListBox.ObjectCollection boxListConsole) //DoWorkEventArgs e
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
+            //for (int i = 1; i <= 10; i++)
+            //{
+                //if ((worker.CancellationPending == true))
+                //{
+                    //e.Cancel = true;
+                    //break;
+                //}
+                //else
+                //{
+                    ReadDataGridForAll(DGV, boxListConsole);
+                    //worker.ReportProgress(i * 10);
+                //}
+            //}
+        }
+        public static void ReadDataGridForAll(DataGridView DGV, ListBox.ObjectCollection boxListConsole)
         {
             ErrorPicker.Clear();
-            /////////////////////////////////////
-            int expectedPoints = 8;
-            /////////////////////////////////////
-            int colIndexAlbum = 0;
-            int colAbumReleaseYear = 1;
-            int colAlbumDirectory = 2;
-            int colArtistName = 3;
-            int colAlbumName = 4;
-            int colDirectoryGenre = 7;
-            int colArtistCheck = 10;
-            int colAlbumCheck = 11;
-            int colGenreCheck = 12;
-            int colRatingCheck = 13;
-            int colIndexCheck = 14;
+            dataGridColumns DGC = new dataGridColumns();
 
             int validationPoints = 0;
-
             int CurrentIndex = 0;
             string FolderGenre = "";
             string ArtistName = "";
@@ -224,11 +235,11 @@ namespace MusicProjectLibrary_1
                 bool withoutGenre = false;
                 for (int col = 0; col < DGV.Rows[rows].Cells.Count; col++)
                 {
-                    if (col == colIndexAlbum)
+                    if (col == DGC.colIndexAlbum)
                     {
                         CurrentIndex = Convert.ToInt32(DGV.Rows[rows].Cells[col].Value);
                     }
-                    else if (col == colAbumReleaseYear)
+                    else if (col == DGC.colAbumReleaseYear)
                     {
                         try
                         {
@@ -239,11 +250,9 @@ namespace MusicProjectLibrary_1
                             GridValueInt = 0;
                         }
                         if (GridValueInt != 0)
-                            validationPoints += 1;
-                        //else
-                            //ErrorPicker.Add($"error [no Album Release Year]: Album ID: {CurrentIndex}");
+                            validationPoints += 1;                        
                     }
-                    else if (col == colAlbumDirectory) // check if exist
+                    else if (col == DGC.colAlbumDirectory) // check if exist
                     {
                         try
                         {
@@ -257,11 +266,9 @@ namespace MusicProjectLibrary_1
                         {
                             validationPoints += 1;
                             AlbumDirectory = GridValueString;
-                        }
-                        //else
-                            //ErrorPicker.Add($"error [FAILED to find PATH]: Album ID: {CurrentIndex}");
+                        }                        
                     }
-                    else if (col == colDirectoryGenre) // check if directory Genre is filled
+                    else if (col == DGC.colDirectoryGenre) // check if directory Genre is filled
                     {
 
                         try
@@ -281,12 +288,9 @@ namespace MusicProjectLibrary_1
                         else
                         {
                             withoutGenre = true;
-                        }
-                            
-                        //else
-                            //ErrorPicker.Add($"error [no Directory Genre declared]: Album ID: {CurrentIndex}");
+                        }  
                     }
-                    else if (col == colArtistCheck || col == colAlbumCheck || col == colGenreCheck || col == colRatingCheck || col == colIndexCheck)
+                    else if (col == DGC.colArtistCheck || col == DGC.colAlbumCheck || col == DGC.colGenreCheck || col == DGC.colRatingCheck || col == DGC.colIndexCheck)
                     {
                         try
                         {
@@ -298,56 +302,37 @@ namespace MusicProjectLibrary_1
                         }
                         if (GridValueBool != false)
                         {
-                            if (col == colArtistCheck)
+                            if (col == DGC.colArtistCheck)
                             {
-                                ArtistName = DGV.Rows[rows].Cells[colArtistName].Value.ToString();
+                                ArtistName = DGV.Rows[rows].Cells[DGC.colArtistName].Value.ToString();
                                 validationPoints += 1;
                             }
-                            else if (col == colAlbumCheck)
+                            else if (col == DGC.colAlbumCheck)
                             {
-                                AlbumName = DGV.Rows[rows].Cells[colAlbumName].Value.ToString();
+                                AlbumName = DGV.Rows[rows].Cells[DGC.colAlbumName].Value.ToString();
                                 validationPoints += 1;
                             }
-                            else if (col == colRatingCheck)
+                            else if (col == DGC.colRatingCheck)
                                 validationPoints += 1;
-                            else if (col == colGenreCheck)
+                            else if (col == DGC.colGenreCheck)
                                 validationPoints += 1;
-                            else if (col == colIndexCheck)
+                            else if (col == DGC.colIndexCheck)
                                 validationPoints += 1;
 
-                        }
-                            /*
-                            else
-                            {
-                                if (col == colArtistCheck)
-                                    ErrorPicker.Add($"error [ArtistCheck test FAILED]: Album ID: {CurrentIndex}");
-                                if (col == colAlbumCheck)
-                                    ErrorPicker.Add($"error [AlbumCheck test FAILED]: Album ID: {CurrentIndex}");
-                                if (col == colGenreCheck)
-                                    ErrorPicker.Add($"error [GenreCheck test FAILED]: Album ID: {CurrentIndex}");
-                                if (col == colRatingCheck)
-                                    ErrorPicker.Add($"error [RatingCheck test FAILED]: Album ID: {CurrentIndex}");
-                                if (col == colIndexCheck)
-                                    ErrorPicker.Add($"error [IndexCheck test FAILED]: Album ID: {CurrentIndex}");
-                            }
-                            */
-                        }
+                        }                           
                     }
-                if (validationPoints == expectedPoints)
+                }
+                if (validationPoints == DGC.expectedPoints)
                 {
                     DGV.Rows[rows].DefaultCellStyle.BackColor = Color.LightGreen;
                 }
-                else if(withoutGenre & validationPoints == expectedPoints - 1)
+                else if(withoutGenre & validationPoints == DGC.expectedPoints - 1)
                 {
                     DGV.Rows[rows].DefaultCellStyle.BackColor = Color.PeachPuff;
                 }
-                else
-                    boxListConsole.Add($"=========[Test Failed IDX: {CurrentIndex}]=========");
-            }
-            
-            //[stage two]
-            //
-            
+                //else
+                    //boxListConsole.Add($"=========[Test Failed IDX: {CurrentIndex}]=========");
+            }            
         }
     }
 }

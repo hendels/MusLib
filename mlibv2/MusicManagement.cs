@@ -38,13 +38,15 @@ namespace MusicProjectLibrary_1
             Functions.getPurgatoryPath(tbxPickedPath,true);
             Functions.getMainDirectoryPath(tbxMusicPath, true);
 
-            int countRecord = AutoSearchDatabaseTracks(tbxSearchTracks.Text);
-            BoxListConsole.Items.Add("Tracks count: " + countRecord.ToString());
-            countRecord = AutoSearchDatabaseAlbums(tbxSearchAlbums.Text);
-            BoxListConsole.Items.Add("Album count: " + countRecord.ToString());
-            int countRecordArtist = DBFunctions.AutoSearchDatabaseArtists("", dgvArtists);
-    
+            int countRecordTracks = DBFunctions.AutoSearchDatabaseTracks(AlbumsDataGridView, tbxSearchTracks.Text);
+            BoxListConsole.Items.Add("Tracks count: " + countRecordTracks.ToString());
+
+            int countRecordAlbums = AutoSearchDatabaseAlbums(tbxSearchAlbums.Text);
+            BoxListConsole.Items.Add("Album count: " + countRecordAlbums.ToString());
+
+            int countRecordArtist = DBFunctions.AutoSearchDatabaseArtists("", dgvArtists);    
             BoxListConsole.Items.Add("Artist table updated: " + countRecordArtist.ToString());
+
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
             GlobalVariables globalProcCatalog = new GlobalVariables();
         }
@@ -242,22 +244,11 @@ namespace MusicProjectLibrary_1
 
         private void btnFindTracks_Click(object sender, EventArgs e)
         {
-            int countRecord = AutoSearchDatabaseTracks(tbxSearchTracks.Text);
+            int countRecord = DBFunctions.AutoSearchDatabaseTracks(AlbumsDataGridView, tbxSearchTracks.Text);
             BoxListConsole.Items.Add("Tracks count: " + countRecord.ToString());
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;            
         }
-        private int AutoSearchDatabaseTracks(string SearchString)
-        {
-            DBFunctions db = new DBFunctions();
-            if (SearchString != "")
-                TrackList = db.GetTrack(SearchString);
-            else
-                TrackList = db.GetAllTracks();
-
-            UpdateBindingTracks();
-            int countRecord = TrackList.Count;
-            return countRecord;
-        }
+        
 
         private void CheckBoxWriteIndexes_CheckedChanged(object sender, EventArgs e)
         {
@@ -297,13 +288,18 @@ namespace MusicProjectLibrary_1
 
             //validuj SQL'a
             AlbumRowIndex = AlbumsDataGridView.SelectedCells[0].RowIndex;
+            int hardIndex = AlbumRowIndex;
             SQLDataValidate.ReadDataGrid(AlbumsDataGridView, BoxListConsole.Items, tbxPickedPath, tbxMusicPath, AlbumRowIndex);
-            AlbumsDataGridView.Rows[AlbumRowIndex].Selected = true;
-
+            
             int countRecord = DBFunctions.AutoSearchDatabaseAlbums("", AlbumsDataGridView);
             BoxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
 
+            AlbumsDataGridView.ClearSelection();                                                //[przemy knowledge - zaznaczanie data grid view]
+            AlbumsDataGridView.CurrentCell = AlbumsDataGridView.Rows[hardIndex].Cells[0]; //[przemy knowledge - zaznaczanie data grid view]
+            AlbumsDataGridView.Rows[hardIndex].Selected = true;                         //[przemy knowledge - zaznaczanie data grid view]
+
+            SQLDataValidate.bw_ReadDataGridForAll(sender ,AlbumsDataGridView, BoxListConsole.Items);
             // aktualizuj tabele tracks - ze usunieto plik / aktualizuj, również że istnieje plik
             //rzuć info ile wyjebał MB z dysku
 
@@ -311,14 +307,14 @@ namespace MusicProjectLibrary_1
 
         private void AlbumsDataGridView_DoubleClick(object sender, EventArgs e)
         {            
-            AlbumsDataGridView.Rows[AlbumsDataGridView.SelectedCells[0].RowIndex].Selected = true;
-            AlbumRowIndex = AlbumsDataGridView.SelectedCells[0].RowIndex;
+            //AlbumsDataGridView.Rows[AlbumsDataGridView.SelectedCells[0].RowIndex].Selected = true;
+            //AlbumRowIndex = AlbumsDataGridView.SelectedCells[0].RowIndex;
         }
 
         private void AlbumsDataGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             PickGenre pickGenreForm = new PickGenre();
-            DirectoryManagement.OpenDirectoryFolder(AlbumsDataGridView, pickGenreForm, BoxListConsole, AlbumRowIndex);
+            DirectoryManagement.DoubleClickOnGridCallBack(AlbumsDataGridView, pickGenreForm, BoxListConsole, AlbumRowIndex);
         }
 
         private void AlbumsDataGridView_SelectionChanged_1(object sender, EventArgs e)
@@ -333,7 +329,7 @@ namespace MusicProjectLibrary_1
         private void AlbumsDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             PickGenre pickGenreForm = new PickGenre();
-            DirectoryManagement.OpenDirectoryFolder(AlbumsDataGridView, pickGenreForm, BoxListConsole, AlbumRowIndex);
+            DirectoryManagement.DoubleClickOnGridCallBack(AlbumsDataGridView, pickGenreForm, BoxListConsole, AlbumRowIndex);
         }
 
         private void progBar_Click(object sender, EventArgs e)
@@ -353,9 +349,9 @@ namespace MusicProjectLibrary_1
         private void btnDiscogs_Click(object sender, EventArgs e)
         {
 
-            string SearchArtist = "";
-            string SearchRelease = "";
-            DiscogsManagement.startDiscogs(BoxListConsole.Items, SearchArtist, SearchRelease, 0);
+            //string SearchArtist = "";
+            //string SearchRelease = "";
+            //DiscogsManagement.startDiscogs(BoxListConsole.Items, SearchArtist, SearchRelease, 0);
             //this.Show();
         }
 
@@ -382,7 +378,7 @@ namespace MusicProjectLibrary_1
         private void btnSelectHealthy_Click(object sender, EventArgs e)
         {
             BoxListConsole.Items.Add("Start checking...");
-            SQLDataValidate.ReadDataGridForAll(AlbumsDataGridView, BoxListConsole.Items, tbxPickedPath, tbxMusicPath, AlbumRowIndex);
+            SQLDataValidate.ReadDataGridForAll(AlbumsDataGridView, BoxListConsole.Items);
         }
     }
 }

@@ -428,7 +428,7 @@
             this.progBar.Name = "progBar";
             this.progBar.Size = new System.Drawing.Size(365, 23);
             this.progBar.TabIndex = 31;
-            this.progBar.Click += new System.EventHandler(this.progBar_Click);
+
             // 
             // btnFindTracks
             // 

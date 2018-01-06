@@ -239,5 +239,23 @@ namespace MusicProjectLibrary_1
                 boxListConsole.Add($"...purgatory path error while moving from: {AlbumDirectory}");
             
         }
+        public static void DeleteAlbum(DataGridView DGV, int AlbumRowIndex)
+        {
+            SQLDataValidate.dataGridColumns DGC = new SQLDataValidate.dataGridColumns();
+            int AlbumId = Convert.ToInt32(DGV.Rows[AlbumRowIndex].Cells[DGC.colIndexAlbum].Value);
+            string AlbumName = DGV.Rows[AlbumRowIndex].Cells[DGC.colAlbumName].Value.ToString();
+            string AlbumArtist = DGV.Rows[AlbumRowIndex].Cells[DGC.colArtistName].Value.ToString();
+
+            DBFunctions db = new DBFunctions();
+            List<SQLTrackTable> LTT = new List<SQLTrackTable>();
+            LTT = db.GetTrackByAlbumId(AlbumId);
+
+            DialogResult res = MessageBox.Show($"Delete Album from SQL DB? \n Selected Album ID: {AlbumId} \n Album Name: {AlbumName} \n Artist: {AlbumArtist} \n Track Count to delete also: {LTT.Count}", "Delete Album & Tracks", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+            if (res == DialogResult.OK)
+            {
+                DBFunctions.DeleteAlbumByAlbumID(AlbumId);
+                DBFunctions.DeleteTracksByAlbumID(AlbumId);
+            }
+        }
     }
 }

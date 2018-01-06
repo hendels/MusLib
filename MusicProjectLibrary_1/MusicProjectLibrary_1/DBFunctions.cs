@@ -455,6 +455,28 @@ namespace MusicProjectLibrary_1
         {
             DGV.DataSource = TrackList;
         }
+        public static void DeleteAlbumByAlbumID(int idAlbumP)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
+            {
+                connection.Execute("dbo.spAlbums_DeleteAlbumTableByAlbumID, @idAlbum", new { idAlbum = idAlbumP });
+                GlobalChecker.TestSqlAlbumIdQuery += 1;
+            }
+        }
+
+        public static int DeleteTracksByAlbumID(int IdAlbumP)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
+            {
+                DBFunctions db = new DBFunctions();
+                List<SQLTrackTable> LTT = new List<SQLTrackTable>();
+                LTT = db.GetTrackByAlbumId(IdAlbumP);
+                connection.Execute("dbo.spAlbums_DeleteAlbumTableByAlbumID, @IdAlbum", new { IdAlbum = IdAlbumP });
+                GlobalChecker.TestSqlAlbumIdQuery += 1;
+                return LTT.Count;
+            }
+            return 0;
+        }
 
     }
     public class SQLAlbumTable

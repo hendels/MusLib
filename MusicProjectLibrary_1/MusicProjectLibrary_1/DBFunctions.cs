@@ -438,7 +438,7 @@ namespace MusicProjectLibrary_1
             DGV.DataSource = ArtistList;
         }        
         
-        public static int AutoSearchDatabaseTracks(DataGridView DGV, string SearchString)
+        public static int AutoSearchDatabaseTracks(string SearchString, DataGridView DGV)
         {
             List<SQLTrackTable> TrackList = new List<SQLTrackTable>(); //sqlprzemy - table : Albums
             DBFunctions db = new DBFunctions();

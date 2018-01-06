@@ -11,20 +11,16 @@ namespace MusicProjectLibrary_1
 {
     class DirectoryManagement
     {
-        public static void DoubleClickOnGridCallBack(DataGridView DGV, PickGenre pickGenreForm, ListBox boxListConsole, int AlbumRowIndex)
+        public static bool DoubleClickOnGridCallBack(DataGridView DGV, PickGenre pickGenreForm, ListBox boxListConsole, int AlbumRowIndex)
         {
             DGV.MultiSelect = false;
-            int colAlbumID = 0;
-            int colAlbumDirectory = 2;
-            int colAlbumArtist = 3;
-            int colAlbumRelease = 4;
-            int colAlbumDirectoryGenre = 7;
-            int colAlbumGeneralGenre = 5;
+            SQLDataValidate.dataGridColumns DGC = new SQLDataValidate.dataGridColumns();
+     
             int AlbumColIndex = DGV.CurrentCell.ColumnIndex; // [przemy knowledge - select column in data grid view]
             string GridValueString = "";
 
                 
-            if (AlbumColIndex == colAlbumDirectory)
+            if (AlbumColIndex == DGC.colAlbumDirectory)
             {
                 GridValueString = DGV.Rows[AlbumRowIndex].Cells[AlbumColIndex].Value.ToString();
                 try
@@ -35,30 +31,38 @@ namespace MusicProjectLibrary_1
                 {
                     MessageBox.Show("Can't reach this location!");
                 }
+                return false;
             }
-            else if (AlbumColIndex == colAlbumDirectoryGenre)
+            else if (AlbumColIndex == DGC.colDirectoryGenre)
             {
                 pickGenreForm.ShowDialog();
                 int countRecord = DBFunctions.AutoSearchDatabaseAlbums("", DGV);                
                 boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
                 boxListConsole.SelectedIndex = boxListConsole.Items.Count - 1;
 
-                DGV.ClearSelection();                               //[przemy knowledge - zaznaczanie data grid view]
-                DGV.CurrentCell = DGV.Rows[AlbumRowIndex].Cells[0]; //[przemy knowledge - zaznaczanie data grid view]
-                DGV.Rows[AlbumRowIndex].Selected = true;            //[przemy knowledge - zaznaczanie data grid view]
+                //DGV.ClearSelection();                               //[przemy knowledge - zaznaczanie data grid view]
+                //DGV.CurrentCell = DGV.Rows[AlbumRowIndex].Cells[0]; //[przemy knowledge - zaznaczanie data grid view]
+                //DGV.Rows[AlbumRowIndex].Selected = true;            //[przemy knowledge - zaznaczanie data grid view]
+                return true;
             }   
-            else if (AlbumColIndex == colAlbumGeneralGenre)
+            else if (AlbumColIndex == DGC.colAlbumGeneralGenre)
             {
                 DialogResult res = MessageBox.Show("Download Genres from Discogs?", "Discogs API", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                 if (res == DialogResult.OK)
                 {
-                    string ArtistGrid = DGV.Rows[AlbumRowIndex].Cells[colAlbumArtist].Value.ToString();
-                    string ReleaseGrid = DGV.Rows[AlbumRowIndex].Cells[colAlbumRelease].Value.ToString();
-                    int AlbumID = Convert.ToInt32(DGV.Rows[AlbumRowIndex].Cells[colAlbumID].Value);
+                    string ArtistGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colArtistName].Value.ToString();
+                    string ReleaseGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colAlbumName].Value.ToString();
+                    int AlbumID = Convert.ToInt32(DGV.Rows[AlbumRowIndex].Cells[DGC.colIndexAlbum].Value);
 
                     DiscogsManagement.startDiscogs(boxListConsole.Items, ArtistGrid, ReleaseGrid, AlbumID);
+                    return true;
                 }
+                else
+                {
+                    return false;
+                }                
             }
+            return false;
         }
         public static void OpenPairOfFolders(DataGridView DGV, int AlbumRowIndex)
         {

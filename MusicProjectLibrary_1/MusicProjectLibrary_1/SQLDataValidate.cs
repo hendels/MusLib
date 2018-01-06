@@ -24,6 +24,7 @@ namespace MusicProjectLibrary_1
             public int colAlbumDirectory = 2;
             public int colArtistName = 3;
             public int colAlbumName = 4;
+            public int colAlbumGeneralGenre = 5;
             public int colDirectoryGenre = 7;
             public int colArtistCheck = 10;
             public int colAlbumCheck = 11;

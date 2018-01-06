@@ -388,7 +388,7 @@ namespace MusicProjectLibrary_1
                 }
 
                 if ((Path.GetExtension(CurrentFile) == ".jpg" & GlobalVariables.IgnoreCurrentFolder == 0) || (Path.GetExtension(CurrentFile) == ".png" & GlobalVariables.IgnoreCurrentFolder == 0) 
-                    || (Path.GetExtension(CurrentFile) == ".tif" & GlobalVariables.IgnoreCurrentFolder == 0))
+                    || (Path.GetExtension(CurrentFile) == ".tif" & GlobalVariables.IgnoreCurrentFolder == 0) || (Path.GetExtension(CurrentFile) == ".jpeg" & GlobalVariables.IgnoreCurrentFolder == 0))
                 {
                     File.Move(CurrentFile, movedAlbumDirectory + @"\" + Path.GetFileName(CurrentFile));
                 }

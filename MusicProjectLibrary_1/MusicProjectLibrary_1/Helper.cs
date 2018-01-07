@@ -14,7 +14,7 @@ namespace MusicProjectLibrary_1
         {
             return ConfigurationManager.ConnectionStrings[name].ConnectionString;
         }
-        public static void DoWork(IProgress<int> progress, int processed, int maxValue, Label progressLabel, string progressString)
+        public static void DoWork(IProgress<int> progress, int processed, int maxValue, string progressString)
         {
             // This method is executed in the context of
             // another thread (different than the main UI thread),

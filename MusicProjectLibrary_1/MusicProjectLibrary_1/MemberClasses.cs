@@ -20,6 +20,7 @@ namespace MusicProjectLibrary_1
         public string trackGenre { set; get; }
         public string trackIndex { set; get; }
         public string trackFileExtension { set; get; }
+        public string trackIdAlbumIndex { get; set; }
 
         public AudioFile pickedAFile { set; get; }
     }
@@ -69,6 +70,7 @@ namespace MusicProjectLibrary_1
             get { return ModifyFIles; }
             set { ModifyFIles = value; }
         }
+        public static bool writeAlbumIndex = false;
         private static bool writeIndexes = false;
         public static bool globalwriteIndexes
         {

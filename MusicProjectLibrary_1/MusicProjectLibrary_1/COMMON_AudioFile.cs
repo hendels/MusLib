@@ -381,6 +381,11 @@ namespace JAudioTags
             get { return ReturnTag("INDEXTRACK"); }
             set { SetTag("INDEXTRACK", value); }
         }
+        public string INDEXALBUM
+        {
+            get { return ReturnTag("INDEXALBUM"); }
+            set { SetTag("INDEXALBUM", value); }
+        }
         public string MODTAGDATE
         {
             get { return ReturnTag("MODTAGDATE"); }

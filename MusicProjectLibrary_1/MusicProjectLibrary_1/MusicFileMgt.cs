@@ -16,16 +16,7 @@ namespace MusicProjectLibrary_1
 {
     public class MusicFileMgt
     {
-
-        //static string Root = @"D:\muz\CSharp\03 - Nafovanny.mp3";
-        
-        //static string Root = @"D:\muz\CSharp\02 - Ephemeron.flac";
-        static string Log = @"D:\muz\CSharp\logs.txt";
-        static string Errors = @"D:\muz\CSharp\Errors.txt";
-
-
-        static int Count = 1;
-
+         
         public static ListBox.ObjectCollection globalBoxListConsole;
         public static List<MusicFileDetails> globalMusicFileDetailsList;
         // This method matches the signature required by FileWalk.
@@ -60,20 +51,17 @@ namespace MusicProjectLibrary_1
 
         }
         public static void readFiles(ListBox.ObjectCollection boxListConsole, ProgressBar progressBar, string DirectoryPick, Label progressLabel)
-        {
-            //string Root = DirectoryPick;
-            boxListConsole.Clear(); //to czyści listboxa
+        {           
+            boxListConsole.Clear(); 
             MusicFileMgt.globalBoxListConsole = boxListConsole;
             //Call the FileWalk method to visit all files in tree
-            List<MusicFileDetails> ListMFD = new List<MusicFileDetails>(); //deklaruj liste w klasie
+            List<MusicFileDetails> ListMFD = new List<MusicFileDetails>(); 
             globalMusicFileDetailsList = ListMFD; // << tu gówno, bo nie mam jak zmienić procedur w COMMON_AudioFiles, za dużo odwołań, biblioteka się wypierdala
 
-            //AudioFile.FileWalk(DirectoryPick, ReadTags, new List<string>() { "MP3", "FLAC" },
-            //    Log, Errors);
             progressLabel.Text = "Reading files...";
             AudioFile.FileWalk(DirectoryPick, ReadTags, new List<string>() { "MP3", "FLAC" });
             int counterList = 0;
-            //List<string> uniqueDir = new List<string>();
+ 
             List<uniqueCatalogs> uniqueDir = new List<uniqueCatalogs>();
 
             foreach (MusicFileDetails item in globalMusicFileDetailsList) //przejeb sie przez liste
@@ -103,7 +91,7 @@ namespace MusicProjectLibrary_1
             bool writeIndex = GlobalVariables.globalwriteIndexes;
             if (writeIndex)
             {
-                writeIndexes(uniqueDir, globalMusicFileDetailsList, progressBar, progressLabel);
+                writeTrackIndexToFile(uniqueDir, globalMusicFileDetailsList, progressBar);
             }
             //
             //Process catalogs
@@ -118,8 +106,66 @@ namespace MusicProjectLibrary_1
             progressLabel.Text = "Done.";
             ///////[progress bar>]
         }
+        public static async void writeAlbumIndexToFile(DataGridView DGV, ProgressBar progressBar)
+        {
+            //
+            //update album songs
+            //
+            progressBar.Step = 1;
 
-        static async void writeIndexes(List<uniqueCatalogs> UQC, List<MusicFileDetails> MFD, ProgressBar progressBar, Label progressLabel)
+            SQLDataValidate.dataGridColumns DGC = new SQLDataValidate.dataGridColumns();
+            bool GridValueBool;
+            for (int rows = 0; rows < DGV.Rows.Count; rows++)
+            {
+                GridValueBool = Convert.ToBoolean(DGV.Rows[rows].Cells[DGC.colWriteIndex].Value);
+                if (GridValueBool)
+                {
+
+                    List<SQLTrackTable> queryGetAllTracksByAlbumID = new List<SQLTrackTable>();
+                    DBFunctions db = new DBFunctions();
+                    int AlbumID = Convert.ToInt32(DGV.Rows[rows].Cells[DGC.colIndexAlbum].Value);
+                    queryGetAllTracksByAlbumID = db.GetTrackByAlbumId(AlbumID);
+                    int maxValue = queryGetAllTracksByAlbumID.Count;
+                    int processed = 0;
+                    MusicFileDetails MFD = new MusicFileDetails();
+                    foreach (SQLTrackTable itemTrack in queryGetAllTracksByAlbumID)
+                    {
+                        if(System.IO.File.Exists(itemTrack.TrackDirectory))
+                        {
+                            MusicFileMgt.QuickRead(itemTrack.TrackDirectory, MFD);
+
+
+                            MFD.pickedAFile.INDEXALBUM = AlbumID.ToString();
+                            MFD.pickedAFile.Save(true);
+                            processed += 1;
+                        }            
+                    }
+                    db.UpdateTrackAlbumIndexByAlbumID(AlbumID, AlbumID);
+                    db.UpdateAlbumIndexCheckByAlbumID(AlbumID, true);
+
+                    var progress = new Progress<int>(v =>
+                    {
+                        // This lambda is executed in context of UI thread,
+                        // so it can safely update form controls
+                        try
+                        {
+                            progressBar.Value = v;
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                    });
+
+                    // Run operation in another thread
+                    await Task.Run(() => Helper.DoWork(progress, processed, 100,""));
+                }
+            }            
+
+
+ 
+        }
+        static async void writeTrackIndexToFile(List<uniqueCatalogs> UQC, List<MusicFileDetails> MFD, ProgressBar progressBar)
         {           
             ///////[<progress bar]
             int processed = 0;
@@ -152,8 +198,7 @@ namespace MusicProjectLibrary_1
                             // so it can safely update form controls
                             try
                             {
-                                progressBar.Value = v;
-                                progressLabel.Text = progressString;
+                                progressBar.Value = v;                                
                             }
                             catch (Exception e)
                             {
@@ -162,7 +207,7 @@ namespace MusicProjectLibrary_1
                         });
 
                         // Run operation in another thread
-                        await Task.Run(() => Helper.DoWork(progress, processed, maxValue, progressLabel, progressString));
+                        await Task.Run(() => Helper.DoWork(progress, processed, maxValue, progressString));
                     }                         
                 }                    
             }
@@ -188,7 +233,7 @@ namespace MusicProjectLibrary_1
             });
 
             // Run operation in another thread
-            await Task.Run(() => Helper.DoWork(progress, processed, maxValue, threadLabel, progressString));
+            await Task.Run(() => Helper.DoWork(progress, processed, maxValue, progressString));
         }
         static void processCatalogs(List<uniqueCatalogs> UQC, List<MusicFileDetails> MFD, ProgressBar progressBar, Label progressLabel)
         {
@@ -225,20 +270,40 @@ namespace MusicProjectLibrary_1
                                                               /// sprawdz czy wszystkie utwory mają ten sam album w danym folderze 
                         //ListAlbumsPerCatalog.Add(itemMFD.trackAlbum);
                         /// sprawdz czy istnieje okładka albumu
-                        ///     zwróć statystyki
-                        ///     <to do>
-                        /// sprawdz czy wszędzie istnieje rating
+
                         checkTagRating(itemMFD, ListCheckRating, ListRatingInformation);
                         //dodaj tracka - full info
                         ListMfdAlbum.Add(itemMFD);
                     }
                 }
+                /*
                 var allAreRatesFilled = ListCheckRating.Distinct().Count() == 1;
                 if (allAreRatesFilled == true)
                     GlobalChecker.globalCheckerRating = 1;                
                 else
                     GlobalChecker.globalCheckerRating = 0;
-                updateLocalDB(ListTagInformation, ListRatingInformation, ListMfdAlbum, itemUQC, ListCheckTags);
+                */
+                //
+                //check if album index is filled in specific directory ~ if all tracks have album index > correct
+                //
+                int countAlbumIndex = 0;
+                string albumName = "";
+                foreach (MusicFileDetails iMFD in ListMfdAlbum)
+                {
+                    if (iMFD.trackIdAlbumIndex != "" & iMFD.trackIdAlbumIndex != null)
+                    {
+                        albumName = iMFD.trackAlbum;
+                        countAlbumIndex += 1;
+                    }
+                        
+
+                }
+                if (countAlbumIndex == ListMfdAlbum.Count)
+                {
+                    
+                }
+                else
+                    updateLocalDB(ListTagInformation, ListRatingInformation, ListMfdAlbum, itemUQC, ListCheckTags);
             }
         }
         static void updateLocalDB(List<TagInformation> LTI, List<RatingInformation> RI, List<MusicFileDetails> LMA, uniqueCatalogs itemUQC, List<int> LCT)
@@ -393,23 +458,6 @@ namespace MusicProjectLibrary_1
             //////////////////////////////////////////////////////////////[<fill tracks]//////////////////////////////////////////////////////////////////
             updateTracksTableInDB(LMA, idAlbum);
             //////////////////////////////////////////////////////////////[fill tracks>]//////////////////////////////////////////////////////////////////
-
-            if (GlobalVariables.globalModifyFIles)
-            {
-                bool testPassed = true; // hardcoding! << ostatni test ma sie tu spelniac, jak jest spelniony, pozwalaj na zmiane calego albumu
-                //mfd powinienes miec w jakiejs klasie <LMA>
-                foreach (TagInformation itemLTI in LTI)
-                {
-                    itemLTI.pickedAFile.Save(true);
-                    MessageBox.Show(itemLTI.pickedAFile.TITLE + " in directory: changed positively.");
-                }
-                    
-            }                
-            //}
-            //else
-            //{
-            //    updateAlbumsTableInDB(7, itemUQC, itemUQC.ToString(), false); //zwróć błąd do bazki że nie wszystkie tagi są uzupełnione
-            //}
         }
         
         static int updateAlbumsTableInDB(int updateCase, uniqueCatalogs itemUQC, string updateStringDB, bool checkValue, decimal updateDecimalDB, int updateIntDB)
@@ -418,7 +466,9 @@ namespace MusicProjectLibrary_1
             DBFunctions db = new DBFunctions();
             DirectoryList = db.GetAlbumDirectory(itemUQC.uniqeDirectory);
             int DLcount = DirectoryList.Count;
-            if (DLcount == 1) //exist in sql => update
+            if (DLcount == 1) //exist in sql => update [todo] sprawdzaj po INDEXALBUM jeżeli jest uzupełnione, trzeba aktualizować po id Album [problem ścieżki w pliku]
+                //pobierz ID
+                //pobierz 
             {
                 int idAlbum = updateAlbumsSwitch(db, updateCase, itemUQC, updateStringDB, checkValue, updateDecimalDB, updateIntDB);
                 return idAlbum;
@@ -625,7 +675,7 @@ namespace MusicProjectLibrary_1
         static void checkAlbumInCatalog(MusicFileDetails MFD, uniqueCatalogs UQC)
         {
             // do wyjebania funkcja
-            foreach (MusicFileDetails itemMFD in (IEnumerable<MusicFileDetails>)MFD)
+            foreach (MusicFileDetails itemMFD in (IEnumerable<MusicFileDetails>)MFD) //[przemy knowledge  - zastosowanie enumerable]
             {                
                 //[przemy todo] sprawdzaj czy pierwszy element nie = ""
                 if (itemMFD.trackAlbum.Any(o => o != itemMFD.trackAlbum[0])) //[knowledge] Linqowe sprawdzanie czy elementy w liscie są takie same
@@ -657,6 +707,7 @@ namespace MusicProjectLibrary_1
                 string TrackIndex = AFile.INDEXTRACK;
                 string TrackAudioPath = AFile.AudioPath;
                 string TrackExtension = "FLAC";
+                string TrackAlbumID = AFile.INDEXALBUM;
                 
                 //update class
                 //AFile.
@@ -670,13 +721,12 @@ namespace MusicProjectLibrary_1
                 MFD.trackModDateTag = TrackModTagDate;
                 MFD.trackGenre = TrackGenre;
                 MFD.trackIndex = TrackIndex;
-                MFD.trackFileExtension = TrackExtension;
-                MFD.pickedAFile = AFile;                
+                MFD.trackFileExtension = TrackExtension;                
+                MFD.trackIdAlbumIndex = TrackAlbumID;
 
-                globalMusicFileDetailsList.Add(MFD); // dodaj do listy klasy
-                
-                
-                //MusicFileMgt.globalBoxListConsole.Add(onlyDir + " | " + TrackTitle + " / " + TrackAlbum + " / " + TrackRating + " / " + TrackModTagDate + " / " + TrackGenre);
+                MFD.pickedAFile = AFile;
+
+                globalMusicFileDetailsList.Add(MFD); 
             }
                 
 

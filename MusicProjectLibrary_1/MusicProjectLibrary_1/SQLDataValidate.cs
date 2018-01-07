@@ -17,20 +17,23 @@ namespace MusicProjectLibrary_1
         public class dataGridColumns
         {
             /////////////////////////////////////
-            public int expectedPoints = 8;
+            public int expectedPoints = 9;
             /////////////////////////////////////
             public int colIndexAlbum = 0;
-            public int colAbumReleaseYear = 1;
-            public int colAlbumDirectory = 2;
-            public int colArtistName = 3;
-            public int colAlbumName = 4;
-            public int colAlbumGeneralGenre = 5;
-            public int colDirectoryGenre = 7;
-            public int colArtistCheck = 10;
-            public int colAlbumCheck = 11;
-            public int colGenreCheck = 12;
-            public int colRatingCheck = 13;
-            public int colIndexCheck = 14;
+            public int colWriteIndex = 1;
+            public int colAbumReleaseYear = 2;
+            public int colAlbumDirectory = 3;
+            public int colIdArtist = 4;
+            public int colArtistName = 5;
+            public int colAlbumName = 6;
+            public int colAlbumGeneralGenre = 7;
+            public int colDirectoryGenre = 9;
+            public int colArtistCheck = 12;
+            public int colAlbumCheck = 13;
+            public int colGenreCheck = 14;
+            public int colRatingCheck = 15;
+            public int colIndexCheck = 16;
+            public int colIndexAlbumCheck = 17;
         }
         public static void ReadDataGrid(DataGridView DGV, ListBox.ObjectCollection boxListConsole, TextBox tbxPurgPath, TextBox tbxGeneralPath, int AlbumRowIndex)
         {
@@ -113,7 +116,7 @@ namespace MusicProjectLibrary_1
                             else
                                 ErrorPicker.Add($"error [no Directory Genre declared]: Album ID: {CurrentIndex}");
                         }
-                        else if (col == DGC.colArtistCheck || col == DGC.colAlbumCheck || col == DGC.colGenreCheck || col == DGC.colRatingCheck || col == DGC.colIndexCheck)
+                        else if (col == DGC.colArtistCheck || col == DGC.colAlbumCheck || col == DGC.colGenreCheck || col == DGC.colRatingCheck || col == DGC.colIndexCheck || col == DGC.colIndexAlbumCheck)
                         {
                             try
                             {
@@ -135,6 +138,8 @@ namespace MusicProjectLibrary_1
                                     AlbumName = DGV.Rows[rows].Cells[DGC.colAlbumName].Value.ToString();
                                     validationPoints += 1;
                                 }
+                                else if (col == DGC.colIndexAlbumCheck)
+                                    validationPoints += 1;
                                 else
                                     validationPoints += 1;
                             }
@@ -151,6 +156,8 @@ namespace MusicProjectLibrary_1
                                     ErrorPicker.Add($"error [RatingCheck test FAILED]: Album ID: {CurrentIndex}");
                                 if (col == DGC.colIndexCheck)
                                     ErrorPicker.Add($"error [IndexCheck test FAILED]: Album ID: {CurrentIndex}");
+                                if (col == DGC.colIndexAlbum)
+                                    ErrorPicker.Add($"error [IndexAlbumCheck test FAILED]: Album ID: {CurrentIndex}");
                             }                                
                         }    
                     }
@@ -291,7 +298,7 @@ namespace MusicProjectLibrary_1
                             withoutGenre = true;
                         }  
                     }
-                    else if (col == DGC.colArtistCheck || col == DGC.colAlbumCheck || col == DGC.colGenreCheck || col == DGC.colRatingCheck || col == DGC.colIndexCheck)
+                    else if (col == DGC.colArtistCheck || col == DGC.colAlbumCheck || col == DGC.colGenreCheck || col == DGC.colRatingCheck || col == DGC.colIndexCheck || col == DGC.colIndexAlbumCheck)
                     {
                         try
                         {
@@ -318,6 +325,8 @@ namespace MusicProjectLibrary_1
                             else if (col == DGC.colGenreCheck)
                                 validationPoints += 1;
                             else if (col == DGC.colIndexCheck)
+                                validationPoints += 1;
+                            else if (col == DGC.colIndexAlbumCheck)
                                 validationPoints += 1;
 
                         }                           

@@ -40,9 +40,6 @@ namespace MusicProjectLibrary_1
                 boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
                 boxListConsole.SelectedIndex = boxListConsole.Items.Count - 1;
 
-                //DGV.ClearSelection();                               //[przemy knowledge - zaznaczanie data grid view]
-                //DGV.CurrentCell = DGV.Rows[AlbumRowIndex].Cells[0]; //[przemy knowledge - zaznaczanie data grid view]
-                //DGV.Rows[AlbumRowIndex].Selected = true;            //[przemy knowledge - zaznaczanie data grid view]
                 return true;
             }   
             else if (AlbumColIndex == DGC.colAlbumGeneralGenre)
@@ -62,6 +59,30 @@ namespace MusicProjectLibrary_1
                     return false;
                 }                
             }
+            return false;
+        }
+        public static bool SingleClickOnGridCallBack(DataGridView DGV, int AlbumRowIndex)
+        {
+            SQLDataValidate.dataGridColumns DGC = new SQLDataValidate.dataGridColumns();
+            DBFunctions db = new DBFunctions();
+            int AlbumColIndex = DGV.CurrentCell.ColumnIndex;
+            bool GridValueBool;
+
+            if (AlbumColIndex == DGC.colWriteIndex)
+            {
+                GridValueBool = Convert.ToBoolean(DGV.Rows[AlbumRowIndex].Cells[AlbumColIndex].Value);
+                int AlbumID = Convert.ToInt32(DGV.Rows[AlbumRowIndex].Cells[DGC.colIndexAlbum].Value);
+                if (GridValueBool)
+                {
+                    db.UpdateWriteIndex(AlbumID, true);                    
+                }          
+                else
+                {
+                    db.UpdateWriteIndex(AlbumID, false);                    
+                }
+                    
+            }
+            
             return false;
         }
         public static void OpenPairOfFolders(DataGridView DGV, int AlbumRowIndex)

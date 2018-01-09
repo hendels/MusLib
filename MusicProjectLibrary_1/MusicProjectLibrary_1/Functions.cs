@@ -40,6 +40,18 @@ namespace MusicProjectLibrary_1
                 currentTextBox.Text = Functions.globalOldPath;
             }
         }
+        public static void getDriveGeneralPath(TextBox currentTextBox, Boolean updateTextbox)
+        {
+            string startupPath = System.IO.Directory.GetCurrentDirectory();
+            Functions.filenamePath = startupPath + @"\generalDrivePath.txt";
+            Functions.globalOldPath = MiscFunctions.ReadFile(Functions.filenamePath);
+
+
+            if (updateTextbox)
+            {
+                currentTextBox.Text = Functions.globalOldPath;
+            }
+        }
         public static void pickPath(int pathCase, TextBox currentTextBox)
         {
             FolderBrowserDialog FBD = new FolderBrowserDialog();
@@ -52,6 +64,9 @@ namespace MusicProjectLibrary_1
                         break;
                     case 2:
                         getMainDirectoryPath(currentTextBox, false);
+                        break;
+                    case 3:
+
                         break;
                 }
 

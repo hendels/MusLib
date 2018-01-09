@@ -36,7 +36,7 @@ namespace MusicProjectLibrary_1
             else if (AlbumColIndex == DGC.colDirectoryGenre)
             {
                 pickGenreForm.ShowDialog();
-                int countRecord = DBFunctions.AutoSearchDatabaseAlbums("", DGV);                
+                int countRecord = DBFunctions.AutoSearchDatabaseAlbums(0, DGV);                
                 boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
                 boxListConsole.SelectedIndex = boxListConsole.Items.Count - 1;
 
@@ -190,7 +190,7 @@ namespace MusicProjectLibrary_1
                                     AlbumTransaction += 1;
                                     if (AlbumTransaction == 1)
                                     {
-                                        db.UpdateDirectoryPathByAlbumID(AlbumId, buildPath);
+                                        db.UpdateAlbumDirectoryPathByAlbumID(AlbumId, buildPath);
                                         db.UpdateAlbumProceedDate(AlbumId, dateString);
                                     }
                                         
@@ -216,7 +216,7 @@ namespace MusicProjectLibrary_1
                                         AlbumTransaction += 1;
                                         if (AlbumTransaction == 1)
                                         {
-                                            db.UpdateDirectoryPathByAlbumID(AlbumId, buildPath);
+                                            db.UpdateAlbumDirectoryPathByAlbumID(AlbumId, buildPath);
                                             db.UpdateAlbumProceedDate(AlbumId, dateString);
                                         }
                                            

@@ -36,6 +36,7 @@
             this.CheckBoxModifyFIles = new System.Windows.Forms.CheckBox();
             this.tabCtrTrackAlbums = new System.Windows.Forms.TabControl();
             this.tabAlbums = new System.Windows.Forms.TabPage();
+            this.btnWriteIndexAlbum = new System.Windows.Forms.Button();
             this.btnDeleteAlbum = new System.Windows.Forms.Button();
             this.btnSelectHealthy = new System.Windows.Forms.Button();
             this.btnProcessSelected = new System.Windows.Forms.Button();
@@ -46,19 +47,21 @@
             this.btnCheckTrackDuplicates = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.TracksDataGridView = new System.Windows.Forms.DataGridView();
+            this.dgvTracks = new System.Windows.Forms.DataGridView();
             this.tabArtist = new System.Windows.Forms.TabPage();
             this.dgvArtists = new System.Windows.Forms.DataGridView();
             this.button2 = new System.Windows.Forms.Button();
             this.btnDiscogs = new System.Windows.Forms.Button();
             this.tabSetup = new System.Windows.Forms.TabPage();
+            this.tbxDriveMainPath = new System.Windows.Forms.TextBox();
+            this.chbCheckGeneralPath = new System.Windows.Forms.CheckBox();
+            this.chbWriteAlbumIndex = new System.Windows.Forms.CheckBox();
             this.chbxMove = new System.Windows.Forms.CheckBox();
             this.checkBoxCreateBackUp = new System.Windows.Forms.CheckBox();
             this.chbWriteTrackIndex = new System.Windows.Forms.CheckBox();
             this.tbxSearchAlbums = new System.Windows.Forms.TextBox();
             this.btnFindAlbums = new System.Windows.Forms.Button();
-            this.btnDeleteArtistFromDB = new System.Windows.Forms.Button();
-            this.tbxDeleteArtistFromDB = new System.Windows.Forms.TextBox();
+            this.tbxSearchArtist = new System.Windows.Forms.TextBox();
             this.progBar = new System.Windows.Forms.ProgressBar();
             this.btnFindTracks = new System.Windows.Forms.Button();
             this.tbxSearchTracks = new System.Windows.Forms.TextBox();
@@ -74,13 +77,11 @@
             this.tbxMusicPath = new System.Windows.Forms.TextBox();
             this.btnChangeGeneralCatalogPath = new System.Windows.Forms.Button();
             this.lblProgress = new System.Windows.Forms.Label();
-            this.chbWriteAlbumIndex = new System.Windows.Forms.CheckBox();
-            this.btnWriteIndexAlbum = new System.Windows.Forms.Button();
             this.tabCtrTrackAlbums.SuspendLayout();
             this.tabAlbums.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlbums)).BeginInit();
             this.tabTracks.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TracksDataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvTracks)).BeginInit();
             this.tabArtist.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvArtists)).BeginInit();
             this.tabSetup.SuspendLayout();
@@ -185,6 +186,16 @@
             this.tabAlbums.Text = "Albums";
             this.tabAlbums.UseVisualStyleBackColor = true;
             // 
+            // btnWriteIndexAlbum
+            // 
+            this.btnWriteIndexAlbum.Location = new System.Drawing.Point(434, 3);
+            this.btnWriteIndexAlbum.Name = "btnWriteIndexAlbum";
+            this.btnWriteIndexAlbum.Size = new System.Drawing.Size(105, 23);
+            this.btnWriteIndexAlbum.TabIndex = 42;
+            this.btnWriteIndexAlbum.Text = "Write Index";
+            this.btnWriteIndexAlbum.UseVisualStyleBackColor = true;
+            this.btnWriteIndexAlbum.Click += new System.EventHandler(this.btnWriteIndexAlbum_Click);
+            // 
             // btnDeleteAlbum
             // 
             this.btnDeleteAlbum.Location = new System.Drawing.Point(323, 3);
@@ -259,7 +270,7 @@
             this.tabTracks.Controls.Add(this.btnCheckTrackDuplicates);
             this.tabTracks.Controls.Add(this.button4);
             this.tabTracks.Controls.Add(this.button3);
-            this.tabTracks.Controls.Add(this.TracksDataGridView);
+            this.tabTracks.Controls.Add(this.dgvTracks);
             this.tabTracks.Location = new System.Drawing.Point(4, 22);
             this.tabTracks.Name = "tabTracks";
             this.tabTracks.Padding = new System.Windows.Forms.Padding(3);
@@ -296,17 +307,17 @@
             this.button3.Text = "Generate playlist";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // TracksDataGridView
+            // dgvTracks
             // 
-            this.TracksDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.dgvTracks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TracksDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.TracksDataGridView.Location = new System.Drawing.Point(3, 32);
-            this.TracksDataGridView.Name = "TracksDataGridView";
-            this.TracksDataGridView.Size = new System.Drawing.Size(1219, 274);
-            this.TracksDataGridView.TabIndex = 37;
-            this.TracksDataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.TracksDataGridView_CellContentClick);
+            this.dgvTracks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvTracks.Location = new System.Drawing.Point(3, 32);
+            this.dgvTracks.Name = "dgvTracks";
+            this.dgvTracks.Size = new System.Drawing.Size(1219, 274);
+            this.dgvTracks.TabIndex = 37;
+            this.dgvTracks.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.TracksDataGridView_CellContentClick);
             // 
             // tabArtist
             // 
@@ -354,6 +365,8 @@
             // 
             // tabSetup
             // 
+            this.tabSetup.Controls.Add(this.tbxDriveMainPath);
+            this.tabSetup.Controls.Add(this.chbCheckGeneralPath);
             this.tabSetup.Controls.Add(this.chbWriteAlbumIndex);
             this.tabSetup.Controls.Add(this.chbxMove);
             this.tabSetup.Controls.Add(this.checkBoxCreateBackUp);
@@ -368,6 +381,40 @@
             this.tabSetup.TabIndex = 3;
             this.tabSetup.Text = "Setup";
             this.tabSetup.UseVisualStyleBackColor = true;
+            // 
+            // tbxDriveMainPath
+            // 
+            this.tbxDriveMainPath.BackColor = System.Drawing.Color.AliceBlue;
+            this.tbxDriveMainPath.Enabled = false;
+            this.tbxDriveMainPath.Location = new System.Drawing.Point(148, 72);
+            this.tbxDriveMainPath.Name = "tbxDriveMainPath";
+            this.tbxDriveMainPath.Size = new System.Drawing.Size(365, 20);
+            this.tbxDriveMainPath.TabIndex = 39;
+            // 
+            // chbCheckGeneralPath
+            // 
+            this.chbCheckGeneralPath.AutoSize = true;
+            this.chbCheckGeneralPath.Location = new System.Drawing.Point(4, 75);
+            this.chbCheckGeneralPath.Margin = new System.Windows.Forms.Padding(2);
+            this.chbCheckGeneralPath.Name = "chbCheckGeneralPath";
+            this.chbCheckGeneralPath.Size = new System.Drawing.Size(119, 17);
+            this.chbCheckGeneralPath.TabIndex = 38;
+            this.chbCheckGeneralPath.Text = "Check general path";
+            this.chbCheckGeneralPath.UseVisualStyleBackColor = true;
+            this.chbCheckGeneralPath.CheckedChanged += new System.EventHandler(this.chbCheckGeneralPath_CheckedChanged);
+            // 
+            // chbWriteAlbumIndex
+            // 
+            this.chbWriteAlbumIndex.AutoSize = true;
+            this.chbWriteAlbumIndex.BackColor = System.Drawing.Color.LightCoral;
+            this.chbWriteAlbumIndex.Location = new System.Drawing.Point(4, 25);
+            this.chbWriteAlbumIndex.Margin = new System.Windows.Forms.Padding(2);
+            this.chbWriteAlbumIndex.Name = "chbWriteAlbumIndex";
+            this.chbWriteAlbumIndex.Size = new System.Drawing.Size(112, 17);
+            this.chbWriteAlbumIndex.TabIndex = 37;
+            this.chbWriteAlbumIndex.Text = "Write Album Index";
+            this.chbWriteAlbumIndex.UseVisualStyleBackColor = false;
+            this.chbWriteAlbumIndex.CheckedChanged += new System.EventHandler(this.chbWriteAlbumIndex_CheckedChanged);
             // 
             // chbxMove
             // 
@@ -422,22 +469,12 @@
             this.btnFindAlbums.UseVisualStyleBackColor = true;
             this.btnFindAlbums.Click += new System.EventHandler(this.btnFindAlbums_Click);
             // 
-            // btnDeleteArtistFromDB
+            // tbxSearchArtist
             // 
-            this.btnDeleteArtistFromDB.Location = new System.Drawing.Point(386, 160);
-            this.btnDeleteArtistFromDB.Name = "btnDeleteArtistFromDB";
-            this.btnDeleteArtistFromDB.Size = new System.Drawing.Size(75, 23);
-            this.btnDeleteArtistFromDB.TabIndex = 30;
-            this.btnDeleteArtistFromDB.Text = "Delete Artist DB";
-            this.btnDeleteArtistFromDB.UseVisualStyleBackColor = true;
-            this.btnDeleteArtistFromDB.Click += new System.EventHandler(this.btnDeleteArtistFromDB_Click);
-            // 
-            // tbxDeleteArtistFromDB
-            // 
-            this.tbxDeleteArtistFromDB.Location = new System.Drawing.Point(467, 160);
-            this.tbxDeleteArtistFromDB.Name = "tbxDeleteArtistFromDB";
-            this.tbxDeleteArtistFromDB.Size = new System.Drawing.Size(100, 20);
-            this.tbxDeleteArtistFromDB.TabIndex = 29;
+            this.tbxSearchArtist.Location = new System.Drawing.Point(467, 160);
+            this.tbxSearchArtist.Name = "tbxSearchArtist";
+            this.tbxSearchArtist.Size = new System.Drawing.Size(100, 20);
+            this.tbxSearchArtist.TabIndex = 29;
             // 
             // progBar
             // 
@@ -531,29 +568,6 @@
             this.lblProgress.TabIndex = 37;
             this.lblProgress.Text = "<>";
             // 
-            // chbWriteAlbumIndex
-            // 
-            this.chbWriteAlbumIndex.AutoSize = true;
-            this.chbWriteAlbumIndex.BackColor = System.Drawing.Color.LightCoral;
-            this.chbWriteAlbumIndex.Location = new System.Drawing.Point(4, 25);
-            this.chbWriteAlbumIndex.Margin = new System.Windows.Forms.Padding(2);
-            this.chbWriteAlbumIndex.Name = "chbWriteAlbumIndex";
-            this.chbWriteAlbumIndex.Size = new System.Drawing.Size(112, 17);
-            this.chbWriteAlbumIndex.TabIndex = 37;
-            this.chbWriteAlbumIndex.Text = "Write Album Index";
-            this.chbWriteAlbumIndex.UseVisualStyleBackColor = false;
-            this.chbWriteAlbumIndex.CheckedChanged += new System.EventHandler(this.chbWriteAlbumIndex_CheckedChanged);
-            // 
-            // btnWriteIndexAlbum
-            // 
-            this.btnWriteIndexAlbum.Location = new System.Drawing.Point(434, 3);
-            this.btnWriteIndexAlbum.Name = "btnWriteIndexAlbum";
-            this.btnWriteIndexAlbum.Size = new System.Drawing.Size(105, 23);
-            this.btnWriteIndexAlbum.TabIndex = 42;
-            this.btnWriteIndexAlbum.Text = "Write Index";
-            this.btnWriteIndexAlbum.UseVisualStyleBackColor = true;
-            this.btnWriteIndexAlbum.Click += new System.EventHandler(this.btnWriteIndexAlbum_Click);
-            // 
             // MusicLibraryWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -565,8 +579,7 @@
             this.Controls.Add(this.tbxSearchTracks);
             this.Controls.Add(this.btnFindTracks);
             this.Controls.Add(this.progBar);
-            this.Controls.Add(this.btnDeleteArtistFromDB);
-            this.Controls.Add(this.tbxDeleteArtistFromDB);
+            this.Controls.Add(this.tbxSearchArtist);
             this.Controls.Add(this.btnFindAlbums);
             this.Controls.Add(this.tbxSearchAlbums);
             this.Controls.Add(this.tabCtrTrackAlbums);
@@ -581,7 +594,7 @@
             this.tabAlbums.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlbums)).EndInit();
             this.tabTracks.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.TracksDataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvTracks)).EndInit();
             this.tabArtist.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvArtists)).EndInit();
             this.tabSetup.ResumeLayout(false);
@@ -649,8 +662,7 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn genreCheckDataGridViewCheckBoxColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn ratingCheckDataGridViewCheckBoxColumn;
         private System.Windows.Forms.BindingSource albumBindingSource2;
-        private System.Windows.Forms.Button btnDeleteArtistFromDB;
-        private System.Windows.Forms.TextBox tbxDeleteArtistFromDB;
+        private System.Windows.Forms.TextBox tbxSearchArtist;
         private System.Windows.Forms.ProgressBar progBar;
         private System.Windows.Forms.Button btnFindTracks;
         private System.Windows.Forms.TextBox tbxSearchTracks;
@@ -659,7 +671,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnDeclareGenre;
         private System.Windows.Forms.DataGridView dgvAlbums;
-        private System.Windows.Forms.DataGridView TracksDataGridView;
+        private System.Windows.Forms.DataGridView dgvTracks;
         private System.Windows.Forms.Button btnProcessSelected;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TextBox tbxMusicPath;
@@ -678,6 +690,8 @@
         private System.Windows.Forms.Button btnDeleteAlbum;
         private System.Windows.Forms.CheckBox chbWriteAlbumIndex;
         private System.Windows.Forms.Button btnWriteIndexAlbum;
+        private System.Windows.Forms.CheckBox chbCheckGeneralPath;
+        private System.Windows.Forms.TextBox tbxDriveMainPath;
     }
 }
 

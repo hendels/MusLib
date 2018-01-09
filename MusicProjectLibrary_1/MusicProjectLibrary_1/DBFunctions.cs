@@ -46,6 +46,17 @@ namespace MusicProjectLibrary_1
                 return output;
             }
         }
+        public List<SQLAlbumTable> GetAlbumById(int idAlbumP)
+        {
+            //throw new NotImplementedException();
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
+            {
+                var output = connection.Query<SQLAlbumTable>("dbo.spAlbums_GetAlbumById @idAlbum", new { idAlbum = idAlbumP }).ToList();
+                GlobalChecker.TestSqlAlbumIdQuery += 1;
+                return output;
+            }
+        }
+        
         public List<SQLAlbumTable> GetAlbumDirectory(string AlbumDirectoryP)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
@@ -181,7 +192,7 @@ namespace MusicProjectLibrary_1
             }
 
         }
-        public void UpdateDirectoryPathByAlbumID(int idAlbumP, string AlbumDirectoryP)
+        public void UpdateAlbumDirectoryPathByAlbumID(int idAlbumP, string AlbumDirectoryP)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
             {
@@ -255,12 +266,12 @@ namespace MusicProjectLibrary_1
                 return output;
             }
         }
-        public List<SQLTrackTable> GetTrack(string ArtistName)
+        public List<SQLTrackTable> GetTracksByAlbumId(int IdAlbumP)
         {
             //throw new NotImplementedException();
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
             {
-                var output = connection.Query<SQLTrackTable>("dbo.spAlbums_GetByAlbumName @Artist", new { Artist = ArtistName }).ToList();
+                var output = connection.Query<SQLTrackTable>("dbo.spTracks_GetByAlbumId @IdAlbum", new { IdAlbum = IdAlbumP }).ToList();
                 GlobalChecker.TestSqlAlbumIdQuery += 1;
                 return output;
             }
@@ -430,12 +441,12 @@ namespace MusicProjectLibrary_1
 
         }
         // [misc functions]
-        public static int AutoSearchDatabaseAlbums(string SearchString, DataGridView DGV)
+        public static int AutoSearchDatabaseAlbums(int IdAlbum, DataGridView DGV)
         {
             List<SQLAlbumTable> AlbumList = new List<SQLAlbumTable>(); //sqlprzemy - table : Albums
             DBFunctions db = new DBFunctions();
-            if (SearchString != "")
-                AlbumList = db.GetAlbum(SearchString);
+            if (IdAlbum != 0)
+                AlbumList = db.GetAlbumById(IdAlbum);
             else
                 AlbumList = db.GetAllAlbums();
 
@@ -447,12 +458,12 @@ namespace MusicProjectLibrary_1
         {
             DGV.DataSource = AlbumList;
         }
-        public static int AutoSearchDatabaseArtists(string SearchString, DataGridView DGV)
+        public static int AutoSearchDatabaseArtists(string ArtistName, DataGridView DGV)
         {
             List<SQLArtistTable> ArtistList = new List<SQLArtistTable>(); //sqlprzemy - table : Albums
             DBFunctions db = new DBFunctions();
-            if (SearchString != "")
-                ArtistList = db.GetAllByArtists(SearchString);
+            if (ArtistName != "")
+                ArtistList = db.GetAllByArtists(ArtistName);
             else
                 ArtistList = db.GetAllArtists();
 
@@ -463,14 +474,13 @@ namespace MusicProjectLibrary_1
         private static void UpdateBindingAlbums(DataGridView DGV, List<SQLArtistTable> ArtistList)
         {
             DGV.DataSource = ArtistList;
-        }        
-        
-        public static int AutoSearchDatabaseTracks(string SearchString, DataGridView DGV)
+        }                
+        public static int AutoSearchDatabaseTracks(int IdAlbum, DataGridView DGV)
         {
             List<SQLTrackTable> TrackList = new List<SQLTrackTable>(); //sqlprzemy - table : Albums
             DBFunctions db = new DBFunctions();
-            if (SearchString != "")
-                TrackList = db.GetTrack(SearchString);
+            if (IdAlbum != 0)
+                TrackList = db.GetTracksByAlbumId(IdAlbum);
             else
                 TrackList = db.GetAllTracks();
 
@@ -486,7 +496,7 @@ namespace MusicProjectLibrary_1
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
             {
-                connection.Execute("dbo.spAlbums_DeleteAlbumTableByAlbumID, @idAlbum", new { idAlbum = idAlbumP });
+                connection.Execute("dbo.spAlbums_DeleteAlbumTableByAlbumID @idAlbum", new { idAlbum = idAlbumP });
                 GlobalChecker.TestSqlAlbumIdQuery += 1;
             }
         }
@@ -498,7 +508,7 @@ namespace MusicProjectLibrary_1
                 DBFunctions db = new DBFunctions();
                 List<SQLTrackTable> LTT = new List<SQLTrackTable>();
                 LTT = db.GetTrackByAlbumId(IdAlbumP);
-                connection.Execute("dbo.spAlbums_DeleteAlbumTableByAlbumID, @IdAlbum", new { IdAlbum = IdAlbumP });
+                connection.Execute("dbo.spTracks_DeleteTracksByAlbumID @IdAlbum", new { IdAlbum = IdAlbumP });
                 GlobalChecker.TestSqlAlbumIdQuery += 1;
                 return LTT.Count;
             }

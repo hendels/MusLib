@@ -37,7 +37,7 @@ namespace MusicProjectLibrary_1
         {
             Functions.getPurgatoryPath(tbxPickedPath,true);
             Functions.getMainDirectoryPath(tbxMusicPath, true);
-            
+            Functions.getDriveGeneralPath(tbxDriveMainPath, true);
 
             int countRecordTracks = RefreshSpecificTable(1);
             BoxListConsole.Items.Add("Tracks count: " + countRecordTracks.ToString());
@@ -106,9 +106,9 @@ namespace MusicProjectLibrary_1
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
             GlobalChecker.TestSqlAlbumIdQuery = 0;
-            MusicFileMgt.readFiles(BoxListConsole.Items, progBar, tbxPickedPath.Text, lblProgress);
+            MusicFileMgt.readFiles(BoxListConsole.Items, progBar, tbxPickedPath.Text, tbxDriveMainPath.Text, lblProgress);
 
-            int countRecordAlbum = DBFunctions.AutoSearchDatabaseAlbums("", dgvAlbums);
+            int countRecordAlbum = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums);
             int countRecordArtist = DBFunctions.AutoSearchDatabaseArtists("", dgvArtists);
             BoxListConsole.Items.Add("Album table updated: " + countRecordAlbum.ToString());
             BoxListConsole.Items.Add("Artist table updated: " + countRecordArtist.ToString());
@@ -194,12 +194,7 @@ namespace MusicProjectLibrary_1
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
             
         }         
-        private void btnDeleteArtistFromDB_Click(object sender, EventArgs e)
-        {
-            DBFunctions db = new DBFunctions();
-            db.DeleteAlbumTableContent_Parameter(tbxDeleteArtistFromDB.Text);
-     
-        }       
+    
         private void btnFindTracks_Click(object sender, EventArgs e)
         {
             int countRecord = RefreshSpecificTable(2);
@@ -240,8 +235,15 @@ namespace MusicProjectLibrary_1
         }        
         private void AlbumsDataGridView_DoubleClick(object sender, EventArgs e)
         {
-            dgvAlbums.Rows[dgvAlbums.SelectedCells[0].RowIndex].Selected = true;
-            AlbumRowIndex = dgvAlbums.SelectedCells[0].RowIndex;
+            try
+            {
+                dgvAlbums.Rows[dgvAlbums.SelectedCells[0].RowIndex].Selected = true;
+                AlbumRowIndex = dgvAlbums.SelectedCells[0].RowIndex;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
         private void AlbumsDataGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -294,6 +296,7 @@ namespace MusicProjectLibrary_1
             private void btnDeleteAlbum_Click(object sender, EventArgs e)
             {
                 DirectoryManagement.DeleteAlbum(dgvAlbums, AlbumRowIndex);
+                MessageBox.Show("Album & connected Tracks deleted");
             }
             private void btnDeclareGenre_Click_1(object sender, EventArgs e)
             {
@@ -312,7 +315,7 @@ namespace MusicProjectLibrary_1
             int hardIndex = AlbumRowIndex;
             SQLDataValidate.ReadDataGrid(dgvAlbums, BoxListConsole.Items, tbxPickedPath, tbxMusicPath, AlbumRowIndex);
 
-            int countRecord = DBFunctions.AutoSearchDatabaseAlbums("", dgvAlbums);
+            int countRecord = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums);
             BoxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
 
@@ -359,16 +362,30 @@ namespace MusicProjectLibrary_1
         private int RefreshSpecificTable(int RefreshTableNo)
         {
             int counter = 0;
+            int subcounter = 0;
+            int subcounter2 = 0;
+            int x = 0;
             switch (RefreshTableNo)
-            {
-                case 1:
-                    counter = DBFunctions.AutoSearchDatabaseAlbums(tbxSearchAlbums.Text, dgvAlbums);
+            {                
+                case 1:                    
+                    if (Int32.TryParse(tbxSearchAlbums.Text, out x))
+                    {
+
+                        subcounter = DBFunctions.AutoSearchDatabaseAlbums(x, dgvAlbums);
+                        subcounter2 = DBFunctions.AutoSearchDatabaseTracks(x, dgvTracks);
+                        counter = subcounter + subcounter;
+                    }                        
+                    else
+                        counter = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums);
                     return counter;
-                case 2:
-                    counter = DBFunctions.AutoSearchDatabaseTracks(tbxSearchTracks.Text, TracksDataGridView);
+                case 2:                    
+                    if (Int32.TryParse(tbxSearchAlbums.Text, out x))
+                        counter = DBFunctions.AutoSearchDatabaseTracks(x, dgvTracks);
+                    else
+                        counter = DBFunctions.AutoSearchDatabaseTracks(0, dgvTracks);
                     return counter;
-                case 3:
-                    counter = DBFunctions.AutoSearchDatabaseArtists("", dgvArtists);
+                case 3:                    
+                        counter = DBFunctions.AutoSearchDatabaseArtists(tbxSearchArtist.Text, dgvArtists);
                     return counter;
             }
             return counter;
@@ -377,6 +394,14 @@ namespace MusicProjectLibrary_1
         private void btnWriteIndexAlbum_Click(object sender, EventArgs e)
         {
             MusicFileMgt.writeAlbumIndexToFile(dgvAlbums, progBar);
+        }
+
+        private void chbCheckGeneralPath_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chbCheckGeneralPath.Checked == true)
+                GlobalVariables.checkGeneralPath = true;
+            else
+                GlobalVariables.checkGeneralPath = false;
         }
     }
 }

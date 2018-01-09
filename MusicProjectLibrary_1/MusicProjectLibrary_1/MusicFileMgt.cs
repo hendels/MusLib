@@ -19,6 +19,7 @@ namespace MusicProjectLibrary_1
          
         public static ListBox.ObjectCollection globalBoxListConsole;
         public static List<MusicFileDetails> globalMusicFileDetailsList;
+        public static int publicAlbumIndex;
         // This method matches the signature required by FileWalk.
         // Its name is passed to the FileWalk constructor.
         // It is called for every FLAC or MP3 file encountered
@@ -50,16 +51,20 @@ namespace MusicProjectLibrary_1
             MessageBox.Show("done");
 
         }
-        public static void readFiles(ListBox.ObjectCollection boxListConsole, ProgressBar progressBar, string DirectoryPick, Label progressLabel)
+        public static void readFiles(ListBox.ObjectCollection boxListConsole, ProgressBar progressBar, string DirectoryPick, string GeneralDirectoryPick, Label progressLabel)
         {           
             boxListConsole.Clear(); 
             MusicFileMgt.globalBoxListConsole = boxListConsole;
             //Call the FileWalk method to visit all files in tree
             List<MusicFileDetails> ListMFD = new List<MusicFileDetails>(); 
             globalMusicFileDetailsList = ListMFD; // << tu gówno, bo nie mam jak zmienić procedur w COMMON_AudioFiles, za dużo odwołań, biblioteka się wypierdala
-
             progressLabel.Text = "Reading files...";
-            AudioFile.FileWalk(DirectoryPick, ReadTags, new List<string>() { "MP3", "FLAC" });
+            if (GlobalVariables.checkGeneralPath)            
+                AudioFile.FileWalk(GeneralDirectoryPick, ReadTags, new List<string>() { "MP3", "FLAC" });            
+            else
+                AudioFile.FileWalk(DirectoryPick, ReadTags, new List<string>() { "MP3", "FLAC" });
+
+
             int counterList = 0;
  
             List<uniqueCatalogs> uniqueDir = new List<uniqueCatalogs>();
@@ -287,30 +292,37 @@ namespace MusicProjectLibrary_1
                 //check if album index is filled in specific directory ~ if all tracks have album index > correct
                 //
                 int countAlbumIndex = 0;
-                string albumName = "";
+                publicAlbumIndex = 0;
+                //int albumIndex = 0;
                 foreach (MusicFileDetails iMFD in ListMfdAlbum)
                 {
                     if (iMFD.trackIdAlbumIndex != "" & iMFD.trackIdAlbumIndex != null)
                     {
-                        albumName = iMFD.trackAlbum;
+                        publicAlbumIndex = Convert.ToInt32(iMFD.trackIdAlbumIndex);
                         countAlbumIndex += 1;
                     }
                         
 
                 }
-                if (countAlbumIndex == ListMfdAlbum.Count)
+                if (countAlbumIndex == ListMfdAlbum.Count & publicAlbumIndex != 0)
                 {
-                    
+                    DBFunctions db = new DBFunctions();
+                    db.UpdateAlbumDirectoryPathByAlbumID(publicAlbumIndex, itemUQC.uniqeDirectory);
+                    updateLocalDB(ListTagInformation, ListRatingInformation, ListMfdAlbum, itemUQC, ListCheckTags);
                 }
                 else
+                {
                     updateLocalDB(ListTagInformation, ListRatingInformation, ListMfdAlbum, itemUQC, ListCheckTags);
+                }
+                    
             }
         }
         static void updateLocalDB(List<TagInformation> LTI, List<RatingInformation> RI, List<MusicFileDetails> LMA, uniqueCatalogs itemUQC, List<int> LCT)
         {
             //////////////////////////////////////////////////////////////[<fill albums]//////////////////////////////////////////////////////////////////
             int idAlbum = 0;
-
+            if (publicAlbumIndex > 0)
+                idAlbum = publicAlbumIndex;
             for (int i = 0; i <= 4; i++) // 0 - sprawdzaj tag o typie Album; 1- sprawdzaj tag o typie Artist; 2 - sprawdzaj tag o typie Genre
             {
                 List<string> ListItem = new List<string>();
@@ -357,11 +369,17 @@ namespace MusicProjectLibrary_1
 
                         if ((tagAlbumFilled == true) & (firstElementAlbum != ""))
                         {
-                            idAlbum = updateAlbumsTableInDB(1, itemUQC, firstElementAlbum, true, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja album]
+                            if (publicAlbumIndex == 0) 
+                                idAlbum = updateAlbumsTableInDB(1, itemUQC, firstElementAlbum, true, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja album]
+                            else
+                                updateAlbumsTableInDB(1, itemUQC, firstElementAlbum, true, 0, 0);
                         }
                         else
                         {
-                            idAlbum = updateAlbumsTableInDB(2, itemUQC, "heterogeneous", false, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze niepoprawnie [sekcja album]
+                            if (publicAlbumIndex == 0)
+                                idAlbum = updateAlbumsTableInDB(2, itemUQC, "heterogeneous", false, 0, 0);
+                            else
+                                updateAlbumsTableInDB(2, itemUQC, "heterogeneous", false, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze niepoprawnie [sekcja album]
                         }                            
                         break;
 
@@ -371,14 +389,20 @@ namespace MusicProjectLibrary_1
 
                         if ((tagArtistFilled == true) & (firstElementArtist != ""))
                         {
-                            idAlbum = updateAlbumsTableInDB(3, itemUQC, firstElementArtist, true, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja Artist]
+                            if (publicAlbumIndex == 0)
+                                idAlbum = updateAlbumsTableInDB(3, itemUQC, firstElementArtist, true, 0, 0);
+                            else
+                                updateAlbumsTableInDB(3, itemUQC, firstElementArtist, true, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja Artist]
                             //////////////////////////////////////////////////////////////[<fill Artists]//////////////////////////////////////////////////////////////////
                             updateArtistsTableInDB(firstElementArtist, idAlbum); // first commit
                             //////////////////////////////////////////////////////////////[fill Artists>]//////////////////////////////////////////////////////////////////
                         }
                         else
                         {
-                            idAlbum = updateAlbumsTableInDB(4, itemUQC, "heterogeneous", false, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze niepoprawnie [sekcja Artist]
+                            if (publicAlbumIndex == 0)
+                                idAlbum = updateAlbumsTableInDB(4, itemUQC, "heterogeneous", false, 0, 0);
+                            else
+                                updateAlbumsTableInDB(4, itemUQC, "heterogeneous", false, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze niepoprawnie [sekcja Artist]
                         }
                         
                         break;
@@ -389,27 +413,42 @@ namespace MusicProjectLibrary_1
 
                         if ((tagGenreFilled == true) & (firstElementGenre != ""))
                         {
-                            idAlbum = updateAlbumsTableInDB(5, itemUQC, firstElementGenre, true, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja Genre]
+                            if (publicAlbumIndex == 0)
+                                idAlbum = updateAlbumsTableInDB(5, itemUQC, firstElementGenre, true, 0, 0);
+                            else
+                                updateAlbumsTableInDB(5, itemUQC, firstElementGenre, true, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja Genre]
                         }                            
                         else
                         {
-                            idAlbum = updateAlbumsTableInDB(6, itemUQC, "heterogeneous", false, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze niepoprawnie [sekcja Genre]
+                            if (publicAlbumIndex == 0)
+                                idAlbum = updateAlbumsTableInDB(6, itemUQC, "heterogeneous", false, 0, 0);
+                            else
+                                updateAlbumsTableInDB(6, itemUQC, "heterogeneous", false, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze niepoprawnie [sekcja Genre]
                         }                            
                         break;
                     case 3:
                         var tagIndexFilled = LCT.Distinct().Count() == 1;
                         if (tagIndexFilled)
                         {
-                            idAlbum = updateAlbumsTableInDB(9, itemUQC, "", true, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja Index]
+                            if (publicAlbumIndex == 0)
+                                idAlbum = updateAlbumsTableInDB(9, itemUQC, "", true, 0, 0);
+                            else
+                                updateAlbumsTableInDB(9, itemUQC, "", true, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja Index]
                         }
                         else
                         {
-                            idAlbum = updateAlbumsTableInDB(10, itemUQC, "", false, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze jest niepoprawnie [sekcja Index]
+                            if (publicAlbumIndex == 0)
+                                idAlbum = updateAlbumsTableInDB(10, itemUQC, "", false, 0, 0);
+                            else
+                                updateAlbumsTableInDB(10, itemUQC, "", false, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze jest niepoprawnie [sekcja Index]
                         }
 
                         break;
                     case 4:
-                        idAlbum = updateAlbumsTableInDB(11, itemUQC, "", false, 0, AlbumReleaseYear);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja Index]
+                        if (publicAlbumIndex == 0)
+                            idAlbum = updateAlbumsTableInDB(11, itemUQC, "", false, 0, AlbumReleaseYear);
+                        else
+                            updateAlbumsTableInDB(11, itemUQC, "", false, 0, AlbumReleaseYear);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja Index]
                         break;
                 }
                     
@@ -445,14 +484,18 @@ namespace MusicProjectLibrary_1
 
                 }
                 string AlbumRateCounter = RatingExist.ToString() + "/" + RI.Count.ToString();
-
-                idAlbum = updateAlbumsTableInDB(7, itemUQC, AlbumRateCounter, true, CalcAlbumRate, 0);
+                if (publicAlbumIndex == 0)
+                    idAlbum = updateAlbumsTableInDB(7, itemUQC, AlbumRateCounter, true, CalcAlbumRate, 0);
+                else
+                    updateAlbumsTableInDB(7, itemUQC, AlbumRateCounter, true, CalcAlbumRate, 0);
             }                
             else
             {
                 string AlbumRateCounter = RatingExist.ToString() + "/" + RI.Count.ToString();
-
-                idAlbum = updateAlbumsTableInDB(8, itemUQC, AlbumRateCounter, false, 0, 0);
+                if (publicAlbumIndex == 0)
+                    idAlbum = updateAlbumsTableInDB(8, itemUQC, AlbumRateCounter, false, 0, 0);
+                else
+                    updateAlbumsTableInDB(8, itemUQC, AlbumRateCounter, false, 0, 0);
             }
             //////////////////////////////////////////////////////////////[fill albums>]//////////////////////////////////////////////////////////////////
             //////////////////////////////////////////////////////////////[<fill tracks]//////////////////////////////////////////////////////////////////
@@ -482,7 +525,7 @@ namespace MusicProjectLibrary_1
                     return idAlbum;
                 }
                 else
-                    MessageBox.Show("Directory Duplicates in database - fatal error.");
+                    MessageBox.Show($"Directory Duplicates in database - fatal error. \n Directory: {itemUQC.uniqeDirectory}");
                     return 0;
             }           
 

@@ -211,10 +211,10 @@ namespace MusicProjectLibrary_1
         }
         private void chbWriteAlbumIndex_CheckedChanged(object sender, EventArgs e)
         {
-            if (chbWriteAlbumIndex.Checked == true)
-                GlobalVariables.writeAlbumIndex = true;
+            if (chbWriteValidationPoints.Checked == true)
+                GlobalVariables.writeValidationPoints = true;
             else
-                GlobalVariables.writeAlbumIndex = false;
+                GlobalVariables.writeValidationPoints = false;
         }
         ////////////////////////////////////////////////////////DGV[1]////////////////////////////////////////
         private void AlbumsDataGridView_DataBindingComplete_1(object sender, DataGridViewBindingCompleteEventArgs e)

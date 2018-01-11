@@ -55,7 +55,7 @@
             this.tabSetup = new System.Windows.Forms.TabPage();
             this.tbxDriveMainPath = new System.Windows.Forms.TextBox();
             this.chbCheckGeneralPath = new System.Windows.Forms.CheckBox();
-            this.chbWriteAlbumIndex = new System.Windows.Forms.CheckBox();
+            this.chbWriteValidationPoints = new System.Windows.Forms.CheckBox();
             this.chbxMove = new System.Windows.Forms.CheckBox();
             this.checkBoxCreateBackUp = new System.Windows.Forms.CheckBox();
             this.chbWriteTrackIndex = new System.Windows.Forms.CheckBox();
@@ -77,6 +77,7 @@
             this.tbxMusicPath = new System.Windows.Forms.TextBox();
             this.btnChangeGeneralCatalogPath = new System.Windows.Forms.Button();
             this.lblProgress = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabCtrTrackAlbums.SuspendLayout();
             this.tabAlbums.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlbums)).BeginInit();
@@ -365,9 +366,10 @@
             // 
             // tabSetup
             // 
+            this.tabSetup.Controls.Add(this.textBox1);
             this.tabSetup.Controls.Add(this.tbxDriveMainPath);
             this.tabSetup.Controls.Add(this.chbCheckGeneralPath);
-            this.tabSetup.Controls.Add(this.chbWriteAlbumIndex);
+            this.tabSetup.Controls.Add(this.chbWriteValidationPoints);
             this.tabSetup.Controls.Add(this.chbxMove);
             this.tabSetup.Controls.Add(this.checkBoxCreateBackUp);
             this.tabSetup.Controls.Add(this.chbWriteTrackIndex);
@@ -403,18 +405,18 @@
             this.chbCheckGeneralPath.UseVisualStyleBackColor = true;
             this.chbCheckGeneralPath.CheckedChanged += new System.EventHandler(this.chbCheckGeneralPath_CheckedChanged);
             // 
-            // chbWriteAlbumIndex
+            // chbWriteValidationPoints
             // 
-            this.chbWriteAlbumIndex.AutoSize = true;
-            this.chbWriteAlbumIndex.BackColor = System.Drawing.Color.LightCoral;
-            this.chbWriteAlbumIndex.Location = new System.Drawing.Point(4, 25);
-            this.chbWriteAlbumIndex.Margin = new System.Windows.Forms.Padding(2);
-            this.chbWriteAlbumIndex.Name = "chbWriteAlbumIndex";
-            this.chbWriteAlbumIndex.Size = new System.Drawing.Size(112, 17);
-            this.chbWriteAlbumIndex.TabIndex = 37;
-            this.chbWriteAlbumIndex.Text = "Write Album Index";
-            this.chbWriteAlbumIndex.UseVisualStyleBackColor = false;
-            this.chbWriteAlbumIndex.CheckedChanged += new System.EventHandler(this.chbWriteAlbumIndex_CheckedChanged);
+            this.chbWriteValidationPoints.AutoSize = true;
+            this.chbWriteValidationPoints.BackColor = System.Drawing.Color.LightGray;
+            this.chbWriteValidationPoints.Location = new System.Drawing.Point(4, 25);
+            this.chbWriteValidationPoints.Margin = new System.Windows.Forms.Padding(2);
+            this.chbWriteValidationPoints.Name = "chbWriteValidationPoints";
+            this.chbWriteValidationPoints.Size = new System.Drawing.Size(132, 17);
+            this.chbWriteValidationPoints.TabIndex = 37;
+            this.chbWriteValidationPoints.Text = "Write Validation Points";
+            this.chbWriteValidationPoints.UseVisualStyleBackColor = false;
+            this.chbWriteValidationPoints.CheckedChanged += new System.EventHandler(this.chbWriteAlbumIndex_CheckedChanged);
             // 
             // chbxMove
             // 
@@ -568,6 +570,15 @@
             this.lblProgress.TabIndex = 37;
             this.lblProgress.Text = "<>";
             // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.Color.AliceBlue;
+            this.textBox1.Enabled = false;
+            this.textBox1.Location = new System.Drawing.Point(148, 98);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(49, 20);
+            this.textBox1.TabIndex = 40;
+            // 
             // MusicLibraryWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -688,10 +699,11 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.CheckBox chbxMove;
         private System.Windows.Forms.Button btnDeleteAlbum;
-        private System.Windows.Forms.CheckBox chbWriteAlbumIndex;
+        private System.Windows.Forms.CheckBox chbWriteValidationPoints;
         private System.Windows.Forms.Button btnWriteIndexAlbum;
         private System.Windows.Forms.CheckBox chbCheckGeneralPath;
         private System.Windows.Forms.TextBox tbxDriveMainPath;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

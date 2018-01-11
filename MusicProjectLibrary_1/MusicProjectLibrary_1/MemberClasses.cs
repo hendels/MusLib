@@ -70,7 +70,7 @@ namespace MusicProjectLibrary_1
             get { return ModifyFIles; }
             set { ModifyFIles = value; }
         }
-        public static bool writeAlbumIndex = false;
+        public static bool writeValidationPoints = false;
         public static bool checkGeneralPath = false;
         private static bool writeIndexes = false;
         public static bool globalwriteIndexes

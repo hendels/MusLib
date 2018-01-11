@@ -171,7 +171,10 @@ namespace MusicProjectLibrary_1
             //
             //[stage two]
             //
-            if(validationPoints == DGC.expectedPoints)
+            //add validation points to SQL -> used for album find
+            DBFunctions db = new DBFunctions();
+            db.UpdateAlbumValidationPointsByAlbumID(CurrentIndex, validationPoints);
+            if (validationPoints == DGC.expectedPoints)
             {
                 //tworz foldery gatunkowe - jeżeli ich nie ma na dysku docelowym
                 
@@ -332,7 +335,16 @@ namespace MusicProjectLibrary_1
                         }                           
                     }
                 }
+                //add validation points to SQL -> used for album find
+                if (GlobalVariables.writeValidationPoints)
+                {
+                    DBFunctions db = new DBFunctions();
+                    db.UpdateAlbumValidationPointsByAlbumID(CurrentIndex, validationPoints);
+                }
+
                 if (validationPoints == DGC.expectedPoints)
+
+                    if (validationPoints == DGC.expectedPoints)
                 {
                     DGV.Rows[rows].DefaultCellStyle.BackColor = Color.LightGreen;
                 }

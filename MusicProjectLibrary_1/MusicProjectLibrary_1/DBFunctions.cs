@@ -14,13 +14,14 @@ namespace MusicProjectLibrary_1
     {
         //[ALBUMS TABLE]
             //[GET from Albums table]
-        public List<SQLAlbumTable> GetAllAlbums()
+        public List<SQLAlbumTable> GetAllAlbums(int RecordCountP, int selectAllP, int sortByP, int rangeValidateMinP, int rangeValidateMaxP)
         {
             //throw new NotImplementedException();
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
             {
                 
-                var output = connection.Query<SQLAlbumTable>("dbo.spAlbums_GetAll").ToList();
+                var output = connection.Query<SQLAlbumTable>($"dbo.spAlbums_GetAll @RecordCount, @selectAll, @sortBy, @rangeValidateMin, @rangeValidateMax", new { RecordCount = RecordCountP,
+                    selectAll = selectAllP, sortBy = sortByP, rangeValidateMin = rangeValidateMinP, rangeValidateMax = rangeValidateMaxP }).ToList();
                 GlobalChecker.TestSqlAlbumIdQuery += 1;
                 return output;
             }
@@ -183,6 +184,15 @@ namespace MusicProjectLibrary_1
             }
             
         }
+        public void UpdateAlbumValidationPointsByAlbumID(int idAlbumP, int ValidationPointsP)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
+            {
+                connection.Execute("dbo.spAlbums_UpdateValidationPointsByAlbumID @idAlbum, @ValidationPoints", new { idAlbum = idAlbumP, ValidationPoints = ValidationPointsP });
+                GlobalChecker.TestSqlAlbumIdQuery += 1;
+            }
+
+        }
         public void UpdateAlbumGenreByAlbumID(int idAlbumP, string AlbumGenreP)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
@@ -255,13 +265,14 @@ namespace MusicProjectLibrary_1
         
         //[TRACKS TABLE]
             //[GET from Tracks table]
-        public List<SQLTrackTable> GetAllTracks()
+        public List<SQLTrackTable> GetAllTracks(int RecordCountP ,int selectAllP ,int sortyByP ,int rangeValidateMinP ,int rangeValidateMaxP)
         {
             //throw new NotImplementedException();
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
             {
 
-                var output = connection.Query<SQLTrackTable>("dbo.spTracks_GetAll").ToList();
+                var output = connection.Query<SQLTrackTable>("dbo.spTracks_GetAll @RecordCount, @selectAll, @sortyBy, @rangeValidateMin, @rangeValidateMax", 
+                    new { RecordCount= RecordCountP, selectAll = selectAllP, sortyBy = sortyByP, rangeValidateMin= rangeValidateMinP, rangeValidateMax = rangeValidateMaxP }).ToList();
                 GlobalChecker.TestSqlAlbumIdQuery += 1;
                 return output;
             }
@@ -448,7 +459,7 @@ namespace MusicProjectLibrary_1
             if (IdAlbum != 0)
                 AlbumList = db.GetAlbumById(IdAlbum);
             else
-                AlbumList = db.GetAllAlbums();
+                AlbumList = db.GetAllAlbums(50, 0, 2, 1, 11); //RecordCountP, selectAllP, sortByP, rangeValidateMinP, rangeValidateMaxP
 
             UpdateBindingAlbums(DGV, AlbumList);
             int countRecord = AlbumList.Count;
@@ -482,7 +493,7 @@ namespace MusicProjectLibrary_1
             if (IdAlbum != 0)
                 TrackList = db.GetTracksByAlbumId(IdAlbum);
             else
-                TrackList = db.GetAllTracks();
+                TrackList = db.GetAllTracks(200, 0, 1, 3, 5);
 
             UpdateBindingTracks(DGV, TrackList);
             int countRecord = TrackList.Count;
@@ -532,8 +543,8 @@ namespace MusicProjectLibrary_1
         public string DirectoryGenre { get; set; }
         public string DateProceed { get; set; }
 
+        public int ValidationPoints { get; set; }
         public decimal AlbumRating { get; set; }
-
         public bool ArtistCheck { get; set; }
         public bool AlbumCheck { get; set; }
         public bool GenreCheck { get; set; }
@@ -545,8 +556,8 @@ namespace MusicProjectLibrary_1
         {
             get
             {
-                return $"{idAlbum} {writeIndex} {AlbumName} ({AlbumDirectory})  {AlbumArtist} {idArtist} {AlbumReleaseYear} {AlbumGenre} {AlbumRateCounter} {AlbumRating} {DirectoryGenre} {DateProceed} " +
-                    $"[ArtistCheck: {ArtistCheck}][AlbumCheck: {AlbumCheck}][GenreCheck: {GenreCheck}][RatingCheck: {RatingCheck}][IndexCheck: {IndexCheck}] {AlbumIndexCheck}"; // [pobiera sie tu z sql'a - nazwy musza byc takie same jak w sql tabeli inaczej nic nie pokaze
+                return $"{idAlbum} {writeIndex} {AlbumName}{AlbumDirectory} {ValidationPoints} {AlbumArtist} {idArtist} {AlbumReleaseYear} {AlbumGenre} {AlbumRateCounter} {AlbumRating} {DirectoryGenre} {DateProceed} " +
+                    $"{ArtistCheck}{AlbumCheck} {GenreCheck} {RatingCheck}{IndexCheck} {AlbumIndexCheck}"; // [pobiera sie tu z sql'a - nazwy musza byc takie same jak w sql tabeli inaczej nic nie pokaze
             }
 
         }

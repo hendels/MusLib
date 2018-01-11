@@ -452,14 +452,14 @@ namespace MusicProjectLibrary_1
 
         }
         // [misc functions]
-        public static int AutoSearchDatabaseAlbums(int IdAlbum, DataGridView DGV)
+        public static int AutoSearchDatabaseAlbums(int IdAlbum, DataGridView DGV, int AlbumCount, int PointsMin, int PointsMax)
         {
             List<SQLAlbumTable> AlbumList = new List<SQLAlbumTable>(); //sqlprzemy - table : Albums
             DBFunctions db = new DBFunctions();
             if (IdAlbum != 0)
                 AlbumList = db.GetAlbumById(IdAlbum);
             else
-                AlbumList = db.GetAllAlbums(50, 0, 2, 1, 11); //RecordCountP, selectAllP, sortByP, rangeValidateMinP, rangeValidateMaxP
+                AlbumList = db.GetAllAlbums(AlbumCount, 0, 2, PointsMin, PointsMax); //RecordCountP, selectAllP, sortByP, rangeValidateMinP, rangeValidateMaxP
 
             UpdateBindingAlbums(DGV, AlbumList);
             int countRecord = AlbumList.Count;
@@ -486,14 +486,14 @@ namespace MusicProjectLibrary_1
         {
             DGV.DataSource = ArtistList;
         }                
-        public static int AutoSearchDatabaseTracks(int IdAlbum, DataGridView DGV)
+        public static int AutoSearchDatabaseTracks(int IdAlbum, DataGridView DGV, int AlbumCount, int RateMin, int RateMax)
         {
             List<SQLTrackTable> TrackList = new List<SQLTrackTable>(); //sqlprzemy - table : Albums
             DBFunctions db = new DBFunctions();
             if (IdAlbum != 0)
                 TrackList = db.GetTracksByAlbumId(IdAlbum);
             else
-                TrackList = db.GetAllTracks(200, 0, 1, 3, 5);
+                TrackList = db.GetAllTracks(AlbumCount, 0, 1, RateMin, RateMax);
 
             UpdateBindingTracks(DGV, TrackList);
             int countRecord = TrackList.Count;

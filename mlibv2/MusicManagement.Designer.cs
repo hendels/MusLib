@@ -53,6 +53,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.btnDiscogs = new System.Windows.Forms.Button();
             this.tabSetup = new System.Windows.Forms.TabPage();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tbxDriveMainPath = new System.Windows.Forms.TextBox();
             this.chbCheckGeneralPath = new System.Windows.Forms.CheckBox();
             this.chbWriteValidationPoints = new System.Windows.Forms.CheckBox();
@@ -77,7 +78,14 @@
             this.tbxMusicPath = new System.Windows.Forms.TextBox();
             this.btnChangeGeneralCatalogPath = new System.Windows.Forms.Button();
             this.lblProgress = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.tbxTrackRatingMin = new System.Windows.Forms.TextBox();
+            this.tbxTrackRatingMax = new System.Windows.Forms.TextBox();
+            this.tbxPointsMax = new System.Windows.Forms.TextBox();
+            this.tbxPointsMin = new System.Windows.Forms.TextBox();
+            this.lblPoints = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tbxTrackCount = new System.Windows.Forms.TextBox();
+            this.tbxAlbumCount = new System.Windows.Forms.TextBox();
             this.tabCtrTrackAlbums.SuspendLayout();
             this.tabAlbums.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlbums)).BeginInit();
@@ -384,6 +392,15 @@
             this.tabSetup.Text = "Setup";
             this.tabSetup.UseVisualStyleBackColor = true;
             // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.Color.AliceBlue;
+            this.textBox1.Enabled = false;
+            this.textBox1.Location = new System.Drawing.Point(148, 98);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(49, 20);
+            this.textBox1.TabIndex = 40;
+            // 
             // tbxDriveMainPath
             // 
             this.tbxDriveMainPath.BackColor = System.Drawing.Color.AliceBlue;
@@ -456,14 +473,14 @@
             // 
             // tbxSearchAlbums
             // 
-            this.tbxSearchAlbums.Location = new System.Drawing.Point(467, 108);
+            this.tbxSearchAlbums.Location = new System.Drawing.Point(99, 85);
             this.tbxSearchAlbums.Name = "tbxSearchAlbums";
             this.tbxSearchAlbums.Size = new System.Drawing.Size(100, 20);
             this.tbxSearchAlbums.TabIndex = 27;
             // 
             // btnFindAlbums
             // 
-            this.btnFindAlbums.Location = new System.Drawing.Point(387, 108);
+            this.btnFindAlbums.Location = new System.Drawing.Point(19, 85);
             this.btnFindAlbums.Name = "btnFindAlbums";
             this.btnFindAlbums.Size = new System.Drawing.Size(75, 23);
             this.btnFindAlbums.TabIndex = 28;
@@ -473,10 +490,11 @@
             // 
             // tbxSearchArtist
             // 
-            this.tbxSearchArtist.Location = new System.Drawing.Point(467, 160);
+            this.tbxSearchArtist.Location = new System.Drawing.Point(99, 137);
             this.tbxSearchArtist.Name = "tbxSearchArtist";
             this.tbxSearchArtist.Size = new System.Drawing.Size(100, 20);
             this.tbxSearchArtist.TabIndex = 29;
+            this.tbxSearchArtist.Text = "<artist search>";
             // 
             // progBar
             // 
@@ -487,7 +505,7 @@
             // 
             // btnFindTracks
             // 
-            this.btnFindTracks.Location = new System.Drawing.Point(387, 134);
+            this.btnFindTracks.Location = new System.Drawing.Point(19, 111);
             this.btnFindTracks.Name = "btnFindTracks";
             this.btnFindTracks.Size = new System.Drawing.Size(75, 23);
             this.btnFindTracks.TabIndex = 32;
@@ -497,7 +515,7 @@
             // 
             // tbxSearchTracks
             // 
-            this.tbxSearchTracks.Location = new System.Drawing.Point(467, 134);
+            this.tbxSearchTracks.Location = new System.Drawing.Point(99, 111);
             this.tbxSearchTracks.Name = "tbxSearchTracks";
             this.tbxSearchTracks.Size = new System.Drawing.Size(100, 20);
             this.tbxSearchTracks.TabIndex = 33;
@@ -510,9 +528,9 @@
             this.BoxListConsole.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BoxListConsole.ForeColor = System.Drawing.SystemColors.Window;
             this.BoxListConsole.FormattingEnabled = true;
-            this.BoxListConsole.Location = new System.Drawing.Point(573, 12);
+            this.BoxListConsole.Location = new System.Drawing.Point(645, -1);
             this.BoxListConsole.Name = "BoxListConsole";
-            this.BoxListConsole.Size = new System.Drawing.Size(671, 134);
+            this.BoxListConsole.Size = new System.Drawing.Size(599, 147);
             this.BoxListConsole.TabIndex = 16;
             // 
             // albumListBindingSource
@@ -570,20 +588,89 @@
             this.lblProgress.TabIndex = 37;
             this.lblProgress.Text = "<>";
             // 
-            // textBox1
+            // tbxTrackRatingMin
             // 
-            this.textBox1.BackColor = System.Drawing.Color.AliceBlue;
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(148, 98);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(49, 20);
-            this.textBox1.TabIndex = 40;
+            this.tbxTrackRatingMin.Location = new System.Drawing.Point(317, 111);
+            this.tbxTrackRatingMin.Name = "tbxTrackRatingMin";
+            this.tbxTrackRatingMin.Size = new System.Drawing.Size(29, 20);
+            this.tbxTrackRatingMin.TabIndex = 38;
+            this.tbxTrackRatingMin.Text = "3";
+            // 
+            // tbxTrackRatingMax
+            // 
+            this.tbxTrackRatingMax.Location = new System.Drawing.Point(352, 111);
+            this.tbxTrackRatingMax.Name = "tbxTrackRatingMax";
+            this.tbxTrackRatingMax.Size = new System.Drawing.Size(29, 20);
+            this.tbxTrackRatingMax.TabIndex = 39;
+            this.tbxTrackRatingMax.Text = "5";
+            // 
+            // tbxPointsMax
+            // 
+            this.tbxPointsMax.Location = new System.Drawing.Point(352, 85);
+            this.tbxPointsMax.Name = "tbxPointsMax";
+            this.tbxPointsMax.Size = new System.Drawing.Size(29, 20);
+            this.tbxPointsMax.TabIndex = 41;
+            this.tbxPointsMax.Text = "9";
+            // 
+            // tbxPointsMin
+            // 
+            this.tbxPointsMin.Location = new System.Drawing.Point(317, 85);
+            this.tbxPointsMin.Name = "tbxPointsMin";
+            this.tbxPointsMin.Size = new System.Drawing.Size(29, 20);
+            this.tbxPointsMin.TabIndex = 40;
+            this.tbxPointsMin.Text = "1";
+            // 
+            // lblPoints
+            // 
+            this.lblPoints.AutoSize = true;
+            this.lblPoints.BackColor = System.Drawing.Color.Transparent;
+            this.lblPoints.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPoints.Location = new System.Drawing.Point(264, 87);
+            this.lblPoints.Name = "lblPoints";
+            this.lblPoints.Size = new System.Drawing.Size(49, 15);
+            this.lblPoints.TabIndex = 42;
+            this.lblPoints.Text = "Points";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(264, 113);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 15);
+            this.label1.TabIndex = 43;
+            this.label1.Text = "Rate";
+            // 
+            // tbxTrackCount
+            // 
+            this.tbxTrackCount.Location = new System.Drawing.Point(205, 111);
+            this.tbxTrackCount.Name = "tbxTrackCount";
+            this.tbxTrackCount.Size = new System.Drawing.Size(53, 20);
+            this.tbxTrackCount.TabIndex = 44;
+            this.tbxTrackCount.Text = "200";
+            // 
+            // tbxAlbumCount
+            // 
+            this.tbxAlbumCount.Location = new System.Drawing.Point(205, 85);
+            this.tbxAlbumCount.Name = "tbxAlbumCount";
+            this.tbxAlbumCount.Size = new System.Drawing.Size(53, 20);
+            this.tbxAlbumCount.TabIndex = 45;
+            this.tbxAlbumCount.Text = "50";
             // 
             // MusicLibraryWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1246, 509);
+            this.Controls.Add(this.tbxAlbumCount);
+            this.Controls.Add(this.tbxTrackCount);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblPoints);
+            this.Controls.Add(this.tbxPointsMax);
+            this.Controls.Add(this.tbxPointsMin);
+            this.Controls.Add(this.tbxTrackRatingMax);
+            this.Controls.Add(this.tbxTrackRatingMin);
             this.Controls.Add(this.lblProgress);
             this.Controls.Add(this.btnChangeGeneralCatalogPath);
             this.Controls.Add(this.tbxMusicPath);
@@ -704,6 +791,14 @@
         private System.Windows.Forms.CheckBox chbCheckGeneralPath;
         private System.Windows.Forms.TextBox tbxDriveMainPath;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox tbxTrackRatingMin;
+        private System.Windows.Forms.TextBox tbxTrackRatingMax;
+        private System.Windows.Forms.TextBox tbxPointsMax;
+        private System.Windows.Forms.TextBox tbxPointsMin;
+        private System.Windows.Forms.Label lblPoints;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox tbxTrackCount;
+        private System.Windows.Forms.TextBox tbxAlbumCount;
     }
 }
 

@@ -36,7 +36,7 @@ namespace MusicProjectLibrary_1
             else if (AlbumColIndex == DGC.colDirectoryGenre)
             {
                 pickGenreForm.ShowDialog();
-                int countRecord = DBFunctions.AutoSearchDatabaseAlbums(0, DGV);                
+                int countRecord = DBFunctions.AutoSearchDatabaseAlbums(1, DGV, 0,0,0);                
                 boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
                 boxListConsole.SelectedIndex = boxListConsole.Items.Count - 1;
 

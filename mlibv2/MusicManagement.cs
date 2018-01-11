@@ -108,7 +108,7 @@ namespace MusicProjectLibrary_1
             GlobalChecker.TestSqlAlbumIdQuery = 0;
             MusicFileMgt.readFiles(BoxListConsole.Items, progBar, tbxPickedPath.Text, tbxDriveMainPath.Text, lblProgress);
 
-            int countRecordAlbum = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums);
+            int countRecordAlbum = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums, 0, 0, 0);
             int countRecordArtist = DBFunctions.AutoSearchDatabaseArtists("", dgvArtists);
             BoxListConsole.Items.Add("Album table updated: " + countRecordAlbum.ToString());
             BoxListConsole.Items.Add("Artist table updated: " + countRecordArtist.ToString());
@@ -192,7 +192,7 @@ namespace MusicProjectLibrary_1
             int countRecord = RefreshSpecificTable(1);
             BoxListConsole.Items.Add("Album count: " + countRecord.ToString());
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
-            
+            SQLDataValidate.ReadDataGridForAll(dgvAlbums, BoxListConsole.Items);
         }         
     
         private void btnFindTracks_Click(object sender, EventArgs e)
@@ -315,7 +315,7 @@ namespace MusicProjectLibrary_1
             int hardIndex = AlbumRowIndex;
             SQLDataValidate.ReadDataGrid(dgvAlbums, BoxListConsole.Items, tbxPickedPath, tbxMusicPath, AlbumRowIndex);
 
-            int countRecord = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums);
+            int countRecord = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums, 0, 0, 0);
             BoxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
 
@@ -371,18 +371,18 @@ namespace MusicProjectLibrary_1
                     if (Int32.TryParse(tbxSearchAlbums.Text, out x))
                     {
 
-                        subcounter = DBFunctions.AutoSearchDatabaseAlbums(x, dgvAlbums);
-                        subcounter2 = DBFunctions.AutoSearchDatabaseTracks(x, dgvTracks);
+                        subcounter = DBFunctions.AutoSearchDatabaseAlbums(x, dgvAlbums, 0, 0, 0);
+                        subcounter2 = DBFunctions.AutoSearchDatabaseTracks(x, dgvTracks, 0, 0 ,0);
                         counter = subcounter + subcounter;
                     }                        
                     else
-                        counter = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums);
+                        counter = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums, Convert.ToInt32(tbxAlbumCount.Text), Convert.ToInt32(tbxPointsMin.Text), Convert.ToInt32(tbxPointsMax.Text));
                     return counter;
                 case 2:                    
                     if (Int32.TryParse(tbxSearchAlbums.Text, out x))
-                        counter = DBFunctions.AutoSearchDatabaseTracks(x, dgvTracks);
+                        counter = DBFunctions.AutoSearchDatabaseTracks(x, dgvTracks, 0, 0 , 0);
                     else
-                        counter = DBFunctions.AutoSearchDatabaseTracks(0, dgvTracks);
+                        counter = DBFunctions.AutoSearchDatabaseTracks(0, dgvTracks, Convert.ToInt32(tbxTrackCount.Text), Convert.ToInt32(tbxTrackRatingMin.Text), Convert.ToInt32(tbxTrackRatingMax.Text));
                     return counter;
                 case 3:                    
                         counter = DBFunctions.AutoSearchDatabaseArtists(tbxSearchArtist.Text, dgvArtists);

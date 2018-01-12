@@ -14,14 +14,21 @@ namespace MusicProjectLibrary_1
     {
         //[ALBUMS TABLE]
             //[GET from Albums table]
-        public List<SQLAlbumTable> GetAllAlbums(int RecordCountP, int selectAllP, int sortByP, int rangeValidateMinP, int rangeValidateMaxP)
+        public List<SQLAlbumTable> GetAllAlbums(int RecordCountP, int selectAllP, int sortByP, int rangeValidateMinP, int rangeValidateMaxP, bool showProceedP)
         {
             //throw new NotImplementedException();
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
             {
                 
-                var output = connection.Query<SQLAlbumTable>($"dbo.spAlbums_GetAll @RecordCount, @selectAll, @sortBy, @rangeValidateMin, @rangeValidateMax", new { RecordCount = RecordCountP,
-                    selectAll = selectAllP, sortBy = sortByP, rangeValidateMin = rangeValidateMinP, rangeValidateMax = rangeValidateMaxP }).ToList();
+                var output = connection.Query<SQLAlbumTable>($"dbo.spAlbums_GetAll @RecordCount, @selectAll, @sortBy, @rangeValidateMin, @rangeValidateMax, @showProceed", new
+                {
+                    RecordCount = RecordCountP,
+                    selectAll = selectAllP,
+                    sortBy = sortByP,
+                    rangeValidateMin = rangeValidateMinP,
+                    rangeValidateMax = rangeValidateMaxP,
+                    showProceed = showProceedP
+                }).ToList();
                 GlobalChecker.TestSqlAlbumIdQuery += 1;
                 return output;
             }
@@ -222,11 +229,11 @@ namespace MusicProjectLibrary_1
             }
             return 0;
         }
-        public void UpdateAlbumProceedDate(int AlbumIdP, string ProceedDateP)
+        public void UpdateAlbumProceedDate(int AlbumIdP, string ProceedDateP, bool ProceedP)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
             {
-                connection.Execute("dbo.spAlbums_UpdateDateProceed @AlbumId, @ProceedDate", new { AlbumId = AlbumIdP, ProceedDate = ProceedDateP });                
+                connection.Execute("dbo.spAlbums_UpdateDateProceed @AlbumId, @ProceedDate, @Proceed", new { AlbumId = AlbumIdP, ProceedDate = ProceedDateP, Proceed = ProceedP });                
                 GlobalChecker.TestSqlAlbumIdQuery += 1;
             }
         }
@@ -452,14 +459,14 @@ namespace MusicProjectLibrary_1
 
         }
         // [misc functions]
-        public static int AutoSearchDatabaseAlbums(int IdAlbum, DataGridView DGV, int AlbumCount, int PointsMin, int PointsMax)
+        public static int AutoSearchDatabaseAlbums(int IdAlbum, DataGridView DGV, int showAll, int AlbumCount, int PointsMin, int PointsMax, bool ShowProcedure)
         {
             List<SQLAlbumTable> AlbumList = new List<SQLAlbumTable>(); //sqlprzemy - table : Albums
             DBFunctions db = new DBFunctions();
             if (IdAlbum != 0)
                 AlbumList = db.GetAlbumById(IdAlbum);
             else
-                AlbumList = db.GetAllAlbums(AlbumCount, 0, 2, PointsMin, PointsMax); //RecordCountP, selectAllP, sortByP, rangeValidateMinP, rangeValidateMaxP
+                AlbumList = db.GetAllAlbums(AlbumCount, showAll, 2, PointsMin, PointsMax, ShowProcedure); //RecordCountP, selectAllP, sortByP, rangeValidateMinP, rangeValidateMaxP
 
             UpdateBindingAlbums(DGV, AlbumList);
             int countRecord = AlbumList.Count;
@@ -541,6 +548,7 @@ namespace MusicProjectLibrary_1
         public string AlbumGenre { get; set; }        
         public string AlbumRateCounter { get; set; }
         public string DirectoryGenre { get; set; }
+        public bool Proceed { get; set; }
         public string DateProceed { get; set; }
 
         public int ValidationPoints { get; set; }
@@ -557,7 +565,7 @@ namespace MusicProjectLibrary_1
             get
             {
                 return $"{idAlbum} {writeIndex} {AlbumName}{AlbumDirectory} {ValidationPoints} {AlbumArtist} {idArtist} {AlbumReleaseYear} {AlbumGenre} {AlbumRateCounter} {AlbumRating} {DirectoryGenre} {DateProceed} " +
-                    $"{ArtistCheck}{AlbumCheck} {GenreCheck} {RatingCheck}{IndexCheck} {AlbumIndexCheck}"; // [pobiera sie tu z sql'a - nazwy musza byc takie same jak w sql tabeli inaczej nic nie pokaze
+                    $"{ArtistCheck}{AlbumCheck} {GenreCheck} {RatingCheck}{IndexCheck} {AlbumIndexCheck} {Proceed}"; // [pobiera sie tu z sql'a - nazwy musza byc takie same jak w sql tabeli inaczej nic nie pokaze
             }
 
         }

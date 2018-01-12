@@ -86,6 +86,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tbxTrackCount = new System.Windows.Forms.TextBox();
             this.tbxAlbumCount = new System.Windows.Forms.TextBox();
+            this.chbProceed = new System.Windows.Forms.CheckBox();
             this.tabCtrTrackAlbums.SuspendLayout();
             this.tabAlbums.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlbums)).BeginInit();
@@ -658,11 +659,23 @@
             this.tbxAlbumCount.TabIndex = 45;
             this.tbxAlbumCount.Text = "50";
             // 
+            // chbProceed
+            // 
+            this.chbProceed.AutoSize = true;
+            this.chbProceed.Location = new System.Drawing.Point(317, 136);
+            this.chbProceed.Margin = new System.Windows.Forms.Padding(2);
+            this.chbProceed.Name = "chbProceed";
+            this.chbProceed.Size = new System.Drawing.Size(96, 17);
+            this.chbProceed.TabIndex = 46;
+            this.chbProceed.Text = "Show Proceed";
+            this.chbProceed.UseVisualStyleBackColor = true;
+            // 
             // MusicLibraryWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1246, 509);
+            this.Controls.Add(this.chbProceed);
             this.Controls.Add(this.tbxAlbumCount);
             this.Controls.Add(this.tbxTrackCount);
             this.Controls.Add(this.label1);
@@ -799,6 +812,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbxTrackCount;
         private System.Windows.Forms.TextBox tbxAlbumCount;
+        private System.Windows.Forms.CheckBox chbProceed;
     }
 }
 

@@ -36,7 +36,7 @@ namespace MusicProjectLibrary_1
             else if (AlbumColIndex == DGC.colDirectoryGenre)
             {
                 pickGenreForm.ShowDialog();
-                int countRecord = DBFunctions.AutoSearchDatabaseAlbums(1, DGV, 0,0,0);                
+                int countRecord = DBFunctions.AutoSearchDatabaseAlbums(1, DGV, 1, 0,0,0, false);                
                 boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
                 boxListConsole.SelectedIndex = boxListConsole.Items.Count - 1;
 
@@ -144,7 +144,8 @@ namespace MusicProjectLibrary_1
                     {
                         if (item.FileExtension != "" & item.TrackName != "" & IndexLibTrack != 0)
                         {
-                            string newFileName = item.TrackName + "." + item.FileExtension;
+                            string ItemName = Functions.findProhibitedSigns(item.TrackName);
+                            string newFileName = ItemName + "." + item.FileExtension;
                             try
                             {
                                 string musicFileFullPath = buildPath + @"\" + newFileName;
@@ -191,7 +192,7 @@ namespace MusicProjectLibrary_1
                                     if (AlbumTransaction == 1)
                                     {
                                         db.UpdateAlbumDirectoryPathByAlbumID(AlbumId, buildPath);
-                                        db.UpdateAlbumProceedDate(AlbumId, dateString);
+                                        db.UpdateAlbumProceedDate(AlbumId, dateString, true);
                                     }
                                         
                                     //update track                            
@@ -217,7 +218,7 @@ namespace MusicProjectLibrary_1
                                         if (AlbumTransaction == 1)
                                         {
                                             db.UpdateAlbumDirectoryPathByAlbumID(AlbumId, buildPath);
-                                            db.UpdateAlbumProceedDate(AlbumId, dateString);
+                                            db.UpdateAlbumProceedDate(AlbumId, dateString, true);
                                         }
                                            
                                         //update track                            

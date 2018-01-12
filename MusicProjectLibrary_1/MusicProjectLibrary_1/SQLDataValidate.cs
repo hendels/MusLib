@@ -340,11 +340,9 @@ namespace MusicProjectLibrary_1
                 {
                     DBFunctions db = new DBFunctions();
                     db.UpdateAlbumValidationPointsByAlbumID(CurrentIndex, validationPoints);
-                }
+                }                
 
                 if (validationPoints == DGC.expectedPoints)
-
-                    if (validationPoints == DGC.expectedPoints)
                 {
                     DGV.Rows[rows].DefaultCellStyle.BackColor = Color.LightGreen;
                 }

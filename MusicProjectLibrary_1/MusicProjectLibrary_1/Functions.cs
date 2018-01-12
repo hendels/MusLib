@@ -313,6 +313,7 @@ namespace MusicProjectLibrary_1
             List<string> signs = new List<string>();
             signs.Add("|");
             signs.Add(@"""");
+            signs.Add(@"/");
             string modifiedString = checkString;
             foreach (string itemList in signs)
             {

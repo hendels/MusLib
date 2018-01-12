@@ -108,7 +108,7 @@ namespace MusicProjectLibrary_1
             GlobalChecker.TestSqlAlbumIdQuery = 0;
             MusicFileMgt.readFiles(BoxListConsole.Items, progBar, tbxPickedPath.Text, tbxDriveMainPath.Text, lblProgress);
 
-            int countRecordAlbum = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums, 0, 0, 0);
+            int countRecordAlbum = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums, 1, 0, 0, 0, chbProceed.Checked);
             int countRecordArtist = DBFunctions.AutoSearchDatabaseArtists("", dgvArtists);
             BoxListConsole.Items.Add("Album table updated: " + countRecordAlbum.ToString());
             BoxListConsole.Items.Add("Artist table updated: " + countRecordArtist.ToString());
@@ -315,13 +315,19 @@ namespace MusicProjectLibrary_1
             int hardIndex = AlbumRowIndex;
             SQLDataValidate.ReadDataGrid(dgvAlbums, BoxListConsole.Items, tbxPickedPath, tbxMusicPath, AlbumRowIndex);
 
-            int countRecord = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums, 0, 0, 0);
+            int countRecord = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums, 0, 0, 0, 0, chbProceed.Checked);
             BoxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
 
             dgvAlbums.ClearSelection();                                                //[przemy knowledge - zaznaczanie data grid view]
-            dgvAlbums.CurrentCell = dgvAlbums.Rows[hardIndex].Cells[0]; //[przemy knowledge - zaznaczanie data grid view]
-            dgvAlbums.Rows[hardIndex].Selected = true;                         //[przemy knowledge - zaznaczanie data grid view]
+            try
+            {
+                dgvAlbums.CurrentCell = dgvAlbums.Rows[hardIndex].Cells[0]; //[przemy knowledge - zaznaczanie data grid view]
+                dgvAlbums.Rows[hardIndex].Selected = true;                         //[przemy knowledge - zaznaczanie data grid view]
+            }
+            catch (Exception ex)
+            { }
+            
 
             SQLDataValidate.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
             // aktualizuj tabele tracks - ze usunieto plik / aktualizuj, również że istnieje plik
@@ -371,12 +377,12 @@ namespace MusicProjectLibrary_1
                     if (Int32.TryParse(tbxSearchAlbums.Text, out x))
                     {
 
-                        subcounter = DBFunctions.AutoSearchDatabaseAlbums(x, dgvAlbums, 0, 0, 0);
+                        subcounter = DBFunctions.AutoSearchDatabaseAlbums(x, dgvAlbums, 1, 0, 0, 0, chbProceed.Checked);
                         subcounter2 = DBFunctions.AutoSearchDatabaseTracks(x, dgvTracks, 0, 0 ,0);
                         counter = subcounter + subcounter;
                     }                        
                     else
-                        counter = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums, Convert.ToInt32(tbxAlbumCount.Text), Convert.ToInt32(tbxPointsMin.Text), Convert.ToInt32(tbxPointsMax.Text));
+                        counter = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums, 0, Convert.ToInt32(tbxAlbumCount.Text), Convert.ToInt32(tbxPointsMin.Text), Convert.ToInt32(tbxPointsMax.Text), chbProceed.Checked);
                     return counter;
                 case 2:                    
                     if (Int32.TryParse(tbxSearchAlbums.Text, out x))

@@ -107,6 +107,13 @@ namespace MusicProjectLibrary_1
     {
         public string firstPath { set; get; }
         public string secondPath { set; get; }
+        public int ratingStarsFirstFile { get; set; }
+        public int ratingStarsSecondFile { get; set; }
+        
+        public int firstIDAlbum { get; set; }
+        public int firstIDTrack { get; set; }
+        public int secondIDAlbum { get; set; }
+        public int secondIDTrack { get; set; }
     }
     public class PassConsole
     {

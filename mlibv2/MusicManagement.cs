@@ -61,8 +61,34 @@ namespace MusicProjectLibrary_1
                     xmlSaveInformation info = (xmlSaveInformation)xs.Deserialize(read);
                     tbxPointsMin.Text = info.PointsMin;
                     tbxPointsMax.Text = info.PointsMax;
+                    tbxTrackRatingMin.Text = info.RateMin;
+                    tbxTrackRatingMin.Text = info.RateMax;
+                    chbProceed.Checked = info.ShowProceed; 
+                    tbxAlbumCount.Text = info.AlbumCount.ToString();
+                    tbxTrackCount.Text = info.TrackCount.ToString();
                 }
                 
+            }
+        }
+        private void btnSaveXml_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                xmlSaveInformation SaveInfo = new xmlSaveInformation();
+                SaveInfo.PointsMin = tbxPointsMin.Text;
+                SaveInfo.PointsMax = tbxPointsMax.Text;
+                SaveInfo.RateMin = tbxTrackRatingMin.Text;
+                SaveInfo.RateMax = tbxTrackRatingMin.Text;
+                SaveInfo.ShowProceed = chbProceed.Checked;
+                SaveInfo.AlbumCount = Convert.ToInt32(tbxAlbumCount.Text);
+                SaveInfo.TrackCount = Convert.ToInt32(tbxTrackCount.Text);
+
+                Functions.xmlSave(SaveInfo, "config.xml");
+                MessageBox.Show("saved");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         public void checkFilesInDirectory_Click(object sender, EventArgs e)
@@ -74,47 +100,7 @@ namespace MusicProjectLibrary_1
         {
             Functions.pickPath(2, tbxMusicPath);
         }
-        private void idAlbumLabel_Click(object sender, EventArgs e)
-        {
 
-        }
-        private void release_DateDateTimePicker_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void nameTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void idAlbumTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void favourite_Tracks_NoTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void nameLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void favourite_Tracks_NoLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void release_DateLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void albumListBindingNavigatorSaveItem_Click_1(object sender, EventArgs e)
-        {
-            
-        }  
-
-        private void moveFileButt_Click(object sender, EventArgs e)
-        {
-            
-        }  
         private void ButtonReadTag_Click(object sender, EventArgs e)
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -133,10 +119,6 @@ namespace MusicProjectLibrary_1
             BoxListConsole.Items.Add("..........processing done in time: " + Math.Round(elapsedMs / 1000, 2) + "s.");
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
         }        
-        private void ButtonReadDir_Click(object sender, EventArgs e)
-        {
-            
-        }
 
         private void CheckBoxProcessCatalogs_CheckedChanged(object sender, EventArgs e)
         {
@@ -300,7 +282,7 @@ namespace MusicProjectLibrary_1
         private void btnCheckTrackDuplicates_Click(object sender, EventArgs e)
             {
 
-                duplicates duplicatesForm = new duplicates();
+                duplicatesForm duplicatesForm = new duplicatesForm();
                 PassConsole lstbxConsole = new PassConsole();
                 lstbxConsole.listboxConsole = BoxListConsole;
                 duplicatesForm.ShowDialog();
@@ -308,7 +290,7 @@ namespace MusicProjectLibrary_1
             }
             private void btnDeleteAlbum_Click(object sender, EventArgs e)
             {
-                DirectoryManagement.DeleteAlbum(dgvAlbums, AlbumRowIndex);
+                DirectoryManagement.DeleteAlbumFromAlbumDGV(dgvAlbums, AlbumRowIndex);
                 MessageBox.Show("Album & connected Tracks deleted");
             }
             private void btnDeclareGenre_Click_1(object sender, EventArgs e)
@@ -395,10 +377,17 @@ namespace MusicProjectLibrary_1
                         counter = subcounter + subcounter;
                     }                        
                     else
-                        counter = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums, 0, Convert.ToInt32(tbxAlbumCount.Text), Convert.ToInt32(tbxPointsMin.Text), Convert.ToInt32(tbxPointsMax.Text), chbProceed.Checked);
+                    {
+                        int AlbumCount = 0;
+                        if (tbxAlbumCount.Text != "")
+                            AlbumCount = Convert.ToInt32(tbxAlbumCount.Text);
+
+                         counter = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums, 0, AlbumCount, Convert.ToInt32(tbxPointsMin.Text), Convert.ToInt32(tbxPointsMax.Text), chbProceed.Checked);
+                    }
+                        
                     return counter;
                 case 2:                    
-                    if (Int32.TryParse(tbxSearchAlbums.Text, out x))
+                    if (Int32.TryParse(tbxSearchTracks.Text, out x))
                         counter = DBFunctions.AutoSearchDatabaseTracks(x, dgvTracks, 0, 0 , 0);
                     else
                         counter = DBFunctions.AutoSearchDatabaseTracks(0, dgvTracks, Convert.ToInt32(tbxTrackCount.Text), Convert.ToInt32(tbxTrackRatingMin.Text), Convert.ToInt32(tbxTrackRatingMax.Text));
@@ -423,26 +412,6 @@ namespace MusicProjectLibrary_1
                 GlobalVariables.checkGeneralPath = false;
         }
 
-        private void btnSaveXml_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                xmlSaveInformation SaveInfo = new xmlSaveInformation();
-                SaveInfo.PointsMin = tbxPointsMin.Text;
-                SaveInfo.PointsMax = tbxPointsMax.Text;
-                SaveInfo.RateMin = tbxTrackRatingMin.Text;
-                SaveInfo.RateMax = tbxTrackRatingMin.Text;
-                SaveInfo.ShowProceed = chbProceed.Checked;
-                SaveInfo.AlbumCount = Convert.ToInt32(tbxAlbumCount.Text);
-                SaveInfo.TrackCount = Convert.ToInt32(tbxTrackCount.Text);
-
-                Functions.xmlSave(SaveInfo, "config.xml");
-                MessageBox.Show("saved");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
+        
     }
 }

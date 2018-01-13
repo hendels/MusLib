@@ -87,12 +87,15 @@ namespace MusicProjectLibrary_1
         }
         public static void OpenPairOfFolders(DataGridView DGV, int AlbumRowIndex)
         {
+            dataGridColumnsDuplicates DGCD = new dataGridColumnsDuplicates();
+
             DGV.MultiSelect = false;
-            string GridValuePath1 = DGV.Rows[AlbumRowIndex].Cells[0].Value.ToString();
-            string GridValuePath2 = DGV.Rows[AlbumRowIndex].Cells[1].Value.ToString();
+            string GridValuePath1 = DGV.Rows[AlbumRowIndex].Cells[DGCD.colFirstPath].Value.ToString();
+            string GridValuePath2 = DGV.Rows[AlbumRowIndex].Cells[DGCD.colSecondPath].Value.ToString();
             Process.Start(GridValuePath1);
             Process.Start(GridValuePath2);
         }
+        
         public static void CreateDirectoryForAlbum(string path, string artistName, string albumName, ListBox.ObjectCollection boxListConsole, TextBox tbxPurgPath, TextBox tbxGeneralPath,int AlbumId, string AlbumDirectory, int AlbumRowIndex)
         {
             //ARTIST_ALBUMNAME
@@ -261,7 +264,7 @@ namespace MusicProjectLibrary_1
                 boxListConsole.Add($"...purgatory path error while moving from: {AlbumDirectory}");
             
         }
-        public static void DeleteAlbum(DataGridView DGV, int AlbumRowIndex)
+        public static void DeleteAlbumFromAlbumDGV(DataGridView DGV, int AlbumRowIndex)
         {
             SQLDataValidate.dataGridColumns DGC = new SQLDataValidate.dataGridColumns();
             int AlbumId = Convert.ToInt32(DGV.Rows[AlbumRowIndex].Cells[DGC.colIndexAlbum].Value);
@@ -278,6 +281,56 @@ namespace MusicProjectLibrary_1
                 DBFunctions.DeleteAlbumByAlbumID(AlbumId);
                 DBFunctions.DeleteTracksByAlbumID(AlbumId);
             }
+        }
+        public static void DeleteAlbumFromDuplicates(int AlbumID)
+        {            
+            DBFunctions db = new DBFunctions();
+            List<SQLTrackTable> LTT = new List<SQLTrackTable>();
+            LTT = db.GetTrackByAlbumId(AlbumID);
+            
+            DialogResult res = MessageBox.Show($"Delete Album from SQL DB + related files? \n Selected Album ID: {AlbumID} \n Track Count to delete also: {LTT.Count}", "Delete Album & Tracks", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+            if (res == DialogResult.OK)
+            {
+                //
+                //delete SQL INFO
+                //
+                DBFunctions.DeleteAlbumByAlbumID(AlbumID);
+                DBFunctions.DeleteTracksByAlbumID(AlbumID);
+                //
+                //delete PURG physical files
+                //
+
+
+            }
+        }
+        public static void DeleteTracksFromDuplicates(DataGridView DGV, ListBox.ObjectCollection LBOX, int TrackID, int AlbumID, string purgatoryTrackPath)
+        {
+            DBFunctions db = new DBFunctions();
+            if (AlbumID != 0)
+            {
+                List<SQLTrackTable> LTT = new List<SQLTrackTable>();
+                LTT = db.GetTrackByAlbumId(AlbumID);
+                if (LTT.Count == 0)
+                {
+                    DialogResult res1 = MessageBox.Show($"There are no related tracks in Album ID: {AlbumID} Delete album from DB?", "Delete Album", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                    if (res1 == DialogResult.OK)
+                    {
+                        DBFunctions.DeleteAlbumByAlbumID(AlbumID);
+                    }
+                }
+            }
+            if (TrackID != 0)
+            {
+                DialogResult res2 = MessageBox.Show($"Delete Track from SQL DB? \n Selected Track ID: {TrackID}", "Delete Tracks", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                if (res2 == DialogResult.OK)
+                {
+                    DBFunctions.DeleteTracksByAlbumID(TrackID);
+                    File.Delete(purgatoryTrackPath);
+                    LBOX.Add($"DELETED from DB TRACK ID: {purgatoryTrackPath}");
+                    LBOX.Add($"DELETED FILE: {purgatoryTrackPath}");
+                }
+            }
+            
         }
     }
 }

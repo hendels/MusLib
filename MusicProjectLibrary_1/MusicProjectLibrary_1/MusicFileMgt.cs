@@ -580,7 +580,7 @@ namespace MusicProjectLibrary_1
 
                     List<SQLTrackTable> ListIndexLib = new List<SQLTrackTable>(); //sqlprzemy
                     DBFunctions db = new DBFunctions();
-                    ListIndexLib = db.GetTrackIndex(indexLib);
+                    ListIndexLib = db.GetTrackByTrackIndex(indexLib);
 
                     if (ListIndexLib.Count == 1)
                     {

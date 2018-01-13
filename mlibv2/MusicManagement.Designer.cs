@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.tbxPickedPath = new System.Windows.Forms.TextBox();
-            this.changeMainPath = new System.Windows.Forms.Button();
             this.ButtonReadTag = new System.Windows.Forms.Button();
             this.CheckBoxProcessCatalogs = new System.Windows.Forms.CheckBox();
             this.CheckBoxModifyFIles = new System.Windows.Forms.CheckBox();
@@ -53,7 +51,6 @@
             this.button2 = new System.Windows.Forms.Button();
             this.btnDiscogs = new System.Windows.Forms.Button();
             this.tabSetup = new System.Windows.Forms.TabPage();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tbxDriveMainPath = new System.Windows.Forms.TextBox();
             this.chbCheckGeneralPath = new System.Windows.Forms.CheckBox();
             this.chbWriteValidationPoints = new System.Windows.Forms.CheckBox();
@@ -75,8 +72,6 @@
             this.albumBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.albumBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.musicLibraryDataSetBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.tbxMusicPath = new System.Windows.Forms.TextBox();
-            this.btnChangeGeneralCatalogPath = new System.Windows.Forms.Button();
             this.lblProgress = new System.Windows.Forms.Label();
             this.tbxTrackRatingMin = new System.Windows.Forms.TextBox();
             this.tbxTrackRatingMax = new System.Windows.Forms.TextBox();
@@ -88,6 +83,11 @@
             this.tbxAlbumCount = new System.Windows.Forms.TextBox();
             this.chbProceed = new System.Windows.Forms.CheckBox();
             this.btnSaveXml = new System.Windows.Forms.Button();
+            this.btnChangeGeneralCatalogPath = new System.Windows.Forms.Button();
+            this.tbxMusicPath = new System.Windows.Forms.TextBox();
+            this.changeMainPath = new System.Windows.Forms.Button();
+            this.tbxPickedPath = new System.Windows.Forms.TextBox();
+            this.tbxBackupPath = new System.Windows.Forms.TextBox();
             this.tabCtrTrackAlbums.SuspendLayout();
             this.tabAlbums.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlbums)).BeginInit();
@@ -106,35 +106,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.musicLibraryDataSetBindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
-            // tbxPickedPath
-            // 
-            this.tbxPickedPath.BackColor = System.Drawing.Color.AliceBlue;
-            this.tbxPickedPath.Enabled = false;
-            this.tbxPickedPath.Location = new System.Drawing.Point(19, 30);
-            this.tbxPickedPath.Name = "tbxPickedPath";
-            this.tbxPickedPath.Size = new System.Drawing.Size(365, 20);
-            this.tbxPickedPath.TabIndex = 10;
-            // 
-            // changeMainPath
-            // 
-            this.changeMainPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.changeMainPath.Location = new System.Drawing.Point(386, 30);
-            this.changeMainPath.Name = "changeMainPath";
-            this.changeMainPath.Size = new System.Drawing.Size(86, 20);
-            this.changeMainPath.TabIndex = 13;
-            this.changeMainPath.Text = "Purgatory Path";
-            this.changeMainPath.UseVisualStyleBackColor = true;
-            this.changeMainPath.Click += new System.EventHandler(this.checkFilesInDirectory_Click);
-            // 
             // ButtonReadTag
             // 
             this.ButtonReadTag.BackColor = System.Drawing.Color.PaleGreen;
-            this.ButtonReadTag.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonReadTag.Location = new System.Drawing.Point(387, 56);
+            this.ButtonReadTag.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonReadTag.Location = new System.Drawing.Point(380, 4);
             this.ButtonReadTag.Name = "ButtonReadTag";
             this.ButtonReadTag.Size = new System.Drawing.Size(86, 24);
             this.ButtonReadTag.TabIndex = 17;
-            this.ButtonReadTag.Text = "Play";
+            this.ButtonReadTag.Text = "Read Drive";
             this.ButtonReadTag.UseVisualStyleBackColor = false;
             this.ButtonReadTag.Click += new System.EventHandler(this.ButtonReadTag_Click);
             // 
@@ -143,7 +123,7 @@
             this.CheckBoxProcessCatalogs.AutoSize = true;
             this.CheckBoxProcessCatalogs.Checked = true;
             this.CheckBoxProcessCatalogs.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CheckBoxProcessCatalogs.Location = new System.Drawing.Point(136, 4);
+            this.CheckBoxProcessCatalogs.Location = new System.Drawing.Point(160, 120);
             this.CheckBoxProcessCatalogs.Margin = new System.Windows.Forms.Padding(2);
             this.CheckBoxProcessCatalogs.Name = "CheckBoxProcessCatalogs";
             this.CheckBoxProcessCatalogs.Size = new System.Drawing.Size(137, 17);
@@ -156,7 +136,7 @@
             // 
             this.CheckBoxModifyFIles.AutoSize = true;
             this.CheckBoxModifyFIles.BackColor = System.Drawing.Color.LightCoral;
-            this.CheckBoxModifyFIles.Location = new System.Drawing.Point(294, 4);
+            this.CheckBoxModifyFIles.Location = new System.Drawing.Point(160, 162);
             this.CheckBoxModifyFIles.Margin = new System.Windows.Forms.Padding(2);
             this.CheckBoxModifyFIles.Name = "CheckBoxModifyFIles";
             this.CheckBoxModifyFIles.Size = new System.Drawing.Size(106, 17);
@@ -219,7 +199,7 @@
             // 
             // btnSelectHealthy
             // 
-            this.btnSelectHealthy.BackColor = System.Drawing.Color.LightCoral;
+            this.btnSelectHealthy.BackColor = System.Drawing.Color.LightSteelBlue;
             this.btnSelectHealthy.Location = new System.Drawing.Point(212, 3);
             this.btnSelectHealthy.Name = "btnSelectHealthy";
             this.btnSelectHealthy.Size = new System.Drawing.Size(105, 23);
@@ -249,7 +229,7 @@
             // 
             // btnDeclareGenre
             // 
-            this.btnDeclareGenre.BackColor = System.Drawing.Color.LightCoral;
+            this.btnDeclareGenre.BackColor = System.Drawing.Color.LightSteelBlue;
             this.btnDeclareGenre.Location = new System.Drawing.Point(6, 3);
             this.btnDeclareGenre.Name = "btnDeclareGenre";
             this.btnDeclareGenre.Size = new System.Drawing.Size(88, 23);
@@ -376,7 +356,12 @@
             // 
             // tabSetup
             // 
-            this.tabSetup.Controls.Add(this.textBox1);
+            this.tabSetup.Controls.Add(this.tbxBackupPath);
+            this.tabSetup.Controls.Add(this.btnSaveXml);
+            this.tabSetup.Controls.Add(this.btnChangeGeneralCatalogPath);
+            this.tabSetup.Controls.Add(this.tbxMusicPath);
+            this.tabSetup.Controls.Add(this.changeMainPath);
+            this.tabSetup.Controls.Add(this.tbxPickedPath);
             this.tabSetup.Controls.Add(this.tbxDriveMainPath);
             this.tabSetup.Controls.Add(this.chbCheckGeneralPath);
             this.tabSetup.Controls.Add(this.chbWriteValidationPoints);
@@ -394,20 +379,11 @@
             this.tabSetup.Text = "Setup";
             this.tabSetup.UseVisualStyleBackColor = true;
             // 
-            // textBox1
-            // 
-            this.textBox1.BackColor = System.Drawing.Color.AliceBlue;
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(148, 98);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(49, 20);
-            this.textBox1.TabIndex = 40;
-            // 
             // tbxDriveMainPath
             // 
             this.tbxDriveMainPath.BackColor = System.Drawing.Color.AliceBlue;
             this.tbxDriveMainPath.Enabled = false;
-            this.tbxDriveMainPath.Location = new System.Drawing.Point(148, 72);
+            this.tbxDriveMainPath.Location = new System.Drawing.Point(1, 8);
             this.tbxDriveMainPath.Name = "tbxDriveMainPath";
             this.tbxDriveMainPath.Size = new System.Drawing.Size(365, 20);
             this.tbxDriveMainPath.TabIndex = 39;
@@ -415,7 +391,7 @@
             // chbCheckGeneralPath
             // 
             this.chbCheckGeneralPath.AutoSize = true;
-            this.chbCheckGeneralPath.Location = new System.Drawing.Point(4, 75);
+            this.chbCheckGeneralPath.Location = new System.Drawing.Point(371, 8);
             this.chbCheckGeneralPath.Margin = new System.Windows.Forms.Padding(2);
             this.chbCheckGeneralPath.Name = "chbCheckGeneralPath";
             this.chbCheckGeneralPath.Size = new System.Drawing.Size(119, 17);
@@ -428,7 +404,7 @@
             // 
             this.chbWriteValidationPoints.AutoSize = true;
             this.chbWriteValidationPoints.BackColor = System.Drawing.Color.LightGray;
-            this.chbWriteValidationPoints.Location = new System.Drawing.Point(4, 25);
+            this.chbWriteValidationPoints.Location = new System.Drawing.Point(4, 142);
             this.chbWriteValidationPoints.Margin = new System.Windows.Forms.Padding(2);
             this.chbWriteValidationPoints.Name = "chbWriteValidationPoints";
             this.chbWriteValidationPoints.Size = new System.Drawing.Size(132, 17);
@@ -441,7 +417,7 @@
             // 
             this.chbxMove.AutoSize = true;
             this.chbxMove.BackColor = System.Drawing.Color.LightCoral;
-            this.chbxMove.Location = new System.Drawing.Point(136, 25);
+            this.chbxMove.Location = new System.Drawing.Point(160, 141);
             this.chbxMove.Margin = new System.Windows.Forms.Padding(2);
             this.chbxMove.Name = "chbxMove";
             this.chbxMove.Size = new System.Drawing.Size(103, 17);
@@ -452,7 +428,7 @@
             // checkBoxCreateBackUp
             // 
             this.checkBoxCreateBackUp.AutoSize = true;
-            this.checkBoxCreateBackUp.Location = new System.Drawing.Point(4, 46);
+            this.checkBoxCreateBackUp.Location = new System.Drawing.Point(371, 88);
             this.checkBoxCreateBackUp.Margin = new System.Windows.Forms.Padding(2);
             this.checkBoxCreateBackUp.Name = "checkBoxCreateBackUp";
             this.checkBoxCreateBackUp.Size = new System.Drawing.Size(117, 17);
@@ -464,7 +440,7 @@
             // chbWriteTrackIndex
             // 
             this.chbWriteTrackIndex.AutoSize = true;
-            this.chbWriteTrackIndex.Location = new System.Drawing.Point(4, 4);
+            this.chbWriteTrackIndex.Location = new System.Drawing.Point(4, 120);
             this.chbWriteTrackIndex.Margin = new System.Windows.Forms.Padding(2);
             this.chbWriteTrackIndex.Name = "chbWriteTrackIndex";
             this.chbWriteTrackIndex.Size = new System.Drawing.Size(111, 17);
@@ -475,14 +451,14 @@
             // 
             // tbxSearchAlbums
             // 
-            this.tbxSearchAlbums.Location = new System.Drawing.Point(99, 85);
+            this.tbxSearchAlbums.Location = new System.Drawing.Point(92, 33);
             this.tbxSearchAlbums.Name = "tbxSearchAlbums";
             this.tbxSearchAlbums.Size = new System.Drawing.Size(100, 20);
             this.tbxSearchAlbums.TabIndex = 27;
             // 
             // btnFindAlbums
             // 
-            this.btnFindAlbums.Location = new System.Drawing.Point(19, 85);
+            this.btnFindAlbums.Location = new System.Drawing.Point(12, 33);
             this.btnFindAlbums.Name = "btnFindAlbums";
             this.btnFindAlbums.Size = new System.Drawing.Size(75, 23);
             this.btnFindAlbums.TabIndex = 28;
@@ -492,7 +468,7 @@
             // 
             // tbxSearchArtist
             // 
-            this.tbxSearchArtist.Location = new System.Drawing.Point(99, 137);
+            this.tbxSearchArtist.Location = new System.Drawing.Point(92, 85);
             this.tbxSearchArtist.Name = "tbxSearchArtist";
             this.tbxSearchArtist.Size = new System.Drawing.Size(100, 20);
             this.tbxSearchArtist.TabIndex = 29;
@@ -500,14 +476,14 @@
             // 
             // progBar
             // 
-            this.progBar.Location = new System.Drawing.Point(19, 56);
+            this.progBar.Location = new System.Drawing.Point(12, 4);
             this.progBar.Name = "progBar";
             this.progBar.Size = new System.Drawing.Size(365, 23);
             this.progBar.TabIndex = 31;
             // 
             // btnFindTracks
             // 
-            this.btnFindTracks.Location = new System.Drawing.Point(19, 111);
+            this.btnFindTracks.Location = new System.Drawing.Point(12, 59);
             this.btnFindTracks.Name = "btnFindTracks";
             this.btnFindTracks.Size = new System.Drawing.Size(75, 23);
             this.btnFindTracks.TabIndex = 32;
@@ -517,7 +493,7 @@
             // 
             // tbxSearchTracks
             // 
-            this.tbxSearchTracks.Location = new System.Drawing.Point(99, 111);
+            this.tbxSearchTracks.Location = new System.Drawing.Point(92, 59);
             this.tbxSearchTracks.Name = "tbxSearchTracks";
             this.tbxSearchTracks.Size = new System.Drawing.Size(100, 20);
             this.tbxSearchTracks.TabIndex = 33;
@@ -530,9 +506,9 @@
             this.BoxListConsole.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BoxListConsole.ForeColor = System.Drawing.SystemColors.Window;
             this.BoxListConsole.FormattingEnabled = true;
-            this.BoxListConsole.Location = new System.Drawing.Point(645, -1);
+            this.BoxListConsole.Location = new System.Drawing.Point(475, 4);
             this.BoxListConsole.Name = "BoxListConsole";
-            this.BoxListConsole.Size = new System.Drawing.Size(599, 147);
+            this.BoxListConsole.Size = new System.Drawing.Size(766, 160);
             this.BoxListConsole.TabIndex = 16;
             // 
             // albumListBindingSource
@@ -559,32 +535,12 @@
             // 
             this.albumBindingSource.DataMember = "Album";
             // 
-            // tbxMusicPath
-            // 
-            this.tbxMusicPath.BackColor = System.Drawing.Color.AliceBlue;
-            this.tbxMusicPath.Enabled = false;
-            this.tbxMusicPath.Location = new System.Drawing.Point(19, 4);
-            this.tbxMusicPath.Name = "tbxMusicPath";
-            this.tbxMusicPath.Size = new System.Drawing.Size(365, 20);
-            this.tbxMusicPath.TabIndex = 35;
-            // 
-            // btnChangeGeneralCatalogPath
-            // 
-            this.btnChangeGeneralCatalogPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnChangeGeneralCatalogPath.Location = new System.Drawing.Point(386, 4);
-            this.btnChangeGeneralCatalogPath.Name = "btnChangeGeneralCatalogPath";
-            this.btnChangeGeneralCatalogPath.Size = new System.Drawing.Size(86, 20);
-            this.btnChangeGeneralCatalogPath.TabIndex = 36;
-            this.btnChangeGeneralCatalogPath.Text = "General Path";
-            this.btnChangeGeneralCatalogPath.UseVisualStyleBackColor = true;
-            this.btnChangeGeneralCatalogPath.Click += new System.EventHandler(this.btnChangeGeneralCatalogPath_Click);
-            // 
             // lblProgress
             // 
             this.lblProgress.AutoSize = true;
             this.lblProgress.BackColor = System.Drawing.Color.Transparent;
             this.lblProgress.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblProgress.Location = new System.Drawing.Point(33, 60);
+            this.lblProgress.Location = new System.Drawing.Point(26, 8);
             this.lblProgress.Name = "lblProgress";
             this.lblProgress.Size = new System.Drawing.Size(21, 15);
             this.lblProgress.TabIndex = 37;
@@ -592,7 +548,7 @@
             // 
             // tbxTrackRatingMin
             // 
-            this.tbxTrackRatingMin.Location = new System.Drawing.Point(317, 111);
+            this.tbxTrackRatingMin.Location = new System.Drawing.Point(310, 59);
             this.tbxTrackRatingMin.Name = "tbxTrackRatingMin";
             this.tbxTrackRatingMin.Size = new System.Drawing.Size(29, 20);
             this.tbxTrackRatingMin.TabIndex = 38;
@@ -600,7 +556,7 @@
             // 
             // tbxTrackRatingMax
             // 
-            this.tbxTrackRatingMax.Location = new System.Drawing.Point(352, 111);
+            this.tbxTrackRatingMax.Location = new System.Drawing.Point(345, 59);
             this.tbxTrackRatingMax.Name = "tbxTrackRatingMax";
             this.tbxTrackRatingMax.Size = new System.Drawing.Size(29, 20);
             this.tbxTrackRatingMax.TabIndex = 39;
@@ -608,7 +564,7 @@
             // 
             // tbxPointsMax
             // 
-            this.tbxPointsMax.Location = new System.Drawing.Point(352, 85);
+            this.tbxPointsMax.Location = new System.Drawing.Point(345, 33);
             this.tbxPointsMax.Name = "tbxPointsMax";
             this.tbxPointsMax.Size = new System.Drawing.Size(29, 20);
             this.tbxPointsMax.TabIndex = 41;
@@ -616,7 +572,7 @@
             // 
             // tbxPointsMin
             // 
-            this.tbxPointsMin.Location = new System.Drawing.Point(317, 85);
+            this.tbxPointsMin.Location = new System.Drawing.Point(310, 33);
             this.tbxPointsMin.Name = "tbxPointsMin";
             this.tbxPointsMin.Size = new System.Drawing.Size(29, 20);
             this.tbxPointsMin.TabIndex = 40;
@@ -627,7 +583,7 @@
             this.lblPoints.AutoSize = true;
             this.lblPoints.BackColor = System.Drawing.Color.Transparent;
             this.lblPoints.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPoints.Location = new System.Drawing.Point(264, 87);
+            this.lblPoints.Location = new System.Drawing.Point(257, 35);
             this.lblPoints.Name = "lblPoints";
             this.lblPoints.Size = new System.Drawing.Size(49, 15);
             this.lblPoints.TabIndex = 42;
@@ -638,7 +594,7 @@
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(264, 113);
+            this.label1.Location = new System.Drawing.Point(257, 61);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(35, 15);
             this.label1.TabIndex = 43;
@@ -646,7 +602,7 @@
             // 
             // tbxTrackCount
             // 
-            this.tbxTrackCount.Location = new System.Drawing.Point(205, 111);
+            this.tbxTrackCount.Location = new System.Drawing.Point(198, 59);
             this.tbxTrackCount.Name = "tbxTrackCount";
             this.tbxTrackCount.Size = new System.Drawing.Size(53, 20);
             this.tbxTrackCount.TabIndex = 44;
@@ -654,7 +610,7 @@
             // 
             // tbxAlbumCount
             // 
-            this.tbxAlbumCount.Location = new System.Drawing.Point(205, 85);
+            this.tbxAlbumCount.Location = new System.Drawing.Point(198, 33);
             this.tbxAlbumCount.Name = "tbxAlbumCount";
             this.tbxAlbumCount.Size = new System.Drawing.Size(53, 20);
             this.tbxAlbumCount.TabIndex = 45;
@@ -663,7 +619,7 @@
             // chbProceed
             // 
             this.chbProceed.AutoSize = true;
-            this.chbProceed.Location = new System.Drawing.Point(317, 136);
+            this.chbProceed.Location = new System.Drawing.Point(310, 84);
             this.chbProceed.Margin = new System.Windows.Forms.Padding(2);
             this.chbProceed.Name = "chbProceed";
             this.chbProceed.Size = new System.Drawing.Size(96, 17);
@@ -674,7 +630,7 @@
             // btnSaveXml
             // 
             this.btnSaveXml.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSaveXml.Location = new System.Drawing.Point(317, 158);
+            this.btnSaveXml.Location = new System.Drawing.Point(3, 202);
             this.btnSaveXml.Name = "btnSaveXml";
             this.btnSaveXml.Size = new System.Drawing.Size(96, 20);
             this.btnSaveXml.TabIndex = 47;
@@ -682,12 +638,58 @@
             this.btnSaveXml.UseVisualStyleBackColor = true;
             this.btnSaveXml.Click += new System.EventHandler(this.btnSaveXml_Click);
             // 
+            // btnChangeGeneralCatalogPath
+            // 
+            this.btnChangeGeneralCatalogPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnChangeGeneralCatalogPath.Location = new System.Drawing.Point(368, 34);
+            this.btnChangeGeneralCatalogPath.Name = "btnChangeGeneralCatalogPath";
+            this.btnChangeGeneralCatalogPath.Size = new System.Drawing.Size(86, 20);
+            this.btnChangeGeneralCatalogPath.TabIndex = 44;
+            this.btnChangeGeneralCatalogPath.Text = "General Path";
+            this.btnChangeGeneralCatalogPath.UseVisualStyleBackColor = true;
+            // 
+            // tbxMusicPath
+            // 
+            this.tbxMusicPath.BackColor = System.Drawing.Color.AliceBlue;
+            this.tbxMusicPath.Enabled = false;
+            this.tbxMusicPath.Location = new System.Drawing.Point(1, 34);
+            this.tbxMusicPath.Name = "tbxMusicPath";
+            this.tbxMusicPath.Size = new System.Drawing.Size(365, 20);
+            this.tbxMusicPath.TabIndex = 43;
+            // 
+            // changeMainPath
+            // 
+            this.changeMainPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.changeMainPath.Location = new System.Drawing.Point(368, 60);
+            this.changeMainPath.Name = "changeMainPath";
+            this.changeMainPath.Size = new System.Drawing.Size(86, 20);
+            this.changeMainPath.TabIndex = 42;
+            this.changeMainPath.Text = "Purgatory Path";
+            this.changeMainPath.UseVisualStyleBackColor = true;
+            // 
+            // tbxPickedPath
+            // 
+            this.tbxPickedPath.BackColor = System.Drawing.Color.AliceBlue;
+            this.tbxPickedPath.Enabled = false;
+            this.tbxPickedPath.Location = new System.Drawing.Point(1, 60);
+            this.tbxPickedPath.Name = "tbxPickedPath";
+            this.tbxPickedPath.Size = new System.Drawing.Size(365, 20);
+            this.tbxPickedPath.TabIndex = 41;
+            // 
+            // tbxBackupPath
+            // 
+            this.tbxBackupPath.BackColor = System.Drawing.Color.LightCoral;
+            this.tbxBackupPath.Enabled = false;
+            this.tbxBackupPath.Location = new System.Drawing.Point(1, 86);
+            this.tbxBackupPath.Name = "tbxBackupPath";
+            this.tbxBackupPath.Size = new System.Drawing.Size(365, 20);
+            this.tbxBackupPath.TabIndex = 48;
+            // 
             // MusicLibraryWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1246, 509);
-            this.Controls.Add(this.btnSaveXml);
             this.Controls.Add(this.chbProceed);
             this.Controls.Add(this.tbxAlbumCount);
             this.Controls.Add(this.tbxTrackCount);
@@ -698,8 +700,6 @@
             this.Controls.Add(this.tbxTrackRatingMax);
             this.Controls.Add(this.tbxTrackRatingMin);
             this.Controls.Add(this.lblProgress);
-            this.Controls.Add(this.btnChangeGeneralCatalogPath);
-            this.Controls.Add(this.tbxMusicPath);
             this.Controls.Add(this.tbxSearchTracks);
             this.Controls.Add(this.btnFindTracks);
             this.Controls.Add(this.progBar);
@@ -709,8 +709,6 @@
             this.Controls.Add(this.tabCtrTrackAlbums);
             this.Controls.Add(this.ButtonReadTag);
             this.Controls.Add(this.BoxListConsole);
-            this.Controls.Add(this.changeMainPath);
-            this.Controls.Add(this.tbxPickedPath);
             this.Name = "MusicLibraryWindow";
             this.Text = "Music Library";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -744,8 +742,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
-        private System.Windows.Forms.TextBox tbxPickedPath;
-        private System.Windows.Forms.Button changeMainPath;
         private System.Windows.Forms.Button ButtonReadTag;
         private System.Windows.Forms.CheckBox CheckBoxProcessCatalogs;
         private System.Windows.Forms.CheckBox CheckBoxModifyFIles;
@@ -798,8 +794,6 @@
         private System.Windows.Forms.DataGridView dgvTracks;
         private System.Windows.Forms.Button btnProcessSelected;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.TextBox tbxMusicPath;
-        private System.Windows.Forms.Button btnChangeGeneralCatalogPath;
         private System.Windows.Forms.Button btnSelectHealthy;
         private System.Windows.Forms.Label lblProgress;
         private System.Windows.Forms.TabPage tabArtist;
@@ -816,7 +810,6 @@
         private System.Windows.Forms.Button btnWriteIndexAlbum;
         private System.Windows.Forms.CheckBox chbCheckGeneralPath;
         private System.Windows.Forms.TextBox tbxDriveMainPath;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox tbxTrackRatingMin;
         private System.Windows.Forms.TextBox tbxTrackRatingMax;
         private System.Windows.Forms.TextBox tbxPointsMax;
@@ -827,6 +820,11 @@
         private System.Windows.Forms.TextBox tbxAlbumCount;
         private System.Windows.Forms.CheckBox chbProceed;
         private System.Windows.Forms.Button btnSaveXml;
+        private System.Windows.Forms.Button btnChangeGeneralCatalogPath;
+        private System.Windows.Forms.TextBox tbxMusicPath;
+        private System.Windows.Forms.Button changeMainPath;
+        private System.Windows.Forms.TextBox tbxPickedPath;
+        private System.Windows.Forms.TextBox tbxBackupPath;
     }
 }
 

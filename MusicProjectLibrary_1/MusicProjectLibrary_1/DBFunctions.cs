@@ -284,16 +284,7 @@ namespace MusicProjectLibrary_1
                 return output;
             }
         }
-        public List<SQLTrackTable> GetTracksByAlbumId(int IdAlbumP)
-        {
-            //throw new NotImplementedException();
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
-            {
-                var output = connection.Query<SQLTrackTable>("dbo.spTracks_GetByAlbumId @IdAlbum", new { IdAlbum = IdAlbumP }).ToList();
-                GlobalChecker.TestSqlAlbumIdQuery += 1;
-                return output;
-            }
-        }
+
         public List<SQLTrackTable> GetTrackByAlbumId(int IdAlbumP)
         {
             //throw new NotImplementedException();
@@ -304,7 +295,7 @@ namespace MusicProjectLibrary_1
                 return output;
             }
         }
-        public List<SQLTrackTable> GetTrackIndex(int IndexLibP)
+        public List<SQLTrackTable> GetTrackByTrackIndex(int IndexLibP)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
             {
@@ -493,12 +484,12 @@ namespace MusicProjectLibrary_1
         {
             DGV.DataSource = ArtistList;
         }                
-        public static int AutoSearchDatabaseTracks(int IdAlbum, DataGridView DGV, int AlbumCount, int RateMin, int RateMax)
+        public static int AutoSearchDatabaseTracks(int IdTrack, DataGridView DGV, int AlbumCount, int RateMin, int RateMax)
         {
             List<SQLTrackTable> TrackList = new List<SQLTrackTable>(); //sqlprzemy - table : Albums
             DBFunctions db = new DBFunctions();
-            if (IdAlbum != 0)
-                TrackList = db.GetTracksByAlbumId(IdAlbum);
+            if (IdTrack != 0)
+                TrackList = db.GetTrackByTrackIndex(IdTrack);
             else
                 TrackList = db.GetAllTracks(AlbumCount, 0, 1, RateMin, RateMax);
 

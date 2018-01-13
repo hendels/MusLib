@@ -220,6 +220,40 @@ namespace MusicProjectLibrary_1
                             DuplicatesPaths DP = new DuplicatesPaths();
                             DP.firstPath = itemTD.TrackPath;
                             DP.secondPath = itemTrack.TrackDirectory;
+
+                            int x1 = 0;
+                            if (Int32.TryParse(itemTD.MFD.trackRating, out x1))
+                            {
+                                DP.ratingStarsFirstFile = x1;
+                            }
+                            else
+                                DP.ratingStarsFirstFile = 0;
+
+                            int x2 = 0;
+                            if (Int32.TryParse(itemTrack.TrackRating.ToString(), out x2))
+                            {
+                                DP.ratingStarsSecondFile = x2;
+                            }
+                            else
+                                DP.ratingStarsSecondFile = 0;
+                            int x3 = 0;
+                            if (Int32.TryParse(itemTD.MFD.trackIdAlbumIndex, out x3))
+                            {
+                                DP.firstIDAlbum = x3;
+                            }
+                            else
+                                DP.firstIDAlbum = 0;
+                            int x4 = 0;
+                            if (Int32.TryParse(itemTD.MFD.trackIndex, out x4))
+                            {
+                                DP.firstIDTrack = x4;
+                            }
+                            else
+                                DP.firstIDTrack = 0;
+
+                            DP.secondIDAlbum = itemTrack.IdAlbumIndex;
+                            DP.secondIDTrack = itemTrack.IndexLib;
+                            
                             LDP.Add(DP);
                         }
                         

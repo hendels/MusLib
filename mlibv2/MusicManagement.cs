@@ -16,9 +16,8 @@ using MusicProjectLibrary_1;
 using MaterialSkin;
 using Dapper;
 using System.Threading.Tasks;
-/// <summary>
-/// 
-/// </summary>
+using System.Xml.Serialization;
+
 namespace MusicProjectLibrary_1
 {
     public partial class MusicLibraryWindow : Form //MaterialSkin.Controls.MaterialForm
@@ -51,6 +50,20 @@ namespace MusicProjectLibrary_1
 
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
             GlobalVariables globalProcCatalog = new GlobalVariables();
+            //
+            //load config file
+            //
+            if (File.Exists("config.xml"))
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(xmlSaveInformation));
+                using (FileStream read = new FileStream("config.xml", FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    xmlSaveInformation info = (xmlSaveInformation)xs.Deserialize(read);
+                    tbxPointsMin.Text = info.PointsMin;
+                    tbxPointsMax.Text = info.PointsMax;
+                }
+                
+            }
         }
         public void checkFilesInDirectory_Click(object sender, EventArgs e)
         {
@@ -408,6 +421,28 @@ namespace MusicProjectLibrary_1
                 GlobalVariables.checkGeneralPath = true;
             else
                 GlobalVariables.checkGeneralPath = false;
+        }
+
+        private void btnSaveXml_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                xmlSaveInformation SaveInfo = new xmlSaveInformation();
+                SaveInfo.PointsMin = tbxPointsMin.Text;
+                SaveInfo.PointsMax = tbxPointsMax.Text;
+                SaveInfo.RateMin = tbxTrackRatingMin.Text;
+                SaveInfo.RateMax = tbxTrackRatingMin.Text;
+                SaveInfo.ShowProceed = chbProceed.Checked;
+                SaveInfo.AlbumCount = Convert.ToInt32(tbxAlbumCount.Text);
+                SaveInfo.TrackCount = Convert.ToInt32(tbxTrackCount.Text);
+
+                Functions.xmlSave(SaveInfo, "config.xml");
+                MessageBox.Show("saved");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

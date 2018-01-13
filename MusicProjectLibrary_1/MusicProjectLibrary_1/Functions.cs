@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 
 namespace MusicProjectLibrary_1
 {
@@ -15,6 +16,14 @@ namespace MusicProjectLibrary_1
         public static string filenamePath;
 
         public static List<string> SortedList = new List<string>();
+
+        public static void xmlSave(object obj, string filename)
+        {
+            XmlSerializer sr = new XmlSerializer(obj.GetType());
+            TextWriter writer = new StreamWriter(filename);
+            sr.Serialize(writer, obj);
+            writer.Close();
+        }
 
         public static void getPurgatoryPath(TextBox currentTextBox, Boolean updateTextbox)
         {

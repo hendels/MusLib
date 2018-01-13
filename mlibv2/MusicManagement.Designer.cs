@@ -87,6 +87,7 @@
             this.tbxTrackCount = new System.Windows.Forms.TextBox();
             this.tbxAlbumCount = new System.Windows.Forms.TextBox();
             this.chbProceed = new System.Windows.Forms.CheckBox();
+            this.btnSaveXml = new System.Windows.Forms.Button();
             this.tabCtrTrackAlbums.SuspendLayout();
             this.tabAlbums.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlbums)).BeginInit();
@@ -670,11 +671,23 @@
             this.chbProceed.Text = "Show Proceed";
             this.chbProceed.UseVisualStyleBackColor = true;
             // 
+            // btnSaveXml
+            // 
+            this.btnSaveXml.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSaveXml.Location = new System.Drawing.Point(317, 158);
+            this.btnSaveXml.Name = "btnSaveXml";
+            this.btnSaveXml.Size = new System.Drawing.Size(96, 20);
+            this.btnSaveXml.TabIndex = 47;
+            this.btnSaveXml.Text = "Save Metadata";
+            this.btnSaveXml.UseVisualStyleBackColor = true;
+            this.btnSaveXml.Click += new System.EventHandler(this.btnSaveXml_Click);
+            // 
             // MusicLibraryWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1246, 509);
+            this.Controls.Add(this.btnSaveXml);
             this.Controls.Add(this.chbProceed);
             this.Controls.Add(this.tbxAlbumCount);
             this.Controls.Add(this.tbxTrackCount);
@@ -813,6 +826,7 @@
         private System.Windows.Forms.TextBox tbxTrackCount;
         private System.Windows.Forms.TextBox tbxAlbumCount;
         private System.Windows.Forms.CheckBox chbProceed;
+        private System.Windows.Forms.Button btnSaveXml;
     }
 }
 

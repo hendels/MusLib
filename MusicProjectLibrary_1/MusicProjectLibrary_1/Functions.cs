@@ -332,6 +332,13 @@ namespace MusicProjectLibrary_1
             }
 
         }
+        public static void getRelatedToArtistGenres()
+        {
+            List<SQLAlbumTable> queryGetAllGenres = new List<SQLAlbumTable>();
+            DBFunctions db = new DBFunctions();
+            queryGetAllGenres = db.GetAlbumsGenre();
+            //chlstSuggestedGenres
+        }
         public static string pickedGenre(TextBox tbxPickedGenre, CheckedListBox checkedListGenre)
         {
             string allGenres = "";
@@ -357,6 +364,9 @@ namespace MusicProjectLibrary_1
             signs.Add("|");
             signs.Add(@"""");
             signs.Add(@"/");
+            signs.Add(@"<");
+            signs.Add(@">");
+            //signs.Add(@".");
             string modifiedString = checkString;
             foreach (string itemList in signs)
             {
@@ -435,31 +445,53 @@ namespace MusicProjectLibrary_1
         public static void TreeDirectorySearch(string CurrentDirectory, string movedAlbumDirectory, ListBox.ObjectCollection boxListConsole) //[przemy knowledge - best tree search]
         {
             int foundIllegalFiles = 0;
-            foreach (string CurrentFile in Directory.GetFiles(CurrentDirectory))
+            try
             {
-                
-                //if (GlobalVariables.IgnoreCurrentFolder > 0)
-                //{
-                if (Path.GetExtension(CurrentFile) == ".flac" || Path.GetExtension(CurrentFile) == ".mp3")
+                foreach (string CurrentFile in Directory.GetFiles(CurrentDirectory))
                 {
-                    foundIllegalFiles += 1;
-                    boxListConsole.Add($"found illegal file in subfolder {CurrentFile} - manual action needed.");
-                }
 
-                if ((Path.GetExtension(CurrentFile) == ".jpg" & GlobalVariables.IgnoreCurrentFolder == 0) || (Path.GetExtension(CurrentFile) == ".png" & GlobalVariables.IgnoreCurrentFolder == 0) 
-                    || (Path.GetExtension(CurrentFile) == ".tif" & GlobalVariables.IgnoreCurrentFolder == 0) || (Path.GetExtension(CurrentFile) == ".jpeg" & GlobalVariables.IgnoreCurrentFolder == 0))
-                {
-                    File.Move(CurrentFile, movedAlbumDirectory + @"\" + Path.GetFileName(CurrentFile));
-                }
+                    //if (GlobalVariables.IgnoreCurrentFolder > 0)
+                    //{
+                    if (Path.GetExtension(CurrentFile) == ".flac" || Path.GetExtension(CurrentFile) == ".mp3")
+                    {
+                        foundIllegalFiles += 1;
+                        boxListConsole.Add($"found illegal file in subfolder {CurrentFile} - manual action needed.");
+                    }
+
+                    if ((Path.GetExtension(CurrentFile) == ".jpg" & GlobalVariables.IgnoreCurrentFolder == 0) || (Path.GetExtension(CurrentFile) == ".png" & GlobalVariables.IgnoreCurrentFolder == 0)
+                        || (Path.GetExtension(CurrentFile) == ".tif" & GlobalVariables.IgnoreCurrentFolder == 0) || (Path.GetExtension(CurrentFile) == ".jpeg" & GlobalVariables.IgnoreCurrentFolder == 0))
+                    {
+                        try
+                        {
+                            File.Move(CurrentFile, movedAlbumDirectory + @"\" + Path.GetFileName(CurrentFile));
+                        }
+                        catch (Exception ex)
+                        {
+                            //MessageBox.Show($"Error with file localization: /n {CurrentFile}");
+                            return;
+                        }
+                    }
                     //}              
+                }
+            }
+            catch (DirectoryNotFoundException ex1)
+            {
+                MessageBox.Show(ex1.ToString());
             }
 
             if (foundIllegalFiles == 0)
             {
-                foreach (string CurrentFile in Directory.GetFiles(CurrentDirectory))
+                try
                 {
-                    File.Delete(CurrentFile);
-                    boxListConsole.Add($"deleting trash file: {CurrentFile}");
+                    foreach (string CurrentFile in Directory.GetFiles(CurrentDirectory))
+                    {
+                        File.Delete(CurrentFile);
+                        boxListConsole.Add($"deleting trash file: {CurrentFile}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return;
                 }
             }
             foreach (string ChildDirectory in Directory.GetDirectories(CurrentDirectory))

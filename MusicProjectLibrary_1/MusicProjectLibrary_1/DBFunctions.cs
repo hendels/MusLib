@@ -106,6 +106,17 @@ namespace MusicProjectLibrary_1
                 return output;
             }
         }
+        public List<SQLAlbumTable> GetAlbumArtists()
+        {
+            //throw new NotImplementedException();
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
+            {
+
+                var output = connection.Query<SQLAlbumTable>("dbo.spAlbums_GetAlbumsArtists").ToList();
+                GlobalChecker.TestSqlAlbumIdQuery += 1;
+                return output;
+            }
+        }
         //[INSERT Albums table]
         public void InsertAlbum(string AlbumNameP, string AlbumDir, string ArtistName, int releaseYear, string AlbumGenreP)
         {

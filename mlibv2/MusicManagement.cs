@@ -262,9 +262,16 @@ namespace MusicProjectLibrary_1
             {
                 RefreshSpecificTable(1);
                 SQLDataValidate.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
-                dgvAlbums.ClearSelection();                               //[przemy knowledge - zaznaczanie data grid view]
-                dgvAlbums.CurrentCell = dgvAlbums.Rows[masterRow].Cells[0]; //[przemy knowledge - zaznaczanie data grid view]
-                dgvAlbums.Rows[masterRow].Selected = true;            //[przemy knowledge - zaznaczanie data grid view]
+                try
+                {
+                    dgvAlbums.ClearSelection();                               //[przemy knowledge - zaznaczanie data grid view]
+                    dgvAlbums.CurrentCell = dgvAlbums.Rows[masterRow].Cells[0]; //[przemy knowledge - zaznaczanie data grid view]
+                    dgvAlbums.Rows[masterRow].Selected = true;            //[przemy knowledge - zaznaczanie data grid view]
+                }
+                catch (Exception ex)
+                {
+
+                }
             }
         }
         private void AlbumsDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)

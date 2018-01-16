@@ -91,6 +91,7 @@ namespace MusicProjectLibrary_1
             set { CreateBackup = value; }
         }
         public static int IgnoreCurrentFolder = 0;
+        public static string SelectedArtist = "";
     }
     public class uniqueCatalogs
     {
@@ -147,5 +148,19 @@ namespace MusicProjectLibrary_1
             set { CheckerRating = value; }
         }
         
+    }
+    public class dataGridColumnsDuplicates
+    {
+
+        public int colFirstPath = 0;
+        public int colFirstIdAlbum = 1;
+        public int colFirstIdTrack = 2;
+        public int colFirstRating = 3;
+
+        public int colSecondPath = 4;
+        public int colSecondIdAlbum = 5;
+        public int colSecondIdTrack = 6;
+        public int colSecondRating = 7;
+
     }
 }

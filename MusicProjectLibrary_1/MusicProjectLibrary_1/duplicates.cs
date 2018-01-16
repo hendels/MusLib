@@ -10,20 +10,7 @@ using System.Windows.Forms;
 
 namespace MusicProjectLibrary_1
 {
-    public class dataGridColumnsDuplicates
-    {
-
-        public int colFirstPath = 0;
-        public int colFirstIdAlbum = 1;
-        public int colFirstIdTrack = 2;
-        public int colFirstRating = 3;
-
-        public int colSecondPath = 4;
-        public int colSecondIdAlbum = 5;
-        public int colSecondIdTrack = 6;
-        public int colSecondRating = 7;
-
-    }
+    
     public partial class duplicatesForm : Form
     {
         public int currentAlbumID;
@@ -58,6 +45,7 @@ namespace MusicProjectLibrary_1
 
             }
         }
+        
         private void duplicates_Load(object sender, EventArgs e)
         {
             
@@ -160,4 +148,5 @@ namespace MusicProjectLibrary_1
         }
         
     }
+
 }

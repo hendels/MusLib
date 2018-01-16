@@ -13,6 +13,7 @@ namespace MusicProjectLibrary_1
     public partial class PickGenre : Form
     {
         public bool TextChanged;
+        public string ListPickedGenres = "";
         public PickGenre()
         {
             InitializeComponent();
@@ -20,42 +21,44 @@ namespace MusicProjectLibrary_1
 
         private void PickGenre_Load(object sender, EventArgs e)
         {
-            Functions.createGenreList(chlstGenres);            
+            PickGenreMgt.createGenreList(chlstGenres);
+            PickGenreMgt.createSecondaryGenreList(GlobalVariables.SelectedArtist , chlstSuggestedGenres);
         }
 
         
 
         private void chlstGenres_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            Functions.pickedGenre(tbxSelectedGenre, chlstGenres);
+            PickGenreMgt.pickedGenre(tbxSelectedGenre, chlstGenres);
         }
 
         private void chlstGenres_SelectedValueChanged(object sender, EventArgs e)
         {
-            Functions.pickedGenre(tbxSelectedGenre, chlstGenres);
+            //PickGenreMgt.pickedGenre(tbxSelectedGenre, chlstGenres);
+            PickGenreMgt.findRelatedGenres(chlstGenres.SelectedItem.ToString(), chlstRelatedGenresOnHDD);
         }
 
         private void chlstGenres_Validated(object sender, EventArgs e)
         {
-            Functions.pickedGenre(tbxSelectedGenre, chlstGenres);
+            PickGenreMgt.pickedGenre(tbxSelectedGenre, chlstGenres);
         }
 
         private void chlstGenres_MouseLeave(object sender, EventArgs e)
         {
-            Functions.pickedGenre(tbxSelectedGenre, chlstGenres);
+            PickGenreMgt.pickedGenre(tbxSelectedGenre, chlstGenres);
         }
 
         private void chlstGenres_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == ' ')
-                Functions.pickedGenre(tbxSelectedGenre, chlstGenres);
+                PickGenreMgt.pickedGenre(tbxSelectedGenre, chlstGenres);
         }
 
         private void btnDeclareGenre_Click(object sender, EventArgs e)
         {
-            string ListPickedGenres = "";
+            
             if (!TextChanged)            
-                ListPickedGenres = Functions.pickedGenre(tbxSelectedGenre, chlstGenres);            
+                ListPickedGenres = PickGenreMgt.pickedGenre(tbxSelectedGenre, chlstGenres);            
             else            
                 ListPickedGenres = tbxWriteGenre.Text;            
                 
@@ -68,6 +71,43 @@ namespace MusicProjectLibrary_1
         private void tbxWriteGenre_TextChanged(object sender, EventArgs e)
         {
             TextChanged = true;
+        }
+
+        private void chlstRelatedGenresOnHDD_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void chlstSuggestedGenres_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            
+        }
+
+        private void chlstSuggestedGenres_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            
+                
+        }
+
+        private void chlstRelatedGenresOnHDD_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == ' ')
+            {
+                tbxSelectedGenre.Text = chlstRelatedGenresOnHDD.SelectedItem.ToString();
+                ListPickedGenres = chlstRelatedGenresOnHDD.SelectedItem.ToString();
+            }
+        }
+
+        private void chlstRelatedGenresOnHDD_SelectedValueChanged(object sender, EventArgs e)
+        {
+            //tbxSelectedGenre.Text = chlstRelatedGenresOnHDD.SelectedItem.ToString();
+            //ListPickedGenres = chlstRelatedGenresOnHDD.SelectedItem.ToString();
+        }
+
+        private void chlstRelatedGenresOnHDD_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            tbxSelectedGenre.Text = chlstRelatedGenresOnHDD.SelectedItem.ToString();
+            ListPickedGenres = chlstRelatedGenresOnHDD.SelectedItem.ToString();
         }
     }
 }

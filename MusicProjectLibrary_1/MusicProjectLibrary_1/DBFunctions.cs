@@ -95,17 +95,28 @@ namespace MusicProjectLibrary_1
             }
             return 0;
         }
-        public List<SQLAlbumTable> GetAlbumsArtists()
+        
+        public List<SQLAlbumTable> GetAllAlbumWrittenGenresByArtist(string AlbumArtistP)
         {
             //throw new NotImplementedException();
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
             {
-
-                var output = connection.Query<SQLAlbumTable>("dbo.spAlbums_GetAlbumsArtists").ToList();
+                var output = connection.Query<SQLAlbumTable>("dbo.spAlbums_GetAllWrittenGenresByArtist @AlbumArtist", new { AlbumArtist = AlbumArtistP }).ToList();
                 GlobalChecker.TestSqlAlbumIdQuery += 1;
                 return output;
             }
         }
+        public List<SQLAlbumTable> GetAllRelatedGenres(string SelectedGenreP)
+        {
+            //throw new NotImplementedException();
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("MusicLibDB")))
+            {
+                var output = connection.Query<SQLAlbumTable>("dbo.spAlbums_GetAllRelatedGenres @SelectedGenre", new { SelectedGenre = SelectedGenreP }).ToList();
+                GlobalChecker.TestSqlAlbumIdQuery += 1;
+                return output;
+            }
+        }
+        
         public List<SQLAlbumTable> GetAlbumArtists()
         {
             //throw new NotImplementedException();

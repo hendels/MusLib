@@ -35,6 +35,8 @@ namespace MusicProjectLibrary_1
             }
             else if (AlbumColIndex == DGC.colDirectoryGenre)
             {
+                string ArtistGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colArtistName].Value.ToString();
+                GlobalVariables.SelectedArtist = ArtistGrid;
                 pickGenreForm.ShowDialog();
                 int countRecord = DBFunctions.AutoSearchDatabaseAlbums(1, DGV, 1, 0,0,0, false);                
                 boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());

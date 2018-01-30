@@ -11,12 +11,12 @@ namespace MusicProjectLibrary_1
 {
     class DirectoryManagement
     {
-        public static bool DoubleClickOnGridCallBack(DataGridView DGV, PickGenre pickGenreForm, ListBox boxListConsole, int AlbumRowIndex)
+        public static bool DoubleClickOnGridCallBack(DataGridView DGV, PickGenre pickGenreForm, ListBox boxListConsole, int AlbumRowIndex, int AlbumColIndex)
         {
             DGV.MultiSelect = false;
             SQLDataValidate.dataGridColumns DGC = new SQLDataValidate.dataGridColumns();
      
-            int AlbumColIndex = DGV.CurrentCell.ColumnIndex; // [przemy knowledge - select column in data grid view]
+            //int AlbumColIndex = DGV.CurrentCell.ColumnIndex; // [przemy knowledge - select column in data grid view]
             string GridValueString = "";
 
                 

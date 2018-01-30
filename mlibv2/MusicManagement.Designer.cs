@@ -51,6 +51,12 @@
             this.button2 = new System.Windows.Forms.Button();
             this.btnDiscogs = new System.Windows.Forms.Button();
             this.tabSetup = new System.Windows.Forms.TabPage();
+            this.tbxBackupPath = new System.Windows.Forms.TextBox();
+            this.btnSaveXml = new System.Windows.Forms.Button();
+            this.btnChangeGeneralCatalogPath = new System.Windows.Forms.Button();
+            this.tbxMusicPath = new System.Windows.Forms.TextBox();
+            this.changeMainPath = new System.Windows.Forms.Button();
+            this.tbxPickedPath = new System.Windows.Forms.TextBox();
             this.tbxDriveMainPath = new System.Windows.Forms.TextBox();
             this.chbCheckGeneralPath = new System.Windows.Forms.CheckBox();
             this.chbWriteValidationPoints = new System.Windows.Forms.CheckBox();
@@ -82,12 +88,6 @@
             this.tbxTrackCount = new System.Windows.Forms.TextBox();
             this.tbxAlbumCount = new System.Windows.Forms.TextBox();
             this.chbProceed = new System.Windows.Forms.CheckBox();
-            this.btnSaveXml = new System.Windows.Forms.Button();
-            this.btnChangeGeneralCatalogPath = new System.Windows.Forms.Button();
-            this.tbxMusicPath = new System.Windows.Forms.TextBox();
-            this.changeMainPath = new System.Windows.Forms.Button();
-            this.tbxPickedPath = new System.Windows.Forms.TextBox();
-            this.tbxBackupPath = new System.Windows.Forms.TextBox();
             this.tabCtrTrackAlbums.SuspendLayout();
             this.tabAlbums.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlbums)).BeginInit();
@@ -255,6 +255,7 @@
             this.dgvAlbums.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.AlbumsDataGridView_DataBindingComplete_1);
             this.dgvAlbums.SelectionChanged += new System.EventHandler(this.AlbumsDataGridView_SelectionChanged_1);
             this.dgvAlbums.DoubleClick += new System.EventHandler(this.AlbumsDataGridView_DoubleClick);
+            this.dgvAlbums.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvAlbums_KeyDown);
             // 
             // tabTracks
             // 
@@ -378,6 +379,64 @@
             this.tabSetup.TabIndex = 3;
             this.tabSetup.Text = "Setup";
             this.tabSetup.UseVisualStyleBackColor = true;
+            // 
+            // tbxBackupPath
+            // 
+            this.tbxBackupPath.BackColor = System.Drawing.Color.LightCoral;
+            this.tbxBackupPath.Enabled = false;
+            this.tbxBackupPath.Location = new System.Drawing.Point(1, 86);
+            this.tbxBackupPath.Name = "tbxBackupPath";
+            this.tbxBackupPath.Size = new System.Drawing.Size(365, 20);
+            this.tbxBackupPath.TabIndex = 48;
+            // 
+            // btnSaveXml
+            // 
+            this.btnSaveXml.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSaveXml.Location = new System.Drawing.Point(3, 202);
+            this.btnSaveXml.Name = "btnSaveXml";
+            this.btnSaveXml.Size = new System.Drawing.Size(96, 20);
+            this.btnSaveXml.TabIndex = 47;
+            this.btnSaveXml.Text = "Save Metadata";
+            this.btnSaveXml.UseVisualStyleBackColor = true;
+            this.btnSaveXml.Click += new System.EventHandler(this.btnSaveXml_Click);
+            // 
+            // btnChangeGeneralCatalogPath
+            // 
+            this.btnChangeGeneralCatalogPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnChangeGeneralCatalogPath.Location = new System.Drawing.Point(368, 34);
+            this.btnChangeGeneralCatalogPath.Name = "btnChangeGeneralCatalogPath";
+            this.btnChangeGeneralCatalogPath.Size = new System.Drawing.Size(86, 20);
+            this.btnChangeGeneralCatalogPath.TabIndex = 44;
+            this.btnChangeGeneralCatalogPath.Text = "General Path";
+            this.btnChangeGeneralCatalogPath.UseVisualStyleBackColor = true;
+            // 
+            // tbxMusicPath
+            // 
+            this.tbxMusicPath.BackColor = System.Drawing.Color.AliceBlue;
+            this.tbxMusicPath.Enabled = false;
+            this.tbxMusicPath.Location = new System.Drawing.Point(1, 34);
+            this.tbxMusicPath.Name = "tbxMusicPath";
+            this.tbxMusicPath.Size = new System.Drawing.Size(365, 20);
+            this.tbxMusicPath.TabIndex = 43;
+            // 
+            // changeMainPath
+            // 
+            this.changeMainPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.changeMainPath.Location = new System.Drawing.Point(368, 60);
+            this.changeMainPath.Name = "changeMainPath";
+            this.changeMainPath.Size = new System.Drawing.Size(86, 20);
+            this.changeMainPath.TabIndex = 42;
+            this.changeMainPath.Text = "Purgatory Path";
+            this.changeMainPath.UseVisualStyleBackColor = true;
+            // 
+            // tbxPickedPath
+            // 
+            this.tbxPickedPath.BackColor = System.Drawing.Color.AliceBlue;
+            this.tbxPickedPath.Enabled = false;
+            this.tbxPickedPath.Location = new System.Drawing.Point(1, 60);
+            this.tbxPickedPath.Name = "tbxPickedPath";
+            this.tbxPickedPath.Size = new System.Drawing.Size(365, 20);
+            this.tbxPickedPath.TabIndex = 41;
             // 
             // tbxDriveMainPath
             // 
@@ -626,64 +685,6 @@
             this.chbProceed.TabIndex = 46;
             this.chbProceed.Text = "Show Proceed";
             this.chbProceed.UseVisualStyleBackColor = true;
-            // 
-            // btnSaveXml
-            // 
-            this.btnSaveXml.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSaveXml.Location = new System.Drawing.Point(3, 202);
-            this.btnSaveXml.Name = "btnSaveXml";
-            this.btnSaveXml.Size = new System.Drawing.Size(96, 20);
-            this.btnSaveXml.TabIndex = 47;
-            this.btnSaveXml.Text = "Save Metadata";
-            this.btnSaveXml.UseVisualStyleBackColor = true;
-            this.btnSaveXml.Click += new System.EventHandler(this.btnSaveXml_Click);
-            // 
-            // btnChangeGeneralCatalogPath
-            // 
-            this.btnChangeGeneralCatalogPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnChangeGeneralCatalogPath.Location = new System.Drawing.Point(368, 34);
-            this.btnChangeGeneralCatalogPath.Name = "btnChangeGeneralCatalogPath";
-            this.btnChangeGeneralCatalogPath.Size = new System.Drawing.Size(86, 20);
-            this.btnChangeGeneralCatalogPath.TabIndex = 44;
-            this.btnChangeGeneralCatalogPath.Text = "General Path";
-            this.btnChangeGeneralCatalogPath.UseVisualStyleBackColor = true;
-            // 
-            // tbxMusicPath
-            // 
-            this.tbxMusicPath.BackColor = System.Drawing.Color.AliceBlue;
-            this.tbxMusicPath.Enabled = false;
-            this.tbxMusicPath.Location = new System.Drawing.Point(1, 34);
-            this.tbxMusicPath.Name = "tbxMusicPath";
-            this.tbxMusicPath.Size = new System.Drawing.Size(365, 20);
-            this.tbxMusicPath.TabIndex = 43;
-            // 
-            // changeMainPath
-            // 
-            this.changeMainPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.changeMainPath.Location = new System.Drawing.Point(368, 60);
-            this.changeMainPath.Name = "changeMainPath";
-            this.changeMainPath.Size = new System.Drawing.Size(86, 20);
-            this.changeMainPath.TabIndex = 42;
-            this.changeMainPath.Text = "Purgatory Path";
-            this.changeMainPath.UseVisualStyleBackColor = true;
-            // 
-            // tbxPickedPath
-            // 
-            this.tbxPickedPath.BackColor = System.Drawing.Color.AliceBlue;
-            this.tbxPickedPath.Enabled = false;
-            this.tbxPickedPath.Location = new System.Drawing.Point(1, 60);
-            this.tbxPickedPath.Name = "tbxPickedPath";
-            this.tbxPickedPath.Size = new System.Drawing.Size(365, 20);
-            this.tbxPickedPath.TabIndex = 41;
-            // 
-            // tbxBackupPath
-            // 
-            this.tbxBackupPath.BackColor = System.Drawing.Color.LightCoral;
-            this.tbxBackupPath.Enabled = false;
-            this.tbxBackupPath.Location = new System.Drawing.Point(1, 86);
-            this.tbxBackupPath.Name = "tbxBackupPath";
-            this.tbxBackupPath.Size = new System.Drawing.Size(365, 20);
-            this.tbxBackupPath.TabIndex = 48;
             // 
             // MusicLibraryWindow
             // 

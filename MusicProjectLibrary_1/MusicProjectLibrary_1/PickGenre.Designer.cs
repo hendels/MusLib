@@ -34,6 +34,8 @@
             this.tbxSelectedGenre = new System.Windows.Forms.TextBox();
             this.tbxWriteGenre = new System.Windows.Forms.TextBox();
             this.chlstRelatedGenresOnHDD = new System.Windows.Forms.CheckedListBox();
+            this.lblRelatedGenres = new System.Windows.Forms.Label();
+            this.lblSuggestedGenres = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // chlstGenres
@@ -62,11 +64,12 @@
             // chlstSuggestedGenres
             // 
             this.chlstSuggestedGenres.FormattingEnabled = true;
-            this.chlstSuggestedGenres.Location = new System.Drawing.Point(279, 12);
+            this.chlstSuggestedGenres.Location = new System.Drawing.Point(279, 27);
             this.chlstSuggestedGenres.Name = "chlstSuggestedGenres";
-            this.chlstSuggestedGenres.Size = new System.Drawing.Size(260, 109);
+            this.chlstSuggestedGenres.Size = new System.Drawing.Size(260, 94);
             this.chlstSuggestedGenres.TabIndex = 37;
             this.chlstSuggestedGenres.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chlstSuggestedGenres_ItemCheck);
+            this.chlstSuggestedGenres.SelectedValueChanged += new System.EventHandler(this.chlstSuggestedGenres_SelectedValueChanged);
             this.chlstSuggestedGenres.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.chlstSuggestedGenres_KeyPress);
             // 
             // tbxSelectedGenre
@@ -92,20 +95,42 @@
             // chlstRelatedGenresOnHDD
             // 
             this.chlstRelatedGenresOnHDD.FormattingEnabled = true;
-            this.chlstRelatedGenresOnHDD.Location = new System.Drawing.Point(279, 132);
+            this.chlstRelatedGenresOnHDD.Location = new System.Drawing.Point(279, 147);
             this.chlstRelatedGenresOnHDD.Name = "chlstRelatedGenresOnHDD";
-            this.chlstRelatedGenresOnHDD.Size = new System.Drawing.Size(260, 199);
+            this.chlstRelatedGenresOnHDD.Size = new System.Drawing.Size(260, 184);
             this.chlstRelatedGenresOnHDD.TabIndex = 40;
             this.chlstRelatedGenresOnHDD.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chlstRelatedGenresOnHDD_ItemCheck);
             this.chlstRelatedGenresOnHDD.SelectedIndexChanged += new System.EventHandler(this.chlstRelatedGenresOnHDD_SelectedIndexChanged);
             this.chlstRelatedGenresOnHDD.SelectedValueChanged += new System.EventHandler(this.chlstRelatedGenresOnHDD_SelectedValueChanged);
             this.chlstRelatedGenresOnHDD.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.chlstRelatedGenresOnHDD_KeyPress);
             // 
+            // lblRelatedGenres
+            // 
+            this.lblRelatedGenres.AutoSize = true;
+            this.lblRelatedGenres.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblRelatedGenres.Location = new System.Drawing.Point(278, 124);
+            this.lblRelatedGenres.Name = "lblRelatedGenres";
+            this.lblRelatedGenres.Size = new System.Drawing.Size(82, 13);
+            this.lblRelatedGenres.TabIndex = 41;
+            this.lblRelatedGenres.Text = "HDD Genres:";
+            // 
+            // lblSuggestedGenres
+            // 
+            this.lblSuggestedGenres.AutoSize = true;
+            this.lblSuggestedGenres.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSuggestedGenres.Location = new System.Drawing.Point(278, 9);
+            this.lblSuggestedGenres.Name = "lblSuggestedGenres";
+            this.lblSuggestedGenres.Size = new System.Drawing.Size(132, 13);
+            this.lblSuggestedGenres.TabIndex = 42;
+            this.lblSuggestedGenres.Text = "Artist Related Genres:";
+            // 
             // PickGenre
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(543, 549);
+            this.ClientSize = new System.Drawing.Size(543, 433);
+            this.Controls.Add(this.lblSuggestedGenres);
+            this.Controls.Add(this.lblRelatedGenres);
             this.Controls.Add(this.chlstRelatedGenresOnHDD);
             this.Controls.Add(this.tbxWriteGenre);
             this.Controls.Add(this.tbxSelectedGenre);
@@ -128,5 +153,7 @@
         private System.Windows.Forms.TextBox tbxSelectedGenre;
         private System.Windows.Forms.TextBox tbxWriteGenre;
         private System.Windows.Forms.CheckedListBox chlstRelatedGenresOnHDD;
+        private System.Windows.Forms.Label lblRelatedGenres;
+        private System.Windows.Forms.Label lblSuggestedGenres;
     }
 }

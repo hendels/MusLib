@@ -17,6 +17,7 @@ using MaterialSkin;
 using Dapper;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using static MusicProjectLibrary_1.SQLDataValidate;
 
 namespace MusicProjectLibrary_1
 {
@@ -69,6 +70,11 @@ namespace MusicProjectLibrary_1
                 }
                 
             }
+            //
+            //refresh
+            //
+            RefreshSpecificTable(1);
+            SQLDataValidate.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
         }
         private void btnSaveXml_Click(object sender, EventArgs e)
         {
@@ -153,23 +159,7 @@ namespace MusicProjectLibrary_1
                 //musicLibraryDataSet.RejectChanges();
             }
         }
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                
-                Validate();
-                musicLibraryDataSetBindingSource.EndEdit();
-
-                MessageBox.Show("updated");
-
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }        
+        
         private void btnDelete_Click(object sender, EventArgs e)
         {
 
@@ -243,7 +233,7 @@ namespace MusicProjectLibrary_1
         private void AlbumsDataGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             PickGenre pickGenreForm = new PickGenre();
-            DirectoryManagement.DoubleClickOnGridCallBack(dgvAlbums, pickGenreForm, BoxListConsole, AlbumRowIndex);
+            DirectoryManagement.DoubleClickOnGridCallBack(dgvAlbums, pickGenreForm, BoxListConsole, AlbumRowIndex, dgvAlbums.CurrentCell.ColumnIndex);
             SQLDataValidate.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
         }
         private void AlbumsDataGridView_SelectionChanged_1(object sender, EventArgs e)
@@ -254,11 +244,11 @@ namespace MusicProjectLibrary_1
                 GlobalVariables.globalSelectedGridAlbumID = (int)dgvAlbums[0, AlbumRowIndex].Value; //[knowledge get value from specific column in datagrid view]                
             }
         }
-        private void AlbumsDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void DgvAlbumsCellDoubleClick(object sender, int columnIndex)
         {
             PickGenre pickGenreForm = new PickGenre();
             int masterRow = AlbumRowIndex;
-            if (DirectoryManagement.DoubleClickOnGridCallBack(dgvAlbums, pickGenreForm, BoxListConsole, AlbumRowIndex))
+            if (DirectoryManagement.DoubleClickOnGridCallBack(dgvAlbums, pickGenreForm, BoxListConsole, AlbumRowIndex, columnIndex))
             {
                 RefreshSpecificTable(1);
                 SQLDataValidate.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
@@ -273,6 +263,10 @@ namespace MusicProjectLibrary_1
 
                 }
             }
+        }
+        private void AlbumsDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DgvAlbumsCellDoubleClick(sender, dgvAlbums.CurrentCell.ColumnIndex);
         }
         private void AlbumsDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -356,10 +350,6 @@ namespace MusicProjectLibrary_1
         private void btnDiscogs_Click(object sender, EventArgs e)
         {
 
-            //string SearchArtist = "";
-            //string SearchRelease = "";
-            //DiscogsManagement.startDiscogs(BoxListConsole.Items, SearchArtist, SearchRelease, 0);
-            //this.Show();
         }       
         private void btnSelectHealthy_Click(object sender, EventArgs e)
         {
@@ -419,6 +409,13 @@ namespace MusicProjectLibrary_1
                 GlobalVariables.checkGeneralPath = false;
         }
 
-        
+        private void dgvAlbums_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == (Keys.Control | Keys.D))
+            {
+                dataGridColumns DGC = new dataGridColumns();
+                DgvAlbumsCellDoubleClick(sender, DGC.colDirectoryGenre);
+            }
+        }
     }
 }

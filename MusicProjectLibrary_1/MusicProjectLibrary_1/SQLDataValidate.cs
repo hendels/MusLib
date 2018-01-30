@@ -210,19 +210,8 @@ namespace MusicProjectLibrary_1
         {
             BackgroundWorker worker = sender as BackgroundWorker;
 
-            //for (int i = 1; i <= 10; i++)
-            //{
-                //if ((worker.CancellationPending == true))
-                //{
-                    //e.Cancel = true;
-                    //break;
-                //}
-                //else
-                //{
-                    ReadDataGridForAll(DGV, boxListConsole);
-                    //worker.ReportProgress(i * 10);
-                //}
-            //}
+            ReadDataGridForAll(DGV, boxListConsole);
+
         }
         public static void ReadDataGridForAll(DataGridView DGV, ListBox.ObjectCollection boxListConsole)
         {

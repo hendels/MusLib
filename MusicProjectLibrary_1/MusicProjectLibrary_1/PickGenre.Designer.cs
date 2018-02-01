@@ -90,6 +90,7 @@
             this.tbxWriteGenre.Size = new System.Drawing.Size(259, 20);
             this.tbxWriteGenre.TabIndex = 39;
             this.tbxWriteGenre.Text = "<LastUsedGenre>";
+            this.tbxWriteGenre.Click += new System.EventHandler(this.tbxWriteGenre_Click);
             this.tbxWriteGenre.TextChanged += new System.EventHandler(this.tbxWriteGenre_TextChanged);
             // 
             // chlstRelatedGenresOnHDD
@@ -100,8 +101,6 @@
             this.chlstRelatedGenresOnHDD.Size = new System.Drawing.Size(260, 184);
             this.chlstRelatedGenresOnHDD.TabIndex = 40;
             this.chlstRelatedGenresOnHDD.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chlstRelatedGenresOnHDD_ItemCheck);
-            this.chlstRelatedGenresOnHDD.SelectedIndexChanged += new System.EventHandler(this.chlstRelatedGenresOnHDD_SelectedIndexChanged);
-            this.chlstRelatedGenresOnHDD.SelectedValueChanged += new System.EventHandler(this.chlstRelatedGenresOnHDD_SelectedValueChanged);
             this.chlstRelatedGenresOnHDD.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.chlstRelatedGenresOnHDD_KeyPress);
             // 
             // lblRelatedGenres
@@ -140,6 +139,7 @@
             this.Name = "PickGenre";
             this.Text = "Pick Genre";
             this.Load += new System.EventHandler(this.PickGenre_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PickGenre_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

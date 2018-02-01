@@ -88,8 +88,7 @@ namespace MusicProjectLibrary_1
                 counter += 1;
                 if (checkedListGenre.Items.Count == 1)
                     allGenres = item.ToString();
-                else
-                    if (counter == 1)
+                else if (counter == 1)
                     allGenres = item.ToString();
                 else
                     allGenres = allGenres + "-" + item.ToString();

@@ -506,12 +506,25 @@ namespace MusicProjectLibrary_1
         {
             DGV.DataSource = ArtistList;
         }                
-        public static int AutoSearchDatabaseTracks(int IdTrack, DataGridView DGV, int AlbumCount, int RateMin, int RateMax)
+        public static int AutoSearchDatabaseTracksByTrackIndex(int IdTrack, DataGridView DGV, int AlbumCount, int RateMin, int RateMax)
         {
             List<SQLTrackTable> TrackList = new List<SQLTrackTable>(); //sqlprzemy - table : Albums
             DBFunctions db = new DBFunctions();
             if (IdTrack != 0)
                 TrackList = db.GetTrackByTrackIndex(IdTrack);
+            else
+                TrackList = db.GetAllTracks(AlbumCount, 0, 1, RateMin, RateMax);
+
+            UpdateBindingTracks(DGV, TrackList);
+            int countRecord = TrackList.Count;
+            return countRecord;
+        }
+        public static int AutoSearchDatabaseTracksByAlbumID(int IdAlbum, DataGridView DGV, int AlbumCount, int RateMin, int RateMax)
+        {
+            List<SQLTrackTable> TrackList = new List<SQLTrackTable>(); //sqlprzemy - table : Albums
+            DBFunctions db = new DBFunctions();
+            if (IdAlbum != 0)
+                TrackList = db.GetTrackByAlbumId(IdAlbum);
             else
                 TrackList = db.GetAllTracks(AlbumCount, 0, 1, RateMin, RateMax);
 

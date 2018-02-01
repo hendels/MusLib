@@ -88,6 +88,7 @@
             this.tbxTrackCount = new System.Windows.Forms.TextBox();
             this.tbxAlbumCount = new System.Windows.Forms.TextBox();
             this.chbProceed = new System.Windows.Forms.CheckBox();
+            this.button5 = new System.Windows.Forms.Button();
             this.tabCtrTrackAlbums.SuspendLayout();
             this.tabAlbums.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlbums)).BeginInit();
@@ -357,6 +358,7 @@
             // 
             // tabSetup
             // 
+            this.tabSetup.Controls.Add(this.button5);
             this.tabSetup.Controls.Add(this.tbxBackupPath);
             this.tabSetup.Controls.Add(this.btnSaveXml);
             this.tabSetup.Controls.Add(this.btnChangeGeneralCatalogPath);
@@ -686,6 +688,16 @@
             this.chbProceed.Text = "Show Proceed";
             this.chbProceed.UseVisualStyleBackColor = true;
             // 
+            // button5
+            // 
+            this.button5.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button5.Location = new System.Drawing.Point(3, 176);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(152, 20);
+            this.button5.TabIndex = 49;
+            this.button5.Text = "Check If File in Albums Exists";
+            this.button5.UseVisualStyleBackColor = true;
+            // 
             // MusicLibraryWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -826,6 +838,7 @@
         private System.Windows.Forms.Button changeMainPath;
         private System.Windows.Forms.TextBox tbxPickedPath;
         private System.Windows.Forms.TextBox tbxBackupPath;
+        private System.Windows.Forms.Button button5;
     }
 }
 

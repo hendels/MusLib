@@ -33,16 +33,19 @@ namespace MusicProjectLibrary_1
                 }
                 return false;
             }
-            else if (AlbumColIndex == DGC.colDirectoryGenre)
+            else if (AlbumColIndex == DGC.colDirectoryGenre) // show pick Genre Form
             {
                 string ArtistGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colArtistName].Value.ToString();
                 GlobalVariables.SelectedArtist = ArtistGrid;
                 pickGenreForm.ShowDialog();
-                int countRecord = DBFunctions.AutoSearchDatabaseAlbums(1, DGV, 1, 0,0,0, false);                
-                boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
-                boxListConsole.SelectedIndex = boxListConsole.Items.Count - 1;
-
-                return true;
+                if (pickGenreForm.GeneratedGenreString != "")
+                {
+                    int countRecord = DBFunctions.AutoSearchDatabaseAlbums(1, DGV, 1, 0, 0, 0, false);
+                    boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
+                    boxListConsole.SelectedIndex = boxListConsole.Items.Count - 1;
+                    return true;
+                }          
+                
             }   
             else if (AlbumColIndex == DGC.colAlbumGeneralGenre)
             {

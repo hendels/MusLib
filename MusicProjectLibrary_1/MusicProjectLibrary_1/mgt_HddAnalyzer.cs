@@ -406,7 +406,29 @@ namespace MusicProjectLibrary_1
 
                     case 2:
                         var tagGenreFilled = ListItem.Distinct().Count() == 1;
-                        string firstElementGenre = ListItem.First();
+                        //
+                        List<string> uniqueGenre = new List<string>();
+                        string genreString = "";
+                        int countGenres = 0;
+                        foreach (string genre in ListItem)
+                        {
+                            if (uniqueGenre.Any(uArtist => uArtist == genre)) // [przemy knowledge] szukanie duplikatów w liście > jeżeli istnieje duplikat nie dodawaj do listy ponownie
+                            {
+                            }
+                            else                            
+                                uniqueGenre.Add(genre);                            
+                        }
+                        foreach(string itemGenre in uniqueGenre)
+                        {     
+                            if(countGenres == 0)                            
+                                genreString = itemGenre;                            
+                            //if (uniqueGenre.IndexOf(itemGenre) == 1) // [przemy knowledge] szukanie indeksu w liscie     
+                            else                            
+                                genreString = genreString + ", " + itemGenre;
+
+                            countGenres += 1;
+                        }
+                        string firstElementGenre = uniqueGenre.First();
 
                         if ((tagGenreFilled == true) & (firstElementGenre != ""))
                         {
@@ -414,13 +436,20 @@ namespace MusicProjectLibrary_1
                                 idAlbum = updateAlbumsTableInDB(5, itemUQC, firstElementGenre, true, 0, 0);
                             else
                                 updateAlbumsTableInDB(5, itemUQC, firstElementGenre, true, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja Genre]
-                        }                            
+                        }  
+                        else if ((tagGenreFilled == false) & (firstElementGenre != ""))
+                        {
+                            if (publicAlbumIndex == 0)
+                                idAlbum = updateAlbumsTableInDB(5, itemUQC, genreString, true, 0, 0);
+                            else
+                                updateAlbumsTableInDB(5, itemUQC, genreString, true, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja Genre]
+                        }
                         else
                         {
                             if (publicAlbumIndex == 0)
-                                idAlbum = updateAlbumsTableInDB(6, itemUQC, "heterogeneous", false, 0, 0);
+                                idAlbum = updateAlbumsTableInDB(6, itemUQC, "error", false, 0, 0);
                             else
-                                updateAlbumsTableInDB(6, itemUQC, "heterogeneous", false, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze niepoprawnie [sekcja Genre]
+                                updateAlbumsTableInDB(6, itemUQC, "error", false, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze niepoprawnie [sekcja Genre]
                         }                            
                         break;
                     case 3:
@@ -697,22 +726,18 @@ namespace MusicProjectLibrary_1
         {
             TagInformation TI = new TagInformation();
 
-            if (MFD.trackAlbum == "" || MFD.trackGenre == "" || MFD.trackName == "" || MFD.trackArtist == "" || MFD.trackIndex == "")
+            if (MFD.trackAlbum == "" || MFD.trackGenre == "" || MFD.trackName == "" || MFD.trackArtist == "" || MFD.trackIndex == "" || MFD.trackStyle == "")
             {
-                globalBoxListConsole.Add(MFD.trackName + " error tag");
+                //globalBoxListConsole.Add(MFD.trackName + " error tag");
                 ListCheckTags.Add(0);
             }
             else
-            {
-                //DateTime dateToday = DateTime.Today;
-                //MFD.pickedAFile.MODTAGDATE = dateToday.ToString("d");
-                
-                
+            {       
                 ListCheckTags.Add(1);  
             }
             TI.trackAlbum = MFD.trackAlbum;
             TI.trackArtist = MFD.trackArtist;
-            TI.trackGenre = MFD.trackGenre;
+            TI.trackGenre = MFD.trackGenre + " " + MFD.trackStyle;
             TI.trackName = MFD.trackName;
             TI.trackIndexLib = MFD.trackIndex;
             TI.pickedAFile = MFD.pickedAFile;
@@ -720,23 +745,7 @@ namespace MusicProjectLibrary_1
             ListTagInformation.Add(TI);
 
         }
-        static void checkAlbumInCatalog(MusicFileDetails MFD, uniqueCatalogs UQC)
-        {
-            // do wyjebania funkcja
-            foreach (MusicFileDetails itemMFD in (IEnumerable<MusicFileDetails>)MFD) //[przemy knowledge  - zastosowanie enumerable]
-            {                
-                //[przemy todo] sprawdzaj czy pierwszy element nie = ""
-                if (itemMFD.trackAlbum.Any(o => o != itemMFD.trackAlbum[0])) //[knowledge] Linqowe sprawdzanie czy elementy w liscie są takie same
-                {
-                    GlobalChecker checkerAlbums = new GlobalChecker();
-                    GlobalChecker.globalCheckerTags = 1;
-                }
-                //MFD.pickedAFile.ALBUM
-            }
-            //if (MFD.trackAlbum )
-            
-        } //TO DELETE
-
+        
         static int ReadTags(string Filename, LazySW SW)
         {
             AudioFile AFile = null;
@@ -744,7 +753,8 @@ namespace MusicProjectLibrary_1
             if (Helpers.JGetExtension(Filename) == "FLAC")
             {
                 AFile = new FLACFile(Filename, false); // Read Only = true
-
+                MusicFileDetails MFD = new MusicFileDetails(); // deklaruj klase
+                /*
                 string onlyDir = Path.GetDirectoryName(AFile.AudioPath);
                 string TrackTitle = AFile.TITLE; //track NAME
                 string TrackRating = AFile.RATING;
@@ -756,10 +766,9 @@ namespace MusicProjectLibrary_1
                 string TrackAudioPath = AFile.AudioPath;
                 string TrackExtension = "FLAC";
                 string TrackAlbumID = AFile.INDEXALBUM;
+                string TrackStyle = AFile.STYLE;
+
                 
-                //update class
-                //AFile.
-                MusicFileDetails MFD = new MusicFileDetails(); // deklaruj klase
                 MFD.trackDirectory = onlyDir;
                 MFD.trackAudioPath = TrackAudioPath;
                 MFD.trackName = TrackTitle;
@@ -771,14 +780,43 @@ namespace MusicProjectLibrary_1
                 MFD.trackIndex = TrackIndex;
                 MFD.trackFileExtension = TrackExtension;                
                 MFD.trackIdAlbumIndex = TrackAlbumID;
+                MFD.trackStyle = TrackStyle;
 
                 MFD.pickedAFile = AFile;
-
+                */
+                setFlacFile(AFile, MFD);
                 globalMusicFileDetailsList.Add(MFD); 
             }
                 
 
             return 0;
+        }
+        private static void setFlacFile(AudioFile AFile, MusicFileDetails MFD)
+        {
+            string onlyDir = Path.GetDirectoryName(AFile.AudioPath);
+            string TrackTitle = AFile.TITLE; //track NAME
+            string TrackRating = AFile.RATING;
+            string TrackModTagDate = AFile.MODTAGDATE;
+            string TrackArtist = AFile.ARTIST;
+            string TrackAlbum = AFile.ALBUM;
+            string TrackGenre = AFile.GENRE;
+            string TrackIndex = AFile.INDEXTRACK;
+            string TrackAudioPath = AFile.AudioPath;
+            string TrackExtension = "FLAC";
+            string TrackAlbumID = AFile.INDEXALBUM;
+            string TrackStyle = AFile.STYLE;
+
+            MFD.trackDirectory = onlyDir;
+            MFD.trackAudioPath = TrackAudioPath;
+            MFD.trackName = TrackTitle;
+            MFD.trackArtist = TrackArtist;
+            MFD.trackAlbum = TrackAlbum;
+            MFD.trackRating = TrackRating;
+            MFD.trackModDateTag = TrackModTagDate;
+            MFD.trackGenre = TrackGenre;
+            MFD.trackIndex = TrackIndex;
+            MFD.trackFileExtension = TrackExtension;
+            MFD.pickedAFile = AFile;
         }
         public static void QuickRead(string FilePath, MusicFileDetails MFD)
         {
@@ -788,32 +826,7 @@ namespace MusicProjectLibrary_1
             {
                 AFile = new FLACFile(FilePath, false); // Read Only = true
 
-                string onlyDir = Path.GetDirectoryName(AFile.AudioPath);
-                string TrackTitle = AFile.TITLE; //track NAME
-                string TrackRating = AFile.RATING;
-                string TrackModTagDate = AFile.MODTAGDATE;
-                string TrackArtist = AFile.ARTIST;
-                string TrackAlbum = AFile.ALBUM;
-                string TrackGenre = AFile.GENRE;
-                string TrackIndex = AFile.INDEXTRACK;
-                string TrackAudioPath = AFile.AudioPath;
-                string TrackExtension = "FLAC";
-
-                //update class
-                //AFile.
-               
-                MFD.trackDirectory = onlyDir;
-                MFD.trackAudioPath = TrackAudioPath;
-                MFD.trackName = TrackTitle;
-                MFD.trackArtist = TrackArtist;
-                MFD.trackAlbum = TrackAlbum;
-                MFD.trackRating = TrackRating;
-                MFD.trackModDateTag = TrackModTagDate;
-                MFD.trackGenre = TrackGenre;
-                MFD.trackIndex = TrackIndex;
-                MFD.trackFileExtension = TrackExtension;
-                MFD.pickedAFile = AFile;               
-                
+                setFlacFile(AFile, MFD);
             }
         }
         static int ChangeModDate(string Filename, LazySW SW)

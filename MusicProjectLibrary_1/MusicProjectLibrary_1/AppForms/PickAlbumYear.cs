@@ -30,7 +30,9 @@ namespace MusicProjectLibrary_1.AppForms
             selectedDiscogs = false;
             selectedYear = false;
             tbxSelectedAlbum.Text = GlobalVariables.SelectedAlbum;
-
+            cmbSelectYear.Items.Add(1992);
+            cmbSelectYear.Items.Add(1993);
+            cmbSelectYear.Items.Add(1994);
             cmbSelectYear.Items.Add(1995);
             cmbSelectYear.Items.Add(1996);
             cmbSelectYear.Items.Add(1997);
@@ -47,6 +49,9 @@ namespace MusicProjectLibrary_1.AppForms
             cmbSelectYear.Items.Add(2008);
             cmbSelectYear.Items.Add(2009);
             cmbSelectYear.Items.Add(2010);
+            cmbSelectYear.Items.Add(2011);
+            cmbSelectYear.Items.Add(2012);
+            cmbSelectYear.Items.Add(2013);
         }
 
         private void btnDiscogs_Click(object sender, EventArgs e)

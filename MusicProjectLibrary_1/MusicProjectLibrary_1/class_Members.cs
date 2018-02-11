@@ -21,6 +21,7 @@ namespace MusicProjectLibrary_1
         public string trackIndex { set; get; }
         public string trackFileExtension { set; get; }
         public string trackIdAlbumIndex { get; set; }
+        public string trackStyle { get; set; }
 
         public AudioFile pickedAFile { set; get; }
     }

@@ -116,15 +116,32 @@ namespace MusicProjectLibrary_1
         {
             Functions.pickPath(2, tbxMusicPath);
         }
+        private void btnReadSelected_Click(object sender, EventArgs e)
+        {
+            string pickedPath = dgvAlbums.Rows[AlbumRowIndex].Cells[publicDGC.colAlbumDirectory].Value.ToString();
+            var confirmResult = MessageBox.Show($"Read tags for {pickedPath} ?",
+                    "Music Library", MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
+            {
+                mgt_HddAnalyzer.readFiles(BoxListConsole.Items, progBar, pickedPath, "blah", lblProgress);
+                int countRecordAlbum = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums, 0,
+                info.AlbumCount, Convert.ToInt32(info.PointsMin), Convert.ToInt32(info.PointsMax), chbProceed.Checked, chb_ShowExceptRating.Checked);
+                BoxListConsole.Items.Add("..........processing path done.");
+                BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
+            }
+            
 
-        private void ButtonReadTag_Click(object sender, EventArgs e)
+        }
+        private void btnReadTag_Click(object sender, EventArgs e)
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
             GlobalChecker.TestSqlAlbumIdQuery = 0;
             mgt_HddAnalyzer.readFiles(BoxListConsole.Items, progBar, tbxPickedPath.Text, tbxDriveMainPath.Text, lblProgress);
 
-            int countRecordAlbum = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums, 1, 0, 0, 0, chbProceed.Checked, chb_ShowExceptRating.Checked);
+            int countRecordAlbum = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums, 0,
+                info.AlbumCount, Convert.ToInt32(info.PointsMin), Convert.ToInt32(info.PointsMax), chbProceed.Checked, chb_ShowExceptRating.Checked);
             int countRecordArtist = mgt_SQLDatabase.AutoSearchDatabaseArtists("", dgvArtists);
+
             BoxListConsole.Items.Add("Album table updated: " + countRecordAlbum.ToString());
             BoxListConsole.Items.Add("Artist table updated: " + countRecordArtist.ToString());
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
@@ -454,5 +471,7 @@ namespace MusicProjectLibrary_1
             }
             return base.ProcessDialogKey(keyData);
         }
+
+
     }
 }

@@ -22,6 +22,7 @@ namespace MusicProjectLibrary_1.AppForms
         {
             selectedDiscogs = false;
             tbxSelectedAlbum.Text = GlobalVariables.SelectedAlbum;
+            btnDiscogs.Focus();
         }
 
         private void btnDiscogs_Click(object sender, EventArgs e)

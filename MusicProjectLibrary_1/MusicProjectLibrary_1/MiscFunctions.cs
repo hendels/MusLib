@@ -20,7 +20,24 @@ namespace MusicProjectLibrary_1
             return File.ReadAllText(Filename);
         }
         public decimal PercentComplete { get; set; }
+        /*
+        public lookForDuplicatesInList()
+        {
+            foreach (SQLAlbumTable artist in queryGetAllArtists)
+            {
+                if (uniqueArtists.Any(uArtist => uArtist == artist.AlbumArtist)) // [przemy knowledge] szukanie duplikatów w liście > jeżeli istnieje duplikat nie dodawaj do listy ponownie
+                {
+
+                }
+                else
+                {
+                    uniqueArtists.Add(artist.AlbumArtist);
+                }
+            }
         
+        }       
+        */
     }
+
     
 }

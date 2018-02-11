@@ -391,6 +391,11 @@ namespace JAudioTags
             get { return ReturnTag("MODTAGDATE"); }
             set { SetTag("MODTAGDATE", value); }
         }
+        public string STYLE
+        {
+            get { return ReturnTag("STYLE"); }
+            set { SetTag("STYLE", value); }
+        }
         /// <summary>
         /// If the current file is a FLAC file this searches the
         /// tag list for the name as passed in and returns the 

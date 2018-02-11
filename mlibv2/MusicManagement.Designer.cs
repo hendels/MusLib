@@ -29,18 +29,15 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.ButtonReadTag = new System.Windows.Forms.Button();
+            this.btnReadTag = new System.Windows.Forms.Button();
             this.CheckBoxProcessCatalogs = new System.Windows.Forms.CheckBox();
             this.CheckBoxModifyFIles = new System.Windows.Forms.CheckBox();
             this.tabCtrTrackAlbums = new System.Windows.Forms.TabControl();
             this.tabAlbums = new System.Windows.Forms.TabPage();
-            this.button6 = new System.Windows.Forms.Button();
             this.btnWriteIndexAlbum = new System.Windows.Forms.Button();
             this.btnDeleteAlbum = new System.Windows.Forms.Button();
-            this.btnSelectHealthy = new System.Windows.Forms.Button();
             this.btnProcessSelected = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.btnDeclareGenre = new System.Windows.Forms.Button();
             this.dgvAlbums = new System.Windows.Forms.DataGridView();
             this.tabTracks = new System.Windows.Forms.TabPage();
             this.btnCheckTrackDuplicates = new System.Windows.Forms.Button();
@@ -91,6 +88,11 @@
             this.tbxAlbumCount = new System.Windows.Forms.TextBox();
             this.chbProceed = new System.Windows.Forms.CheckBox();
             this.chb_ShowExceptRating = new System.Windows.Forms.CheckBox();
+            this.btnReadSelected = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
+            this.button9 = new System.Windows.Forms.Button();
             this.tabCtrTrackAlbums.SuspendLayout();
             this.tabAlbums.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlbums)).BeginInit();
@@ -109,17 +111,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.musicLibraryDataSetBindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
-            // ButtonReadTag
+            // btnReadTag
             // 
-            this.ButtonReadTag.BackColor = System.Drawing.Color.PaleGreen;
-            this.ButtonReadTag.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonReadTag.Location = new System.Drawing.Point(380, 4);
-            this.ButtonReadTag.Name = "ButtonReadTag";
-            this.ButtonReadTag.Size = new System.Drawing.Size(86, 24);
-            this.ButtonReadTag.TabIndex = 17;
-            this.ButtonReadTag.Text = "Read Drive";
-            this.ButtonReadTag.UseVisualStyleBackColor = false;
-            this.ButtonReadTag.Click += new System.EventHandler(this.ButtonReadTag_Click);
+            this.btnReadTag.BackColor = System.Drawing.Color.DarkSeaGreen;
+            this.btnReadTag.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReadTag.Location = new System.Drawing.Point(380, 4);
+            this.btnReadTag.Name = "btnReadTag";
+            this.btnReadTag.Size = new System.Drawing.Size(86, 24);
+            this.btnReadTag.TabIndex = 17;
+            this.btnReadTag.Text = "Read Drive";
+            this.btnReadTag.UseVisualStyleBackColor = false;
+            this.btnReadTag.Click += new System.EventHandler(this.btnReadTag_Click);
             // 
             // CheckBoxProcessCatalogs
             // 
@@ -165,13 +167,10 @@
             // 
             // tabAlbums
             // 
-            this.tabAlbums.Controls.Add(this.button6);
             this.tabAlbums.Controls.Add(this.btnWriteIndexAlbum);
             this.tabAlbums.Controls.Add(this.btnDeleteAlbum);
-            this.tabAlbums.Controls.Add(this.btnSelectHealthy);
             this.tabAlbums.Controls.Add(this.btnProcessSelected);
             this.tabAlbums.Controls.Add(this.button1);
-            this.tabAlbums.Controls.Add(this.btnDeclareGenre);
             this.tabAlbums.Controls.Add(this.dgvAlbums);
             this.tabAlbums.Location = new System.Drawing.Point(4, 22);
             this.tabAlbums.Name = "tabAlbums";
@@ -180,15 +179,6 @@
             this.tabAlbums.TabIndex = 0;
             this.tabAlbums.Text = "Albums";
             this.tabAlbums.UseVisualStyleBackColor = true;
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(545, 3);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(105, 23);
-            this.button6.TabIndex = 43;
-            this.button6.Text = "2017";
-            this.button6.UseVisualStyleBackColor = true;
             // 
             // btnWriteIndexAlbum
             // 
@@ -210,17 +200,6 @@
             this.btnDeleteAlbum.UseVisualStyleBackColor = true;
             this.btnDeleteAlbum.Click += new System.EventHandler(this.btnDeleteAlbum_Click);
             // 
-            // btnSelectHealthy
-            // 
-            this.btnSelectHealthy.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.btnSelectHealthy.Location = new System.Drawing.Point(212, 3);
-            this.btnSelectHealthy.Name = "btnSelectHealthy";
-            this.btnSelectHealthy.Size = new System.Drawing.Size(105, 23);
-            this.btnSelectHealthy.TabIndex = 40;
-            this.btnSelectHealthy.Text = "Select Healthy";
-            this.btnSelectHealthy.UseVisualStyleBackColor = false;
-            this.btnSelectHealthy.Click += new System.EventHandler(this.btnSelectHealthy_Click);
-            // 
             // btnProcessSelected
             // 
             this.btnProcessSelected.Location = new System.Drawing.Point(101, 3);
@@ -239,17 +218,6 @@
             this.button1.TabIndex = 38;
             this.button1.Text = "Find next Genre";
             this.button1.UseVisualStyleBackColor = true;
-            // 
-            // btnDeclareGenre
-            // 
-            this.btnDeclareGenre.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.btnDeclareGenre.Location = new System.Drawing.Point(6, 3);
-            this.btnDeclareGenre.Name = "btnDeclareGenre";
-            this.btnDeclareGenre.Size = new System.Drawing.Size(88, 23);
-            this.btnDeclareGenre.TabIndex = 37;
-            this.btnDeclareGenre.Text = "Declare Genre";
-            this.btnDeclareGenre.UseVisualStyleBackColor = false;
-            this.btnDeclareGenre.Click += new System.EventHandler(this.btnDeclareGenre_Click_1);
             // 
             // dgvAlbums
             // 
@@ -369,6 +337,10 @@
             // 
             // tabSetup
             // 
+            this.tabSetup.Controls.Add(this.button9);
+            this.tabSetup.Controls.Add(this.button8);
+            this.tabSetup.Controls.Add(this.button7);
+            this.tabSetup.Controls.Add(this.button6);
             this.tabSetup.Controls.Add(this.button5);
             this.tabSetup.Controls.Add(this.tbxBackupPath);
             this.tabSetup.Controls.Add(this.btnSaveXml);
@@ -724,11 +696,60 @@
             this.chb_ShowExceptRating.Text = "Except Rating";
             this.chb_ShowExceptRating.UseVisualStyleBackColor = true;
             // 
+            // btnReadSelected
+            // 
+            this.btnReadSelected.BackColor = System.Drawing.Color.PaleGreen;
+            this.btnReadSelected.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReadSelected.Location = new System.Drawing.Point(380, 30);
+            this.btnReadSelected.Name = "btnReadSelected";
+            this.btnReadSelected.Size = new System.Drawing.Size(86, 24);
+            this.btnReadSelected.TabIndex = 48;
+            this.btnReadSelected.Text = "Read Selected";
+            this.btnReadSelected.UseVisualStyleBackColor = false;
+            this.btnReadSelected.Click += new System.EventHandler(this.btnReadSelected_Click);
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(1018, 8);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(105, 23);
+            this.button7.TabIndex = 51;
+            this.button7.Text = "split CUE";
+            this.button7.UseVisualStyleBackColor = true;
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(907, 8);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(105, 23);
+            this.button6.TabIndex = 50;
+            this.button6.Text = "listened in 2017";
+            this.button6.UseVisualStyleBackColor = true;
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(907, 37);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(160, 23);
+            this.button8.TabIndex = 52;
+            this.button8.Text = "improve discogs search";
+            this.button8.UseVisualStyleBackColor = true;
+            // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(907, 66);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(160, 23);
+            this.button9.TabIndex = 53;
+            this.button9.Text = "regex to find albums / tracks";
+            this.button9.UseVisualStyleBackColor = true;
+            // 
             // MusicLibraryWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1246, 509);
+            this.Controls.Add(this.btnReadSelected);
             this.Controls.Add(this.chb_ShowExceptRating);
             this.Controls.Add(this.chbProceed);
             this.Controls.Add(this.tbxAlbumCount);
@@ -747,7 +768,7 @@
             this.Controls.Add(this.btnFindAlbums);
             this.Controls.Add(this.tbxSearchAlbums);
             this.Controls.Add(this.tabCtrTrackAlbums);
-            this.Controls.Add(this.ButtonReadTag);
+            this.Controls.Add(this.btnReadTag);
             this.Controls.Add(this.BoxListConsole);
             this.Name = "MusicLibraryWindow";
             this.Text = "Music Library";
@@ -782,7 +803,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
-        private System.Windows.Forms.Button ButtonReadTag;
+        private System.Windows.Forms.Button btnReadTag;
         private System.Windows.Forms.CheckBox CheckBoxProcessCatalogs;
         private System.Windows.Forms.CheckBox CheckBoxModifyFIles;
         private System.Windows.Forms.BindingSource trackListBindingSource;
@@ -829,12 +850,10 @@
         private System.Windows.Forms.CheckBox chbWriteTrackIndex;
         private System.Windows.Forms.ListBox BoxListConsole;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button btnDeclareGenre;
         private System.Windows.Forms.DataGridView dgvAlbums;
         private System.Windows.Forms.DataGridView dgvTracks;
         private System.Windows.Forms.Button btnProcessSelected;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button btnSelectHealthy;
         private System.Windows.Forms.Label lblProgress;
         private System.Windows.Forms.TabPage tabArtist;
         private System.Windows.Forms.TabPage tabSetup;
@@ -867,6 +886,10 @@
         private System.Windows.Forms.TextBox tbxBackupPath;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.CheckBox chb_ShowExceptRating;
+        private System.Windows.Forms.Button btnReadSelected;
+        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button6;
     }
 }

@@ -58,7 +58,7 @@ namespace MusicProjectLibrary_1
 
         private void dgvPaths_DoubleClick(object sender, EventArgs e)
         {
-            DirectoryManagement.OpenPairOfFolders(dgvPaths, dgvPaths.SelectedCells[0].RowIndex);
+            mgt_Directory.OpenPairOfFolders(dgvPaths, dgvPaths.SelectedCells[0].RowIndex);
         }
 
         private void btnCheckDuplicates_Click(object sender, EventArgs e)
@@ -108,7 +108,7 @@ namespace MusicProjectLibrary_1
                 dgvPaths.Rows[dgvPaths.SelectedCells[0].RowIndex].Selected = true;
                 TrackPurgatoryPath = dgvPaths.Rows[dgvPaths.SelectedCells[0].RowIndex].Cells[DGCD.colSecondPath].Value.ToString();
                 MusicFileDetails MFD = new MusicFileDetails();
-                MusicFileMgt.QuickRead(TrackPurgatoryPath, MFD);
+                mgt_HddAnalyzer.QuickRead(TrackPurgatoryPath, MFD);
                 tbxSelectedAlbumID.Text = MFD.trackIdAlbumIndex;
                 tbxSelectedTrackID.Text = MFD.trackIndex;
                 int x1 = 0;
@@ -140,7 +140,7 @@ namespace MusicProjectLibrary_1
             dataGridColumnsDuplicates DGCD = new dataGridColumnsDuplicates();
             foreach(var row in dgvPaths.SelectedRows)
             {
-                DirectoryManagement.DeleteTracksFromDuplicates(dgvPaths, lbxConsole.Items, currentTrackID, currentAlbumID, TrackPurgatoryPath);
+                mgt_Directory.DeleteTracksFromDuplicates(dgvPaths, lbxConsole.Items, currentTrackID, currentAlbumID, TrackPurgatoryPath);
                 dgvPaths.Rows.RemoveAt(dgvPaths.SelectedCells[0].RowIndex);
 
             }

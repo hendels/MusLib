@@ -72,6 +72,7 @@ namespace MusicProjectLibrary_1
         }
         public static bool writeValidationPoints = false;
         public static bool checkGeneralPath = false;
+        public static bool runPickArtist = false;
         private static bool writeIndexes = false;
         public static bool globalwriteIndexes
         {
@@ -93,6 +94,7 @@ namespace MusicProjectLibrary_1
         public static int IgnoreCurrentFolder = 0;
         public static string SelectedArtist = "";
         public static string LastUsedGenre = "";
+        public static string SelectedAlbum = "";
     }
     public class uniqueCatalogs
     {

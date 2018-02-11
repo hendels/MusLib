@@ -17,7 +17,7 @@ using MaterialSkin;
 using Dapper;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using static MusicProjectLibrary_1.SQLDataValidate;
+using static MusicProjectLibrary_1.mgt_SQLValidation;
 
 namespace MusicProjectLibrary_1
 {
@@ -25,7 +25,8 @@ namespace MusicProjectLibrary_1
     {
         List<SQLAlbumTable> AlbumList = new List<SQLAlbumTable>(); //sqlprzemy - table : Albums
         List<SQLTrackTable> TrackList = new List<SQLTrackTable>(); //sqlprzemy - table : Tracks
-        xmlSaveInformation info = new xmlSaveInformation();
+        mgt_XML info = new mgt_XML();
+        dataGridColumns publicDGC = new dataGridColumns();
 
         public int AlbumRowIndex = 0;
         public MusicLibraryWindow()
@@ -43,7 +44,7 @@ namespace MusicProjectLibrary_1
 
             int countRecordTracks = RefreshSpecificTable(1);
             BoxListConsole.Items.Add("Tracks count: " + countRecordTracks.ToString());
-            SQLDataValidate.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
+            mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
 
             int countRecordAlbums = RefreshSpecificTable(2);
             BoxListConsole.Items.Add("Album count: " + countRecordAlbums.ToString());
@@ -58,17 +59,24 @@ namespace MusicProjectLibrary_1
             //
             if (File.Exists("config.xml"))
             {
-                XmlSerializer xs = new XmlSerializer(typeof(xmlSaveInformation));
+                XmlSerializer xs = new XmlSerializer(typeof(mgt_XML));
                 using (FileStream read = new FileStream("config.xml", FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
-                    info = (xmlSaveInformation)xs.Deserialize(read);
-                    tbxPointsMin.Text = info.PointsMin;
-                    tbxPointsMax.Text = info.PointsMax;
-                    tbxTrackRatingMin.Text = info.RateMin;
-                    tbxTrackRatingMin.Text = info.RateMax;
-                    chbProceed.Checked = info.ShowProceed; 
-                    tbxAlbumCount.Text = info.AlbumCount.ToString();
-                    tbxTrackCount.Text = info.TrackCount.ToString();
+                    try
+                    {
+                        info = (mgt_XML)xs.Deserialize(read);
+                        tbxPointsMin.Text = info.PointsMin;
+                        tbxPointsMax.Text = info.PointsMax;
+                        tbxTrackRatingMin.Text = info.RateMin;
+                        tbxTrackRatingMin.Text = info.RateMax;
+                        chbProceed.Checked = info.ShowProceed;
+                        tbxAlbumCount.Text = info.AlbumCount.ToString();
+                        tbxTrackCount.Text = info.TrackCount.ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("error while loading XML");
+                    }
                 }
                 
             }
@@ -76,13 +84,13 @@ namespace MusicProjectLibrary_1
             //refresh
             //
             RefreshSpecificTable(1);
-            SQLDataValidate.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
+            mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
         }
         private void btnSaveXml_Click(object sender, EventArgs e)
         {
             try
             {
-                xmlSaveInformation SaveInfo = new xmlSaveInformation();
+                mgt_XML SaveInfo = new mgt_XML();
                 SaveInfo.PointsMin = tbxPointsMin.Text;
                 SaveInfo.PointsMax = tbxPointsMax.Text;
                 SaveInfo.RateMin = tbxTrackRatingMin.Text;
@@ -113,10 +121,10 @@ namespace MusicProjectLibrary_1
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
             GlobalChecker.TestSqlAlbumIdQuery = 0;
-            MusicFileMgt.readFiles(BoxListConsole.Items, progBar, tbxPickedPath.Text, tbxDriveMainPath.Text, lblProgress);
+            mgt_HddAnalyzer.readFiles(BoxListConsole.Items, progBar, tbxPickedPath.Text, tbxDriveMainPath.Text, lblProgress);
 
-            int countRecordAlbum = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums, 1, 0, 0, 0, chbProceed.Checked);
-            int countRecordArtist = DBFunctions.AutoSearchDatabaseArtists("", dgvArtists);
+            int countRecordAlbum = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums, 1, 0, 0, 0, chbProceed.Checked, chb_ShowExceptRating.Checked);
+            int countRecordArtist = mgt_SQLDatabase.AutoSearchDatabaseArtists("", dgvArtists);
             BoxListConsole.Items.Add("Album table updated: " + countRecordAlbum.ToString());
             BoxListConsole.Items.Add("Artist table updated: " + countRecordArtist.ToString());
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
@@ -143,25 +151,7 @@ namespace MusicProjectLibrary_1
             else
                 GlobalVariables.globalModifyFIles = false;
         }
-        private void button1_Click(object sender, EventArgs e)
-        {          
-        }        
-
-        private void btnNew_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                //musicLibraryDataSet.Track.AddTrackRow(musicLibraryDataSet.Track.NewTrackRow());
-                musicLibraryDataSetBindingSource.MoveLast();
-                
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //musicLibraryDataSet.RejectChanges();
-            }
-        }
-        
+                 
         private void btnDelete_Click(object sender, EventArgs e)
         {
 
@@ -177,9 +167,9 @@ namespace MusicProjectLibrary_1
         private void btnFindAlbums_Click(object sender, EventArgs e)
         {
             int countRecord = RefreshSpecificTable(1);
-            BoxListConsole.Items.Add("Album count: " + countRecord.ToString());
+            //BoxListConsole.Items.Add("Album count: " + countRecord.ToString());
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
-            SQLDataValidate.ReadDataGridForAll(dgvAlbums, BoxListConsole.Items);
+            mgt_SQLValidation.ReadDataGridForAll(dgvAlbums, BoxListConsole.Items);
         }         
     
         private void btnFindTracks_Click(object sender, EventArgs e)
@@ -213,7 +203,7 @@ namespace MusicProjectLibrary_1
             }
             foreach (DataGridViewColumn c in dgvAlbums.Columns)
             {
-                SQLDataValidate.dataGridColumns DGC = new SQLDataValidate.dataGridColumns();
+                mgt_SQLValidation.dataGridColumns DGC = new mgt_SQLValidation.dataGridColumns();
                 if (c.Index == DGC.colAlbumDirectory || c.Index == DGC.colDirectoryGenre || c.Index == DGC.colAlbumGeneralGenre
                     || c.Index == DGC.colArtistCheck || c.Index == DGC.colAlbumCheck || c.Index == DGC.colGenreCheck || c.Index == DGC.colRatingCheck || c.Index == DGC.colIndexCheck)
                     c.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
@@ -234,26 +224,28 @@ namespace MusicProjectLibrary_1
         }
         private void AlbumsDataGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            PickGenre pickGenreForm = new PickGenre();
-            DirectoryManagement.DoubleClickOnGridCallBack(dgvAlbums, pickGenreForm, BoxListConsole, AlbumRowIndex, dgvAlbums.CurrentCell.ColumnIndex);
-            SQLDataValidate.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
+            //PickGenre pickGenreForm = new PickGenre();
+            mgt_Directory.DoubleClickOnGridCallBack(dgvAlbums, BoxListConsole, AlbumRowIndex, dgvAlbums.CurrentCell.ColumnIndex);
+            mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
         }
         private void AlbumsDataGridView_SelectionChanged_1(object sender, EventArgs e)
         {
             if (dgvAlbums.SelectedCells.Count > 0)
             {
                 AlbumRowIndex = dgvAlbums.SelectedCells[0].RowIndex; //[knowledge get row index from data grid view]
-                GlobalVariables.globalSelectedGridAlbumID = (int)dgvAlbums[0, AlbumRowIndex].Value; //[knowledge get value from specific column in datagrid view]                
+                GlobalVariables.globalSelectedGridAlbumID = (int)dgvAlbums[0, AlbumRowIndex].Value; //[knowledge get value from specific column in datagrid view]  
+                GlobalVariables.SelectedAlbum = "[" + GlobalVariables.globalSelectedGridAlbumID + "] - " + dgvAlbums.Rows[AlbumRowIndex].Cells[publicDGC.colAlbumName].Value
+                    + " | " + dgvAlbums.Rows[AlbumRowIndex].Cells[publicDGC.colAlbumDirectory].Value;
             }
         }
         private void DgvAlbumsCellDoubleClick(object sender, int columnIndex)
         {
-            PickGenre pickGenreForm = new PickGenre();
+            //PickGenre pickGenreForm = new PickGenre();
             int masterRow = AlbumRowIndex;
-            if (DirectoryManagement.DoubleClickOnGridCallBack(dgvAlbums, pickGenreForm, BoxListConsole, AlbumRowIndex, columnIndex))
+            if (mgt_Directory.DoubleClickOnGridCallBack(dgvAlbums, BoxListConsole, AlbumRowIndex, columnIndex))
             {
                 RefreshSpecificTable(1);
-                SQLDataValidate.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
+                mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
                 try
                 {
                     dgvAlbums.ClearSelection();                               //[przemy knowledge - zaznaczanie data grid view]
@@ -270,13 +262,10 @@ namespace MusicProjectLibrary_1
         {
             DgvAlbumsCellDoubleClick(sender, dgvAlbums.CurrentCell.ColumnIndex);
         }
-        private void AlbumsDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            
-        }
+
         private void AlbumsDataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
-            if (DirectoryManagement.SingleClickOnGridCallBack(dgvAlbums, AlbumRowIndex))
+            if (mgt_Directory.SingleClickOnGridCallBack(dgvAlbums, AlbumRowIndex))
             {
 
             }
@@ -293,7 +282,7 @@ namespace MusicProjectLibrary_1
             }
             private void btnDeleteAlbum_Click(object sender, EventArgs e)
             {
-                DirectoryManagement.DeleteAlbumFromAlbumDGV(dgvAlbums, AlbumRowIndex);
+                mgt_Directory.DeleteAlbumFromAlbumDGV(dgvAlbums, AlbumRowIndex);
                 MessageBox.Show("Album & connected Tracks deleted");
             }
             private void btnDeclareGenre_Click_1(object sender, EventArgs e)
@@ -311,9 +300,10 @@ namespace MusicProjectLibrary_1
             //validuj SQL'a
             AlbumRowIndex = dgvAlbums.SelectedCells[0].RowIndex;
             int hardIndex = AlbumRowIndex;
-            SQLDataValidate.ReadDataGrid(dgvAlbums, BoxListConsole.Items, tbxPickedPath, tbxMusicPath, AlbumRowIndex);
+            mgt_SQLValidation.ReadDataGrid(dgvAlbums, BoxListConsole.Items, tbxPickedPath, tbxMusicPath, AlbumRowIndex);
 
-            int countRecord = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums, 0, info.AlbumCount, Convert.ToInt32(info.PointsMin), Convert.ToInt32(info.PointsMax), chbProceed.Checked);
+            int countRecord = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums, 0, 
+                info.AlbumCount, Convert.ToInt32(info.PointsMin), Convert.ToInt32(info.PointsMax), chbProceed.Checked, chb_ShowExceptRating.Checked);
             BoxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
 
@@ -327,7 +317,7 @@ namespace MusicProjectLibrary_1
             { }
             
 
-            SQLDataValidate.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
+            mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
             // aktualizuj tabele tracks - ze usunieto plik / aktualizuj, również że istnieje plik
             //rzuć info ile wyjebał MB z dysku
 
@@ -356,7 +346,7 @@ namespace MusicProjectLibrary_1
         private void btnSelectHealthy_Click(object sender, EventArgs e)
         {
             BoxListConsole.Items.Add("Start checking...");
-            SQLDataValidate.ReadDataGridForAll(dgvAlbums, BoxListConsole.Items);
+            mgt_SQLValidation.ReadDataGridForAll(dgvAlbums, BoxListConsole.Items);
         }
         ////////////////////////////////////////////////////////INTERNAL FUNCTIONS////////////////////////////////////////
         private int RefreshSpecificTable(int RefreshTableNo)
@@ -367,32 +357,46 @@ namespace MusicProjectLibrary_1
             int x = 0;
             switch (RefreshTableNo)
             {                
-                case 1:                    
+                case 1: // if something exist in search box (album ID)           
                     if (Int32.TryParse(tbxSearchAlbums.Text, out x))
                     {
-
-                        subcounter = DBFunctions.AutoSearchDatabaseAlbums(x, dgvAlbums, 1, 0, 0, 0, chbProceed.Checked);
-                        subcounter2 = DBFunctions.AutoSearchDatabaseTracksByAlbumID(x, dgvTracks, 0, 0 ,0);
-                        counter = subcounter + subcounter;
+                        /*
+                         = show all Case
+                        */
+                        subcounter = mgt_SQLDatabase.AutoSearchDatabaseAlbums(x, dgvAlbums, 
+                            1, 0, 0, 0, chbProceed.Checked, chb_ShowExceptRating.Checked);
+                        subcounter2 = mgt_SQLDatabase.AutoSearchDatabaseTracksByAlbumID(x, dgvTracks, 0, 0 ,0);
+                        counter = subcounter + subcounter2;
                     }                        
                     else
                     {
+                        /*
+                         * id album
+                         * DGV
+                         * par 1: showAll ; 1 = true, 0 = false
+                         * par 2: Album count ; only for showAll = 0
+                         * par 3: PointsMin ; only for showAll = 0
+                         * par 4: PointsMax ; only for showAll = 0
+                         * par 5: showProceed; only for showAll = 0
+                         * par 6: showFullyRated; only forShowAll = 0
+                        */
                         int AlbumCount = 0;
                         if (tbxAlbumCount.Text != "")
                             AlbumCount = Convert.ToInt32(tbxAlbumCount.Text);
 
-                         counter = DBFunctions.AutoSearchDatabaseAlbums(0, dgvAlbums, 0, AlbumCount, Convert.ToInt32(tbxPointsMin.Text), Convert.ToInt32(tbxPointsMax.Text), chbProceed.Checked);
+                         counter = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums, 
+                             0, AlbumCount, Convert.ToInt32(tbxPointsMin.Text), Convert.ToInt32(tbxPointsMax.Text), chbProceed.Checked, chb_ShowExceptRating.Checked);
                     }
                         
                     return counter;
                 case 2:                    
                     if (Int32.TryParse(tbxSearchTracks.Text, out x))
-                        counter = DBFunctions.AutoSearchDatabaseTracksByTrackIndex(x, dgvTracks, 0, 0 , 0);
+                        counter = mgt_SQLDatabase.AutoSearchDatabaseTracksByTrackIndex(x, dgvTracks, 0, 0 , 0);
                     else
-                        counter = DBFunctions.AutoSearchDatabaseTracksByTrackIndex(0, dgvTracks, Convert.ToInt32(tbxTrackCount.Text), Convert.ToInt32(tbxTrackRatingMin.Text), Convert.ToInt32(tbxTrackRatingMax.Text));
+                        counter = mgt_SQLDatabase.AutoSearchDatabaseTracksByTrackIndex(0, dgvTracks, Convert.ToInt32(tbxTrackCount.Text), Convert.ToInt32(tbxTrackRatingMin.Text), Convert.ToInt32(tbxTrackRatingMax.Text));
                     return counter;
                 case 3:                    
-                        counter = DBFunctions.AutoSearchDatabaseArtists(tbxSearchArtist.Text, dgvArtists);
+                        counter = mgt_SQLDatabase.AutoSearchDatabaseArtists(tbxSearchArtist.Text, dgvArtists);
                     return counter;
             }
             return counter;
@@ -400,7 +404,7 @@ namespace MusicProjectLibrary_1
 
         private void btnWriteIndexAlbum_Click(object sender, EventArgs e)
         {
-            MusicFileMgt.writeAlbumIndexToFile(dgvAlbums, progBar);
+            mgt_HddAnalyzer.writeAlbumIndexToFile(dgvAlbums, progBar);
         }
 
         private void chbCheckGeneralPath_CheckedChanged(object sender, EventArgs e)
@@ -413,11 +417,42 @@ namespace MusicProjectLibrary_1
 
         private void dgvAlbums_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyData == (Keys.Control | Keys.D))
-            {
-                dataGridColumns DGC = new dataGridColumns();
+            dataGridColumns DGC = new dataGridColumns();
+            if (e.KeyData == (Keys.Control | Keys.D5))
+            {                
                 DgvAlbumsCellDoubleClick(sender, DGC.colDirectoryGenre);
             }
+            if (e.KeyData == (Keys.Control | Keys.D2))
+            {
+                DgvAlbumsCellDoubleClick(sender, DGC.colArtistName);
+            }
+            if (e.KeyData == (Keys.Control | Keys.D3))
+            {
+                DgvAlbumsCellDoubleClick(sender, DGC.colAlbumName);
+            }
+            if (e.KeyData == (Keys.Control | Keys.D1))
+            {
+                DgvAlbumsCellDoubleClick(sender, DGC.colAbumReleaseYear);
+            }
+            if (e.KeyData == (Keys.Control | Keys.D4))
+            {
+                DgvAlbumsCellDoubleClick(sender, DGC.colAlbumGeneralGenre);
+            }
+        }
+        protected override bool ProcessDialogKey(Keys keyData)
+        {
+            if (Form.ModifierKeys == Keys.None && keyData == Keys.Escape)
+            {
+                var confirmResult = MessageBox.Show($"Exit app ?",
+                    "Music Library", MessageBoxButtons.YesNo);
+                if (confirmResult == DialogResult.Yes)
+                {
+                    this.Close();
+                    return true;
+                }
+                    
+            }
+            return base.ProcessDialogKey(keyData);
         }
     }
 }

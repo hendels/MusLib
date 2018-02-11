@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MusicProjectLibrary_1.AppForms;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -9,12 +10,12 @@ using System.Windows.Forms;
 
 namespace MusicProjectLibrary_1
 {
-    class DirectoryManagement
+    class mgt_Directory
     {
-        public static bool DoubleClickOnGridCallBack(DataGridView DGV, PickGenre pickGenreForm, ListBox boxListConsole, int AlbumRowIndex, int AlbumColIndex)
+        public static bool DoubleClickOnGridCallBack(DataGridView DGV, ListBox boxListConsole, int AlbumRowIndex, int AlbumColIndex)
         {
             DGV.MultiSelect = false;
-            SQLDataValidate.dataGridColumns DGC = new SQLDataValidate.dataGridColumns();
+            mgt_SQLValidation.dataGridColumns DGC = new mgt_SQLValidation.dataGridColumns();
      
             //int AlbumColIndex = DGV.CurrentCell.ColumnIndex; // [przemy knowledge - select column in data grid view]
             string GridValueString = "";
@@ -35,12 +36,13 @@ namespace MusicProjectLibrary_1
             }
             else if (AlbumColIndex == DGC.colDirectoryGenre) // show pick Genre Form
             {
+                PickGenre pickGenreForm = new PickGenre();
                 string ArtistGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colArtistName].Value.ToString();
                 GlobalVariables.SelectedArtist = ArtistGrid;
                 pickGenreForm.ShowDialog();
                 if (pickGenreForm.GeneratedGenreString != "")
                 {
-                    int countRecord = DBFunctions.AutoSearchDatabaseAlbums(1, DGV, 1, 0, 0, 0, false);
+                    int countRecord = mgt_SQLDatabase.AutoSearchDatabaseAlbums(1, DGV, 1, 0, 0, 0, false, false);
                     boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
                     boxListConsole.SelectedIndex = boxListConsole.Items.Count - 1;
                     return true;
@@ -49,27 +51,74 @@ namespace MusicProjectLibrary_1
             }   
             else if (AlbumColIndex == DGC.colAlbumGeneralGenre)
             {
-                DialogResult res = MessageBox.Show("Download Genres from Discogs?", "Discogs API", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
-                if (res == DialogResult.OK)
-                {
-                    string ArtistGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colArtistName].Value.ToString();
-                    string ReleaseGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colAlbumName].Value.ToString();
-                    int AlbumID = Convert.ToInt32(DGV.Rows[AlbumRowIndex].Cells[DGC.colIndexAlbum].Value);
 
-                    DiscogsManagement.startDiscogs(boxListConsole.Items, ArtistGrid, ReleaseGrid, AlbumID);
+                string ArtistGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colArtistName].Value.ToString();
+                string ReleaseGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colAlbumName].Value.ToString();
+                int AlbumID = Convert.ToInt32(DGV.Rows[AlbumRowIndex].Cells[DGC.colIndexAlbum].Value);
+
+                PickAlbumGeneralGenre pickAlbumGenerealGenreForm = new PickAlbumGeneralGenre();
+                pickAlbumGenerealGenreForm.ShowDialog();
+                if (pickAlbumGenerealGenreForm.selectedDiscogs)
+                {
+                    mgt_Discogs.startDiscogs(1, boxListConsole.Items, ArtistGrid, ReleaseGrid, AlbumID);
+                }
+
+                return true;
+           
+            }
+            else if (AlbumColIndex == DGC.colAbumReleaseYear)
+            {
+                string ArtistGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colArtistName].Value.ToString();
+                string ReleaseGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colAlbumName].Value.ToString();
+                int AlbumID = Convert.ToInt32(DGV.Rows[AlbumRowIndex].Cells[DGC.colIndexAlbum].Value);
+
+                PickAlbumYear pickAlbumYearForm = new PickAlbumYear();
+                pickAlbumYearForm.ShowDialog();
+
+                if (pickAlbumYearForm.selectedDiscogs == true)
+                {
+                    mgt_Discogs.startDiscogs(2, boxListConsole.Items, ArtistGrid, ReleaseGrid, AlbumID);
+                }
+
+                return true;
+            }
+            else if (AlbumColIndex == DGC.colArtistName)
+            {
+                GlobalVariables.runPickArtist = true;
+                PickArtist pickArtistForm = new PickArtist();
+                pickArtistForm.ShowDialog();
+                GlobalVariables.runPickArtist = false;
+
+                if (pickArtistForm.ArtistSelected == true)
+                {
+                    int countRecord = mgt_SQLDatabase.AutoSearchDatabaseAlbums(1, DGV, 1, 0, 0, 0, false, false);
+                    boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
+                    boxListConsole.SelectedIndex = boxListConsole.Items.Count - 1;
                     return true;
                 }
-                else
+            }
+            else if (AlbumColIndex == DGC.colAlbumName)
+            {
+                
+                PickAlbumName pickAlbumName = new PickAlbumName();
+                pickAlbumName.ShowDialog();
+                if (pickAlbumName.ArtistNameFilled == true)
                 {
-                    return false;
-                }                
+                    int countRecord = mgt_SQLDatabase.AutoSearchDatabaseAlbums(1, DGV, 1, 0, 0, 0, false, false);
+                    boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
+                    boxListConsole.SelectedIndex = boxListConsole.Items.Count - 1;
+                    return true;
+                }
+                
+                string ReleaseGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colAlbumName].Value.ToString();
+
             }
             return false;
         }
         public static bool SingleClickOnGridCallBack(DataGridView DGV, int AlbumRowIndex)
         {
-            SQLDataValidate.dataGridColumns DGC = new SQLDataValidate.dataGridColumns();
-            DBFunctions db = new DBFunctions();
+            mgt_SQLValidation.dataGridColumns DGC = new mgt_SQLValidation.dataGridColumns();
+            mgt_SQLDatabase db = new mgt_SQLDatabase();
             int AlbumColIndex = DGV.CurrentCell.ColumnIndex;
             bool GridValueBool;
 
@@ -133,7 +182,7 @@ namespace MusicProjectLibrary_1
             {
                 
                 List<SQLTrackTable> LSQTT = new List<SQLTrackTable>();
-                DBFunctions db = new DBFunctions();
+                mgt_SQLDatabase db = new mgt_SQLDatabase();
                 LSQTT = db.GetTrackByAlbumId(AlbumId);
                 int AlbumTransaction = 0;
 
@@ -170,7 +219,7 @@ namespace MusicProjectLibrary_1
                                         //
                                         movedAlbumDirectory = Path.GetDirectoryName(musicFileFullPath);
                                         MusicFileDetails MFD = new MusicFileDetails(); // deklaruj klase
-                                        MusicFileMgt.QuickRead(prepareMoveString, MFD);
+                                        mgt_HddAnalyzer.QuickRead(prepareMoveString, MFD);
                                         try
                                         {
                                             int TrackIndex = Convert.ToInt32(MFD.trackIndex);
@@ -271,25 +320,25 @@ namespace MusicProjectLibrary_1
         }
         public static void DeleteAlbumFromAlbumDGV(DataGridView DGV, int AlbumRowIndex)
         {
-            SQLDataValidate.dataGridColumns DGC = new SQLDataValidate.dataGridColumns();
+            mgt_SQLValidation.dataGridColumns DGC = new mgt_SQLValidation.dataGridColumns();
             int AlbumId = Convert.ToInt32(DGV.Rows[AlbumRowIndex].Cells[DGC.colIndexAlbum].Value);
             string AlbumName = DGV.Rows[AlbumRowIndex].Cells[DGC.colAlbumName].Value.ToString();
             string AlbumArtist = DGV.Rows[AlbumRowIndex].Cells[DGC.colArtistName].Value.ToString();
 
-            DBFunctions db = new DBFunctions();
+            mgt_SQLDatabase db = new mgt_SQLDatabase();
             List<SQLTrackTable> LTT = new List<SQLTrackTable>();
             LTT = db.GetTrackByAlbumId(AlbumId);
 
             DialogResult res = MessageBox.Show($"Delete Album from SQL DB? \n Selected Album ID: {AlbumId} \n Album Name: {AlbumName} \n Artist: {AlbumArtist} \n Track Count to delete also: {LTT.Count}", "Delete Album & Tracks", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
             if (res == DialogResult.OK)
             {
-                DBFunctions.DeleteAlbumByAlbumID(AlbumId);
-                DBFunctions.DeleteTracksByAlbumID(AlbumId);
+                mgt_SQLDatabase.DeleteAlbumByAlbumID(AlbumId);
+                mgt_SQLDatabase.DeleteTracksByAlbumID(AlbumId);
             }
         }
         public static void DeleteAlbumFromDuplicates(int AlbumID)
         {            
-            DBFunctions db = new DBFunctions();
+            mgt_SQLDatabase db = new mgt_SQLDatabase();
             List<SQLTrackTable> LTT = new List<SQLTrackTable>();
             LTT = db.GetTrackByAlbumId(AlbumID);
             
@@ -299,8 +348,8 @@ namespace MusicProjectLibrary_1
                 //
                 //delete SQL INFO
                 //
-                DBFunctions.DeleteAlbumByAlbumID(AlbumID);
-                DBFunctions.DeleteTracksByAlbumID(AlbumID);
+                mgt_SQLDatabase.DeleteAlbumByAlbumID(AlbumID);
+                mgt_SQLDatabase.DeleteTracksByAlbumID(AlbumID);
                 //
                 //delete PURG physical files
                 //
@@ -310,7 +359,7 @@ namespace MusicProjectLibrary_1
         }
         public static void DeleteTracksFromDuplicates(DataGridView DGV, ListBox.ObjectCollection LBOX, int TrackID, int AlbumID, string purgatoryTrackPath)
         {
-            DBFunctions db = new DBFunctions();
+            mgt_SQLDatabase db = new mgt_SQLDatabase();
             if (AlbumID != 0)
             {
                 List<SQLTrackTable> LTT = new List<SQLTrackTable>();
@@ -320,7 +369,7 @@ namespace MusicProjectLibrary_1
                     DialogResult res1 = MessageBox.Show($"There are no related tracks in Album ID: {AlbumID} Delete album from DB?", "Delete Album", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                     if (res1 == DialogResult.OK)
                     {
-                        DBFunctions.DeleteAlbumByAlbumID(AlbumID);
+                        mgt_SQLDatabase.DeleteAlbumByAlbumID(AlbumID);
                     }
                 }
             }
@@ -329,7 +378,7 @@ namespace MusicProjectLibrary_1
                 DialogResult res2 = MessageBox.Show($"Delete Track from SQL DB? \n Selected Track ID: {TrackID}", "Delete Tracks", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                 if (res2 == DialogResult.OK)
                 {
-                    DBFunctions.DeleteTracksByAlbumID(TrackID);
+                    mgt_SQLDatabase.DeleteTracksByAlbumID(TrackID);
                     File.Delete(purgatoryTrackPath);
                     LBOX.Add($"DELETED from DB TRACK ID: {purgatoryTrackPath}");
                     LBOX.Add($"DELETED FILE: {purgatoryTrackPath}");

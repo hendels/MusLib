@@ -23,15 +23,17 @@ namespace MusicProjectLibrary_1
 
         private void PickGenre_Load(object sender, EventArgs e)
         {
-            PickGenreMgt.createGenreList(chlstGenres);
-            PickGenreMgt.createSecondaryGenreList(GlobalVariables.SelectedArtist , chlstSuggestedGenres);
+            mgt_PickGenre.createGenreList(chlstGenres);
+            mgt_PickGenre.createSecondaryGenreList(GlobalVariables.SelectedArtist , chlstSuggestedGenres);
             if (GlobalVariables.LastUsedGenre != "")
                 tbxWriteGenre.Text = GlobalVariables.LastUsedGenre;
+
+            tbxSelectedAlbum.Text = GlobalVariables.SelectedAlbum;
         }
         
         private  void callPickedGenre(CheckedListBox chlstBox)
         {
-            PickGenreMgt.pickedGenre(tbxSelectedGenre, chlstBox);
+            mgt_PickGenre.pickedGenre(tbxSelectedGenre, chlstBox);
         }
         //////////////////////////////////////////////////////////////////////////////////////////////[<<all genres check list box]////////////////////////////////////////////
         private void chlstGenres_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -41,7 +43,7 @@ namespace MusicProjectLibrary_1
 
         private void chlstGenres_SelectedValueChanged(object sender, EventArgs e)
         {
-            PickGenreMgt.findRelatedGenres(chlstGenres.SelectedItem.ToString(), chlstRelatedGenresOnHDD);
+            mgt_PickGenre.findRelatedGenres(chlstGenres.SelectedItem.ToString(), chlstRelatedGenresOnHDD);
         }
 
         private void chlstGenres_Validated(object sender, EventArgs e)
@@ -70,7 +72,7 @@ namespace MusicProjectLibrary_1
         {
             try
             {
-                PickGenreMgt.findRelatedGenres(chlstSuggestedGenres.SelectedItem.ToString(), chlstRelatedGenresOnHDD);
+                mgt_PickGenre.findRelatedGenres(chlstSuggestedGenres.SelectedItem.ToString(), chlstRelatedGenresOnHDD);
             }
             catch (Exception ex)
             {
@@ -130,7 +132,7 @@ namespace MusicProjectLibrary_1
 
             GeneratedGenreString = ListPickedGenres;
 
-            DBFunctions db = new DBFunctions();
+            mgt_SQLDatabase db = new mgt_SQLDatabase();
             db.UpdateDirectoryGenreByAlbumID(GlobalVariables.globalSelectedGridAlbumID, ListPickedGenres);
             GlobalVariables.LastUsedGenre = ListPickedGenres;
             this.Close();

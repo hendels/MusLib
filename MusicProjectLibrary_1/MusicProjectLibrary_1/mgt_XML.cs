@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace MusicProjectLibrary_1
 {
 
-    public class xmlSaveInformation
+    public class mgt_XML
     {
         private string _pointsMin;
         private string _pointsMax;

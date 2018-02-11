@@ -34,6 +34,7 @@
             this.CheckBoxModifyFIles = new System.Windows.Forms.CheckBox();
             this.tabCtrTrackAlbums = new System.Windows.Forms.TabControl();
             this.tabAlbums = new System.Windows.Forms.TabPage();
+            this.button6 = new System.Windows.Forms.Button();
             this.btnWriteIndexAlbum = new System.Windows.Forms.Button();
             this.btnDeleteAlbum = new System.Windows.Forms.Button();
             this.btnSelectHealthy = new System.Windows.Forms.Button();
@@ -51,6 +52,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.btnDiscogs = new System.Windows.Forms.Button();
             this.tabSetup = new System.Windows.Forms.TabPage();
+            this.button5 = new System.Windows.Forms.Button();
             this.tbxBackupPath = new System.Windows.Forms.TextBox();
             this.btnSaveXml = new System.Windows.Forms.Button();
             this.btnChangeGeneralCatalogPath = new System.Windows.Forms.Button();
@@ -88,7 +90,7 @@
             this.tbxTrackCount = new System.Windows.Forms.TextBox();
             this.tbxAlbumCount = new System.Windows.Forms.TextBox();
             this.chbProceed = new System.Windows.Forms.CheckBox();
-            this.button5 = new System.Windows.Forms.Button();
+            this.chb_ShowExceptRating = new System.Windows.Forms.CheckBox();
             this.tabCtrTrackAlbums.SuspendLayout();
             this.tabAlbums.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlbums)).BeginInit();
@@ -163,6 +165,7 @@
             // 
             // tabAlbums
             // 
+            this.tabAlbums.Controls.Add(this.button6);
             this.tabAlbums.Controls.Add(this.btnWriteIndexAlbum);
             this.tabAlbums.Controls.Add(this.btnDeleteAlbum);
             this.tabAlbums.Controls.Add(this.btnSelectHealthy);
@@ -177,6 +180,15 @@
             this.tabAlbums.TabIndex = 0;
             this.tabAlbums.Text = "Albums";
             this.tabAlbums.UseVisualStyleBackColor = true;
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(545, 3);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(105, 23);
+            this.button6.TabIndex = 43;
+            this.button6.Text = "2017";
+            this.button6.UseVisualStyleBackColor = true;
             // 
             // btnWriteIndexAlbum
             // 
@@ -249,7 +261,6 @@
             this.dgvAlbums.Name = "dgvAlbums";
             this.dgvAlbums.Size = new System.Drawing.Size(1222, 274);
             this.dgvAlbums.TabIndex = 34;
-            this.dgvAlbums.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.AlbumsDataGridView_CellContentClick);
             this.dgvAlbums.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.AlbumsDataGridView_CellContentDoubleClick);
             this.dgvAlbums.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.AlbumsDataGridView_CellDoubleClick);
             this.dgvAlbums.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.AlbumsDataGridView_CellValidated);
@@ -382,6 +393,16 @@
             this.tabSetup.Text = "Setup";
             this.tabSetup.UseVisualStyleBackColor = true;
             // 
+            // button5
+            // 
+            this.button5.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button5.Location = new System.Drawing.Point(3, 176);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(152, 20);
+            this.button5.TabIndex = 49;
+            this.button5.Text = "Check If File in Albums Exists";
+            this.button5.UseVisualStyleBackColor = true;
+            // 
             // tbxBackupPath
             // 
             this.tbxBackupPath.BackColor = System.Drawing.Color.LightCoral;
@@ -465,6 +486,8 @@
             // 
             this.chbWriteValidationPoints.AutoSize = true;
             this.chbWriteValidationPoints.BackColor = System.Drawing.Color.LightGray;
+            this.chbWriteValidationPoints.Checked = true;
+            this.chbWriteValidationPoints.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chbWriteValidationPoints.Location = new System.Drawing.Point(4, 142);
             this.chbWriteValidationPoints.Margin = new System.Windows.Forms.Padding(2);
             this.chbWriteValidationPoints.Name = "chbWriteValidationPoints";
@@ -688,21 +711,25 @@
             this.chbProceed.Text = "Show Proceed";
             this.chbProceed.UseVisualStyleBackColor = true;
             // 
-            // button5
+            // chb_ShowExceptRating
             // 
-            this.button5.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.Location = new System.Drawing.Point(3, 176);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(152, 20);
-            this.button5.TabIndex = 49;
-            this.button5.Text = "Check If File in Albums Exists";
-            this.button5.UseVisualStyleBackColor = true;
+            this.chb_ShowExceptRating.AutoSize = true;
+            this.chb_ShowExceptRating.Checked = true;
+            this.chb_ShowExceptRating.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chb_ShowExceptRating.Location = new System.Drawing.Point(310, 105);
+            this.chb_ShowExceptRating.Margin = new System.Windows.Forms.Padding(2);
+            this.chb_ShowExceptRating.Name = "chb_ShowExceptRating";
+            this.chb_ShowExceptRating.Size = new System.Drawing.Size(93, 17);
+            this.chb_ShowExceptRating.TabIndex = 47;
+            this.chb_ShowExceptRating.Text = "Except Rating";
+            this.chb_ShowExceptRating.UseVisualStyleBackColor = true;
             // 
             // MusicLibraryWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1246, 509);
+            this.Controls.Add(this.chb_ShowExceptRating);
             this.Controls.Add(this.chbProceed);
             this.Controls.Add(this.tbxAlbumCount);
             this.Controls.Add(this.tbxTrackCount);
@@ -839,6 +866,8 @@
         private System.Windows.Forms.TextBox tbxPickedPath;
         private System.Windows.Forms.TextBox tbxBackupPath;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.CheckBox chb_ShowExceptRating;
+        private System.Windows.Forms.Button button6;
     }
 }
 

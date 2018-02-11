@@ -14,7 +14,7 @@ using System.IO;
 //
 namespace MusicProjectLibrary_1
 {
-    public class MusicFileMgt
+    public class mgt_HddAnalyzer
     {
          
         public static ListBox.ObjectCollection globalBoxListConsole;
@@ -26,7 +26,7 @@ namespace MusicProjectLibrary_1
         
         public static void changeFiles(int caseChange, string Root, ListBox.ObjectCollection boxListConsole)
         {
-            MusicFileMgt.globalBoxListConsole = boxListConsole;
+            mgt_HddAnalyzer.globalBoxListConsole = boxListConsole;
             //Call the FileWalk method to visit all files in tree
             switch (caseChange)
             {
@@ -54,7 +54,7 @@ namespace MusicProjectLibrary_1
         public static void readFiles(ListBox.ObjectCollection boxListConsole, ProgressBar progressBar, string DirectoryPick, string GeneralDirectoryPick, Label progressLabel)
         {           
             boxListConsole.Clear(); 
-            MusicFileMgt.globalBoxListConsole = boxListConsole;
+            mgt_HddAnalyzer.globalBoxListConsole = boxListConsole;
             //Call the FileWalk method to visit all files in tree
             List<MusicFileDetails> ListMFD = new List<MusicFileDetails>(); 
             globalMusicFileDetailsList = ListMFD; // << tu gówno, bo nie mam jak zmienić procedur w COMMON_AudioFiles, za dużo odwołań, biblioteka się wypierdala
@@ -118,7 +118,7 @@ namespace MusicProjectLibrary_1
             //
             progressBar.Step = 1;
 
-            SQLDataValidate.dataGridColumns DGC = new SQLDataValidate.dataGridColumns();
+            mgt_SQLValidation.dataGridColumns DGC = new mgt_SQLValidation.dataGridColumns();
             bool GridValueBool;
             for (int rows = 0; rows < DGV.Rows.Count; rows++)
             {
@@ -127,7 +127,7 @@ namespace MusicProjectLibrary_1
                 {
 
                     List<SQLTrackTable> queryGetAllTracksByAlbumID = new List<SQLTrackTable>();
-                    DBFunctions db = new DBFunctions();
+                    mgt_SQLDatabase db = new mgt_SQLDatabase();
                     int AlbumID = Convert.ToInt32(DGV.Rows[rows].Cells[DGC.colIndexAlbum].Value);
                     queryGetAllTracksByAlbumID = db.GetTrackByAlbumId(AlbumID);
                     int maxValue = queryGetAllTracksByAlbumID.Count;
@@ -137,8 +137,7 @@ namespace MusicProjectLibrary_1
                     {
                         if(System.IO.File.Exists(itemTrack.TrackDirectory))
                         {
-                            MusicFileMgt.QuickRead(itemTrack.TrackDirectory, MFD);
-
+                            mgt_HddAnalyzer.QuickRead(itemTrack.TrackDirectory, MFD);
 
                             MFD.pickedAFile.INDEXALBUM = AlbumID.ToString();
                             MFD.pickedAFile.Save(true);
@@ -163,7 +162,7 @@ namespace MusicProjectLibrary_1
                     });
 
                     // Run operation in another thread
-                    await Task.Run(() => Helper.DoWork(progress, processed, 100,""));
+                    await Task.Run(() => mgt_Helper.DoWork(progress, processed, 100,""));
                 }
             }            
 
@@ -187,7 +186,7 @@ namespace MusicProjectLibrary_1
                 {
                         
                     List<SQLSeriesNoTable> queryGetLastIndex = new List<SQLSeriesNoTable>();
-                    DBFunctions db = new DBFunctions();
+                    mgt_SQLDatabase db = new mgt_SQLDatabase();
                     queryGetLastIndex = db.GetSeriesLastIndex(10000);
                     foreach (SQLSeriesNoTable TrackSeriesNo in queryGetLastIndex)
                     {
@@ -212,7 +211,7 @@ namespace MusicProjectLibrary_1
                         });
 
                         // Run operation in another thread
-                        await Task.Run(() => Helper.DoWork(progress, processed, maxValue, progressString));
+                        await Task.Run(() => mgt_Helper.DoWork(progress, processed, maxValue, progressString));
                     }                         
                 }                    
             }
@@ -238,7 +237,7 @@ namespace MusicProjectLibrary_1
             });
 
             // Run operation in another thread
-            await Task.Run(() => Helper.DoWork(progress, processed, maxValue, progressString));
+            await Task.Run(() => mgt_Helper.DoWork(progress, processed, maxValue, progressString));
         }
         static void processCatalogs(List<uniqueCatalogs> UQC, List<MusicFileDetails> MFD, ProgressBar progressBar, Label progressLabel)
         {
@@ -281,19 +280,12 @@ namespace MusicProjectLibrary_1
                         ListMfdAlbum.Add(itemMFD);
                     }
                 }
-                /*
-                var allAreRatesFilled = ListCheckRating.Distinct().Count() == 1;
-                if (allAreRatesFilled == true)
-                    GlobalChecker.globalCheckerRating = 1;                
-                else
-                    GlobalChecker.globalCheckerRating = 0;
-                */
+    
                 //
                 //check if album index is filled in specific directory ~ if all tracks have album index > correct
                 //
                 int countAlbumIndex = 0;
                 publicAlbumIndex = 0;
-                //int albumIndex = 0;
                 foreach (MusicFileDetails iMFD in ListMfdAlbum)
                 {
                     if (iMFD.trackIdAlbumIndex != "" & iMFD.trackIdAlbumIndex != null)
@@ -306,7 +298,7 @@ namespace MusicProjectLibrary_1
                 }
                 if (countAlbumIndex == ListMfdAlbum.Count & publicAlbumIndex != 0)
                 {
-                    DBFunctions db = new DBFunctions();
+                    mgt_SQLDatabase db = new mgt_SQLDatabase();
                     db.UpdateAlbumDirectoryPathByAlbumID(publicAlbumIndex, itemUQC.uniqeDirectory);
                     updateLocalDB(ListTagInformation, ListRatingInformation, ListMfdAlbum, itemUQC, ListCheckTags);
                 }
@@ -394,7 +386,12 @@ namespace MusicProjectLibrary_1
                             else
                                 updateAlbumsTableInDB(3, itemUQC, firstElementArtist, true, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja Artist]
                             //////////////////////////////////////////////////////////////[<fill Artists]//////////////////////////////////////////////////////////////////
-                            updateArtistsTableInDB(firstElementArtist, idAlbum); // first commit
+                            int ArtistID = updateArtistsTableInDB(firstElementArtist, idAlbum);
+                            if (ArtistID > 0) // insert or update - if positive, update album table {artist id field}
+                            {
+                                mgt_SQLDatabase db = new mgt_SQLDatabase();
+                                db.UpdateAlbumArtistID(idAlbum, ArtistID);
+                            } 
                             //////////////////////////////////////////////////////////////[fill Artists>]//////////////////////////////////////////////////////////////////
                         }
                         else
@@ -506,7 +503,7 @@ namespace MusicProjectLibrary_1
         static int updateAlbumsTableInDB(int updateCase, uniqueCatalogs itemUQC, string updateStringDB, bool checkValue, decimal updateDecimalDB, int updateIntDB)
         {
             List<SQLAlbumTable> DirectoryList = new List<SQLAlbumTable>(); //sqlprzemy
-            DBFunctions db = new DBFunctions();
+            mgt_SQLDatabase db = new mgt_SQLDatabase();
             DirectoryList = db.GetAlbumDirectory(itemUQC.uniqeDirectory);
             int DLcount = DirectoryList.Count;
             if (DLcount == 1) //exist in sql => update [todo] sprawdzaj po INDEXALBUM jeżeli jest uzupełnione, trzeba aktualizować po id Album [problem ścieżki w pliku]
@@ -530,7 +527,7 @@ namespace MusicProjectLibrary_1
             }           
 
         }
-        static int updateAlbumsSwitch(DBFunctions db, int updateCase, uniqueCatalogs itemUQC, string updateStringDB, bool checkValue, decimal updateDecimalDB, int updateIntDB)
+        static int updateAlbumsSwitch(mgt_SQLDatabase db, int updateCase, uniqueCatalogs itemUQC, string updateStringDB, bool checkValue, decimal updateDecimalDB, int updateIntDB)
         {
             int AlbumID = 0;
             switch (updateCase)
@@ -579,7 +576,7 @@ namespace MusicProjectLibrary_1
                     string FileStatus = "EXIST";
 
                     List<SQLTrackTable> ListIndexLib = new List<SQLTrackTable>(); //sqlprzemy
-                    DBFunctions db = new DBFunctions();
+                    mgt_SQLDatabase db = new mgt_SQLDatabase();
                     ListIndexLib = db.GetTrackByTrackIndex(indexLib);
 
                     if (ListIndexLib.Count == 1)
@@ -607,12 +604,12 @@ namespace MusicProjectLibrary_1
         {
             return "3/3";
         }
-        static void updateArtistsTableInDB(string ArtistName, int AlbumID)
+        static int updateArtistsTableInDB(string ArtistName, int AlbumID)
         {
             if (ArtistName != "")
             {
                 List<SQLArtistTable> ListArtistLib = new List<SQLArtistTable>(); //sqlprzemy
-                DBFunctions db = new DBFunctions();
+                mgt_SQLDatabase db = new mgt_SQLDatabase();
                 ListArtistLib = db.GetAllByArtists(ArtistName);
                 if (ListArtistLib.Count == 1)
                 {
@@ -622,10 +619,14 @@ namespace MusicProjectLibrary_1
                     {
                         //CalcAlbumRate = Math.Round(AlbumStarSum / AlbumStarExist, 2);
                         db.UpdateRatedAlbums(ArtistName, countRatedAlbums());
+                        //
+                        //get Artist ID by Artist Name
+                        //                        
+                        return mgt_Artists.getArtistIdByName(ArtistName);
                     }
                     catch (DivideByZeroException e)
                     {
-
+                        return 0;
                     }
                 }
                 else if (ListArtistLib.Count == 0)
@@ -633,14 +634,18 @@ namespace MusicProjectLibrary_1
                     decimal VarDecimal = 0;
                     
                     db.InsertArtist(ArtistName, "0/0", "0/0", VarDecimal, VarDecimal, 0, 0);
+                    return mgt_Artists.getArtistIdByName(ArtistName);
                 }
                 else if (ListArtistLib.Count > 1)
                 {
                     MessageBox.Show("artist duplicates!");
+                    return 0;
                 }
             }
             
+            return 0;
         }
+        
         static void checkTagRating(MusicFileDetails MFD, List<int> ListCheckRating, List<RatingInformation>  ListRatingInformation)
         {
             if (MFD.trackRating == "" || MFD.trackRating == "0") 
@@ -840,7 +845,7 @@ namespace MusicProjectLibrary_1
 
             // tu moze sie wypierdalac, bo nic nie sprawdza pliku czy jest flackiem
             List<SQLSeriesNoTable> queryGetLastIndex = new List<SQLSeriesNoTable>();
-            DBFunctions db = new DBFunctions();
+            mgt_SQLDatabase db = new mgt_SQLDatabase();
             queryGetLastIndex = db.GetSeriesLastIndex(10000);
             foreach (SQLSeriesNoTable TrackSeriesNo in queryGetLastIndex)
             {

@@ -36,14 +36,15 @@
             this.chlstRelatedGenresOnHDD = new System.Windows.Forms.CheckedListBox();
             this.lblRelatedGenres = new System.Windows.Forms.Label();
             this.lblSuggestedGenres = new System.Windows.Forms.Label();
+            this.tbxSelectedAlbum = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // chlstGenres
             // 
             this.chlstGenres.FormattingEnabled = true;
-            this.chlstGenres.Location = new System.Drawing.Point(12, 12);
+            this.chlstGenres.Location = new System.Drawing.Point(12, 42);
             this.chlstGenres.Name = "chlstGenres";
-            this.chlstGenres.Size = new System.Drawing.Size(260, 319);
+            this.chlstGenres.Size = new System.Drawing.Size(260, 289);
             this.chlstGenres.TabIndex = 0;
             this.chlstGenres.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chlstGenres_ItemCheck);
             this.chlstGenres.SelectedValueChanged += new System.EventHandler(this.chlstGenres_SelectedValueChanged);
@@ -64,7 +65,7 @@
             // chlstSuggestedGenres
             // 
             this.chlstSuggestedGenres.FormattingEnabled = true;
-            this.chlstSuggestedGenres.Location = new System.Drawing.Point(279, 27);
+            this.chlstSuggestedGenres.Location = new System.Drawing.Point(279, 60);
             this.chlstSuggestedGenres.Name = "chlstSuggestedGenres";
             this.chlstSuggestedGenres.Size = new System.Drawing.Size(260, 94);
             this.chlstSuggestedGenres.TabIndex = 37;
@@ -96,9 +97,9 @@
             // chlstRelatedGenresOnHDD
             // 
             this.chlstRelatedGenresOnHDD.FormattingEnabled = true;
-            this.chlstRelatedGenresOnHDD.Location = new System.Drawing.Point(279, 147);
+            this.chlstRelatedGenresOnHDD.Location = new System.Drawing.Point(279, 177);
             this.chlstRelatedGenresOnHDD.Name = "chlstRelatedGenresOnHDD";
-            this.chlstRelatedGenresOnHDD.Size = new System.Drawing.Size(260, 184);
+            this.chlstRelatedGenresOnHDD.Size = new System.Drawing.Size(260, 154);
             this.chlstRelatedGenresOnHDD.TabIndex = 40;
             this.chlstRelatedGenresOnHDD.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chlstRelatedGenresOnHDD_ItemCheck);
             this.chlstRelatedGenresOnHDD.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.chlstRelatedGenresOnHDD_KeyPress);
@@ -107,7 +108,7 @@
             // 
             this.lblRelatedGenres.AutoSize = true;
             this.lblRelatedGenres.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRelatedGenres.Location = new System.Drawing.Point(278, 124);
+            this.lblRelatedGenres.Location = new System.Drawing.Point(276, 161);
             this.lblRelatedGenres.Name = "lblRelatedGenres";
             this.lblRelatedGenres.Size = new System.Drawing.Size(82, 13);
             this.lblRelatedGenres.TabIndex = 41;
@@ -117,17 +118,29 @@
             // 
             this.lblSuggestedGenres.AutoSize = true;
             this.lblSuggestedGenres.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSuggestedGenres.Location = new System.Drawing.Point(278, 9);
+            this.lblSuggestedGenres.Location = new System.Drawing.Point(276, 42);
             this.lblSuggestedGenres.Name = "lblSuggestedGenres";
             this.lblSuggestedGenres.Size = new System.Drawing.Size(132, 13);
             this.lblSuggestedGenres.TabIndex = 42;
             this.lblSuggestedGenres.Text = "Artist Related Genres:";
+            // 
+            // tbxSelectedAlbum
+            // 
+            this.tbxSelectedAlbum.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.tbxSelectedAlbum.Location = new System.Drawing.Point(12, 12);
+            this.tbxSelectedAlbum.Multiline = true;
+            this.tbxSelectedAlbum.Name = "tbxSelectedAlbum";
+            this.tbxSelectedAlbum.ReadOnly = true;
+            this.tbxSelectedAlbum.Size = new System.Drawing.Size(527, 20);
+            this.tbxSelectedAlbum.TabIndex = 49;
+            this.tbxSelectedAlbum.Text = "<no selected album>";
             // 
             // PickGenre
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(543, 433);
+            this.Controls.Add(this.tbxSelectedAlbum);
             this.Controls.Add(this.lblSuggestedGenres);
             this.Controls.Add(this.lblRelatedGenres);
             this.Controls.Add(this.chlstRelatedGenresOnHDD);
@@ -155,5 +168,6 @@
         private System.Windows.Forms.CheckedListBox chlstRelatedGenresOnHDD;
         private System.Windows.Forms.Label lblRelatedGenres;
         private System.Windows.Forms.Label lblSuggestedGenres;
+        private System.Windows.Forms.TextBox tbxSelectedAlbum;
     }
 }

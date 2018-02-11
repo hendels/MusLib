@@ -98,7 +98,7 @@ namespace MusicProjectLibrary_1
             //List<string> uniqueArtists = new List<string>();
             List<SQLAlbumTable> queryGetAllArtists = new List<SQLAlbumTable>();
 
-            DBFunctions db = new DBFunctions();
+            mgt_SQLDatabase db = new mgt_SQLDatabase();
             queryGetAllArtists = db.GetAlbumArtists();
             foreach(SQLAlbumTable artist in queryGetAllArtists)
             {
@@ -123,7 +123,7 @@ namespace MusicProjectLibrary_1
                 List<SQLTrackTable> queryGetAllTracksByArtist = new List<SQLTrackTable>();
                 List<TrackDuplicates> ListTrackDuplicates = new List<TrackDuplicates>();
 
-                DBFunctions db = new DBFunctions();
+                mgt_SQLDatabase db = new mgt_SQLDatabase();
                 queryGetAllTracksByArtist = db.GetTrackByArtist(artist);
                 
 
@@ -160,7 +160,7 @@ namespace MusicProjectLibrary_1
                                 if(File.Exists(itemTrack.TrackDirectory))
                                 {
                                     MusicFileDetails MFD = new MusicFileDetails();
-                                    MusicFileMgt.QuickRead(itemTrack.TrackDirectory, MFD);
+                                    mgt_HddAnalyzer.QuickRead(itemTrack.TrackDirectory, MFD);
                                     TD.MFD = MFD;
                                 }
                                 
@@ -192,7 +192,7 @@ namespace MusicProjectLibrary_1
                             if(File.Exists(itemTrack.TrackDirectory))
                             {
                                 MusicFileDetails MFD = new MusicFileDetails();
-                                MusicFileMgt.QuickRead(itemTrack.TrackDirectory, MFD);
+                                mgt_HddAnalyzer.QuickRead(itemTrack.TrackDirectory, MFD);
                                 try
                                 {
                                     if (MFD.pickedAFile.NumberOfMusicBytes <= itemTD.MFD.pickedAFile.NumberOfMusicBytes + ByteTolerance & MFD.pickedAFile.NumberOfMusicBytes >= itemTD.MFD.pickedAFile.NumberOfMusicBytes - ByteTolerance)
@@ -269,7 +269,7 @@ namespace MusicProjectLibrary_1
         public static void getRelatedToArtistGenres()
         {
             List<SQLAlbumTable> queryGetAllGenres = new List<SQLAlbumTable>();
-            DBFunctions db = new DBFunctions();
+            mgt_SQLDatabase db = new mgt_SQLDatabase();
             queryGetAllGenres = db.GetAlbumsGenre();
             //chlstSuggestedGenres
         }

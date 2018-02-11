@@ -12,12 +12,9 @@ using System.Reactive;
 
 namespace MusicProjectLibrary_1
 {
-    class DiscogsManagement
+    class mgt_Discogs
     {
-        public void go()
-        {
 
-        }
         public class SearchResultsDiscogs
         {
             public string title { get; set; }
@@ -26,7 +23,7 @@ namespace MusicProjectLibrary_1
             public string style { get; set; }
             public int year { get; set; }
         }
-        public static void startDiscogs(ListBox.ObjectCollection listBoxConsole, string SearchArtist, string SearchRelease, int AlbumID)
+        public static void startDiscogs(int updateCase, ListBox.ObjectCollection listBoxConsole, string SearchArtist, string SearchRelease, int AlbumID)
         {
             var tokenInformation = new TokenAuthenticationInformation("QWgIjbVsUoULLGCvqwpQZUvsTEFZlmRALsOJJrLv");
             var discogsClient = new DiscogsClient.DiscogsClient(tokenInformation);
@@ -72,67 +69,81 @@ namespace MusicProjectLibrary_1
             {
                 if (itemSRD.type == "master")
                 {
-                    masterReleases += 1;
-                    //listBoxConsole.Add(itemSRD.title + "/" + itemSRD.year + "/" + itemSRD.genre);
-                    DialogResult res = MessageBox.Show("Downloaded genres:" + "\n" + "Genre: " + itemSRD.genre + "\n" + "Style: " + itemSRD.style, "Discogs API", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
-                    if (res == DialogResult.OK)
+                    if(updateCase == 1)
                     {
-                        DiscogsDataUpdate(AlbumID, itemSRD, listBoxConsole);
+                        masterReleases += 1;
+                        DialogResult res = MessageBox.Show("Downloaded genres:" + "\n" + "Genre: " + itemSRD.genre + "\n" + "Style: " + itemSRD.style, "Discogs API", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                        if (res == DialogResult.OK)
+                        {
+                            DiscogsDataUpdate(updateCase, AlbumID, itemSRD, listBoxConsole);
+                        }
                     }
+                    else if(updateCase == 2)
+                        DiscogsDataUpdate(updateCase, AlbumID, itemSRD, listBoxConsole);
                 }                
             }
             if (masterReleases == 0)
             {
+                /*
                 foreach (SearchResultsDiscogs itemSRD in LSRD)
                 {
                     masterReleases += 1;
-                    //listBoxConsole.Add(itemSRD.title + "/" + itemSRD.year + "/" + itemSRD.genre);
                     DialogResult res = MessageBox.Show("NO MASTER genres:" + "\n" + "Genre: " + itemSRD.genre + "\n" + "Style: " + itemSRD.style, "Discogs API", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                     if (res == DialogResult.OK)
                     {
-                        DiscogsDataUpdate(AlbumID, itemSRD, listBoxConsole);
+                        DiscogsDataUpdate(updateCase, AlbumID, itemSRD, listBoxConsole);
                     }
                     
                 }
+                */
                 if (LSRD.Count == 0)
                     listBoxConsole.Add("...Discogs Search = null, attempting another cycle...");
             }
 
-
-            //IDisposable sub2 = observable.Subscribe(x => listBoxConsole.Add(x.title));
-
         }
-        private static void DiscogsDataUpdate(int AlbumID, SearchResultsDiscogs itemSRD, ListBox.ObjectCollection listBoxConsole)
+        private static void DiscogsDataUpdate(int updateCase, int AlbumID, SearchResultsDiscogs itemSRD, ListBox.ObjectCollection listBoxConsole)
         {
+            /*
+             * updateCase = 1 - update GENRE
+             * updateCAse = 2 - update YEAR
+             */
             //
             //update album songs
             //
             string buildString = "";
             List<SQLTrackTable> queryGetAllTracksByAlbumID = new List<SQLTrackTable>();
 
-            DBFunctions db = new DBFunctions();
+            mgt_SQLDatabase db = new mgt_SQLDatabase();
             queryGetAllTracksByAlbumID = db.GetTrackByAlbumId(AlbumID);
 
             MusicFileDetails MFD = new MusicFileDetails();
             foreach (SQLTrackTable itemTrack in queryGetAllTracksByAlbumID)
             {
-                MusicFileMgt.QuickRead(itemTrack.TrackDirectory, MFD);
-                buildString = itemSRD.genre;
-                if (itemSRD.style != "")
-                    buildString = itemSRD.genre + "," + itemSRD.style;
+                mgt_HddAnalyzer.QuickRead(itemTrack.TrackDirectory, MFD);
+                if (updateCase == 1)
+                {
+                    buildString = itemSRD.genre;
+                    if (itemSRD.style != "")
+                        buildString = itemSRD.genre + "," + itemSRD.style;
+                    
+                    MFD.pickedAFile.GENRE = buildString;
+                    MFD.pickedAFile.Save(true);
+                    listBoxConsole.Add("......changed Genre in file:" + itemTrack.TrackDirectory);
 
-                MFD.pickedAFile.GENRE = buildString;
-                MFD.pickedAFile.Save(true);
-                listBoxConsole.Add("......changed Genre in file:" + itemTrack.TrackDirectory);
+                    db.UpdateAlbumGenreByAlbumID(AlbumID, buildString);
+                    db.UpdateTrackGenreByAlbumID(AlbumID, buildString);
+                    listBoxConsole.Add("...updated Album & Related Tracks");
+                    
+                }
+                if (updateCase == 2)
+                {
+                    MFD.pickedAFile.DATE = itemSRD.year.ToString();
+                    MFD.pickedAFile.Save(true);
+                    db.UpdateAlbumReleaseYearByAlbumId(AlbumID, itemSRD.year);
+                    listBoxConsole.Add($"...year on album {AlbumID} has been updated by value {itemSRD.year}.");
+                }                
             }
-
-            //
-            //update track&album SQL
-            //
-            db.UpdateAlbumGenreByAlbumID(AlbumID, buildString);
-            db.UpdateTrackGenreByAlbumID(AlbumID, buildString);
-
-            listBoxConsole.Add("...updated Album & Related Tracks");
+            
         }
         
     }

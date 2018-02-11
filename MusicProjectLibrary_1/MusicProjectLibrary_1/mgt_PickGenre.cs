@@ -7,14 +7,14 @@ using System.Windows.Forms;
 
 namespace MusicProjectLibrary_1
 {
-    class PickGenreMgt
+    class mgt_PickGenre
     {
         public static List<string> SortedList = new List<string>();
 
         public static void createGenreList(CheckedListBox checkedListGenre)
         {
             List<SQLAlbumTable> queryGetAllGenres = new List<SQLAlbumTable>();
-            DBFunctions db = new DBFunctions();
+            mgt_SQLDatabase db = new mgt_SQLDatabase();
             queryGetAllGenres = db.GetAlbumsGenre();
 
             if (queryGetAllGenres.Count > 0)
@@ -99,7 +99,7 @@ namespace MusicProjectLibrary_1
         public static void createSecondaryGenreList(string SelectedArtist, CheckedListBox checkedSuggestedGenre)
         {
             List<SQLAlbumTable> queryGetAllWrittenGenres = new List<SQLAlbumTable>();
-            DBFunctions db = new DBFunctions();
+            mgt_SQLDatabase db = new mgt_SQLDatabase();
             queryGetAllWrittenGenres = db.GetAllAlbumWrittenGenresByArtist(SelectedArtist);
             if (queryGetAllWrittenGenres.Count != 0 & GlobalVariables.SelectedArtist != "")
             {
@@ -134,7 +134,7 @@ namespace MusicProjectLibrary_1
         {
             chlstRelatedGenresOnHDD.Items.Clear();
             List<SQLAlbumTable> queryGetAllRelatedGenres = new List<SQLAlbumTable>();
-            DBFunctions db = new DBFunctions();
+            mgt_SQLDatabase db = new mgt_SQLDatabase();
             queryGetAllRelatedGenres = db.GetAllRelatedGenres(selectedGenre);
             if (queryGetAllRelatedGenres.Count != 0 & selectedGenre != "")
             {

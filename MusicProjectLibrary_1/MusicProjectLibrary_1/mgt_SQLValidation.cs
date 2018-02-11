@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+// przemy PC - DESKTOP-FKSTQC7\SQLEXPRESS
+// work PC - DESKTOP-FS4HD9A\SQLEXPRESS
 namespace MusicProjectLibrary_1
 {
-    class SQLDataValidate
+    class mgt_SQLValidation
     {
         public static List<string> ErrorPicker = new List<string>();
 
@@ -28,12 +29,23 @@ namespace MusicProjectLibrary_1
             public int colAlbumName = 6;
             public int colAlbumGeneralGenre = 7;
             public int colDirectoryGenre = 9;
-            public int colArtistCheck = 12;
-            public int colAlbumCheck = 13;
-            public int colGenreCheck = 14;
-            public int colRatingCheck = 15;
-            public int colIndexCheck = 16;
-            public int colIndexAlbumCheck = 17;
+            public int colArtistCheck = 14;
+            public int colAlbumCheck = 15;
+            public int colGenreCheck = 16;
+            public int colRatingCheck = 17;
+            public int colIndexCheck = 18;
+            public int colIndexAlbumCheck = 19;
+        }
+        public class ArtistDataGridColumns
+        {
+            public int colIdArtist = 0;
+            public int colArtistName = 1;
+            public int AlbumCount = 2;
+            public int ProceedToTotal = 3;
+            public int ArtistLibraryPercent = 4;
+            public int ProceedPercent = 5;
+            public int RatedSongs = 6;
+            public int GeneralRanking = 7;
         }
         public static void ReadDataGrid(DataGridView DGV, ListBox.ObjectCollection boxListConsole, TextBox tbxPurgPath, TextBox tbxGeneralPath, int AlbumRowIndex)
         {
@@ -172,7 +184,7 @@ namespace MusicProjectLibrary_1
             //[stage two]
             //
             //add validation points to SQL -> used for album find
-            DBFunctions db = new DBFunctions();
+            mgt_SQLDatabase db = new mgt_SQLDatabase();
             db.UpdateAlbumValidationPointsByAlbumID(CurrentIndex, validationPoints);
             if (validationPoints == DGC.expectedPoints)
             {
@@ -185,13 +197,13 @@ namespace MusicProjectLibrary_1
                     if (Directory.Exists(buildPath))
                     {                        
                         boxListConsole.Add($"folder exist in General Path: " + buildPath);
-                        DirectoryManagement.CreateDirectoryForAlbum(buildPath, ArtistName, AlbumName, boxListConsole, tbxPurgPath, tbxGeneralPath, CurrentIndex, AlbumDirectory, AlbumRowIndex);
+                        mgt_Directory.CreateDirectoryForAlbum(buildPath, ArtistName, AlbumName, boxListConsole, tbxPurgPath, tbxGeneralPath, CurrentIndex, AlbumDirectory, AlbumRowIndex);
                     }
                     else
                     {                        
                         boxListConsole.Add($"...creating new folder in General Path: {buildPath}");
                         Directory.CreateDirectory(buildPath);
-                        DirectoryManagement.CreateDirectoryForAlbum(buildPath, ArtistName, AlbumName, boxListConsole, tbxPurgPath, tbxGeneralPath, CurrentIndex, AlbumDirectory, AlbumRowIndex);
+                        mgt_Directory.CreateDirectoryForAlbum(buildPath, ArtistName, AlbumName, boxListConsole, tbxPurgPath, tbxGeneralPath, CurrentIndex, AlbumDirectory, AlbumRowIndex);
                     }
                     //pod gatunkami tworz foldery artystów - sprawdź czy istnieją
                     //ARTIST_AlbumName
@@ -327,7 +339,7 @@ namespace MusicProjectLibrary_1
                 //add validation points to SQL -> used for album find
                 if (GlobalVariables.writeValidationPoints)
                 {
-                    DBFunctions db = new DBFunctions();
+                    mgt_SQLDatabase db = new mgt_SQLDatabase();
                     db.UpdateAlbumValidationPointsByAlbumID(CurrentIndex, validationPoints);
                 }                
 

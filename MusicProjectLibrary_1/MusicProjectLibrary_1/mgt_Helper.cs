@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace MusicProjectLibrary_1
 {
-    public static class Helper
+    public static class mgt_Helper
     {
         public static string CnnVal(string name)
         {

@@ -117,6 +117,30 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppForms\PickAlbumGeneralGenre.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AppForms\PickAlbumGeneralGenre.Designer.cs">
+      <DependentUpon>PickAlbumGeneralGenre.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AppForms\PickAlbumName.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AppForms\PickAlbumName.Designer.cs">
+      <DependentUpon>PickAlbumName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AppForms\PickAlbumYear.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AppForms\PickAlbumYear.Designer.cs">
+      <DependentUpon>PickAlbumYear.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AppForms\PickArtist.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AppForms\PickArtist.Designer.cs">
+      <DependentUpon>PickArtist.cs</DependentUpon>
+    </Compile>
     <Compile Include="COMMON_AudioFile.cs" />
     <Compile Include="COMMON_ByteSource.cs" />
     <Compile Include="COMMON_CustomExceptions.cs" />
@@ -128,9 +152,10 @@
     <Compile Include="COMMON_Testing.cs" />
     <Compile Include="COMMON_TreeWalker.cs" />
     <Compile Include="DBdataHelper.cs" />
-    <Compile Include="DBFunctions.cs" />
-    <Compile Include="DirectoryManagement.cs" />
-    <Compile Include="DiscogsManagement.cs" />
+    <Compile Include="mgt_Artists.cs" />
+    <Compile Include="mgt_SQLDatabase.cs" />
+    <Compile Include="mgt_Directory.cs" />
+    <Compile Include="mgt_Discogs.cs" />
     <Compile Include="duplicates.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -149,9 +174,9 @@
       <DependentUpon>PickGenre.cs</DependentUpon>
     </Compile>
     <Compile Include="Functions.cs" />
-    <Compile Include="Helper.cs" />
+    <Compile Include="mgt_Helper.cs" />
     <Compile Include="M3u.cs" />
-    <Compile Include="MemberClasses.cs" />
+    <Compile Include="class_Members.cs" />
     <Compile Include="MiscFunctions.cs" />
     <Compile Include="MP3_BOM.cs" />
     <Compile Include="MP3_CommTags.cs" />
@@ -163,7 +188,7 @@
     <Compile Include="MP3_V23FileHeader.cs" />
     <Compile Include="MP3_V23Frame.cs" />
     <Compile Include="MP3_V23Tag.cs" />
-    <Compile Include="MusicFileMgt.cs">
+    <Compile Include="mgt_HddAnalyzer.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="..\..\mlibv2\MusicManagement.cs">
@@ -174,16 +199,28 @@
       <DependentUpon>MusicManagement.cs</DependentUpon>
       <Link>MusicManagement.Designer.cs</Link>
     </Compile>
-    <Compile Include="PickGenreMgt.cs" />
+    <Compile Include="mgt_PickGenre.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="SQLDataValidate.cs" />
-    <Compile Include="xmlSaveInformation.cs" />
+    <Compile Include="mgt_SQLValidation.cs" />
+    <Compile Include="mgt_XML.cs" />
     <EmbeddedResource Include="..\..\mlibv2\MusicManagement.resx">
       <DependentUpon>MusicManagement.cs</DependentUpon>
       <SubType>Designer</SubType>
       <Link>MusicManagement.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AppForms\PickAlbumGeneralGenre.resx">
+      <DependentUpon>PickAlbumGeneralGenre.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AppForms\PickAlbumName.resx">
+      <DependentUpon>PickAlbumName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AppForms\PickAlbumYear.resx">
+      <DependentUpon>PickAlbumYear.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AppForms\PickArtist.resx">
+      <DependentUpon>PickArtist.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="duplicates.resx">
       <DependentUpon>duplicates.cs</DependentUpon>

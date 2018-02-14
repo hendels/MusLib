@@ -252,6 +252,17 @@ namespace MusicProjectLibrary_1
             }
             return 0;
         }
+        public int UpdateAlbumFileType(string AlbumDirectoryP, string FileTypeP)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(mgt_Helper.CnnVal("MusicLibDB")))
+            {
+                connection.Execute("dbo.spAlbums_UpdateAlbumFileType @AlbumDirectory, @FileType", new { AlbumDirectory = AlbumDirectoryP, FileType = FileTypeP });
+                int AlbumID = GetAlbumID(AlbumDirectoryP);
+                GlobalChecker.TestSqlAlbumIdQuery += 1;
+                return AlbumID;
+            }
+            return 0;
+        }
         public void UpdateAlbumReleaseYearByAlbumId(int AlbumIdP, int AlbumReleaseYearP)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(mgt_Helper.CnnVal("MusicLibDB")))
@@ -639,13 +650,14 @@ namespace MusicProjectLibrary_1
         public bool RatingCheck { get; set; }
         public bool IndexCheck { get; set; }
         public bool AlbumIndexCheck { get; set; }
+        public string FileType { get; set; }
 
         public string FullInfoAlbums
         {
             get
             {
                 return $"{idAlbum} {writeIndex} {AlbumName}{AlbumDirectory} {ValidationPoints} {AlbumArtist} {idArtist} {AlbumReleaseYear} {AlbumGenre} {AlbumRateCounter} {AlbumRating} {DirectoryGenre} {DateProceed} " +
-                    $"{ArtistCheck}{AlbumCheck} {GenreCheck} {RatingCheck}{IndexCheck} {AlbumIndexCheck} {Proceed}"; // [pobiera sie tu z sql'a - nazwy musza byc takie same jak w sql tabeli inaczej nic nie pokaze
+                    $"{ArtistCheck}{AlbumCheck} {GenreCheck} {RatingCheck}{IndexCheck} {AlbumIndexCheck} {Proceed} {FileType}"; // [pobiera sie tu z sql'a - nazwy musza byc takie same jak w sql tabeli inaczej nic nie pokaze
             }
 
         }

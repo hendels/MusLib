@@ -39,7 +39,7 @@ namespace MusicProjectLibrary_1
         public string trackArtist { set; get; }
         public string trackGenre { set; get; }
         public string trackIndexLib { set; get; }
-
+        public string trackFileExtension { set; get; }
         public AudioFile pickedAFile { set; get; }
     }
     public class GlobalRating

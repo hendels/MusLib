@@ -47,6 +47,13 @@
             this.button2 = new System.Windows.Forms.Button();
             this.btnDiscogs = new System.Windows.Forms.Button();
             this.tabSetup = new System.Windows.Forms.TabPage();
+            this.button13 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button12 = new System.Windows.Forms.Button();
+            this.button11 = new System.Windows.Forms.Button();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.button10 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
@@ -91,12 +98,6 @@
             this.chbProceed = new System.Windows.Forms.CheckBox();
             this.chb_ShowExceptRating = new System.Windows.Forms.CheckBox();
             this.btnReadSelected = new System.Windows.Forms.Button();
-            this.button10 = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.button11 = new System.Windows.Forms.Button();
-            this.button12 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.chbShowAll = new System.Windows.Forms.CheckBox();
             this.tabCtrTrackAlbums.SuspendLayout();
             this.tabAlbums.SuspendLayout();
@@ -319,6 +320,7 @@
             // 
             // tabSetup
             // 
+            this.tabSetup.Controls.Add(this.button13);
             this.tabSetup.Controls.Add(this.button1);
             this.tabSetup.Controls.Add(this.button12);
             this.tabSetup.Controls.Add(this.button11);
@@ -351,6 +353,77 @@
             this.tabSetup.TabIndex = 3;
             this.tabSetup.Text = "Setup";
             this.tabSetup.UseVisualStyleBackColor = true;
+            // 
+            // button13
+            // 
+            this.button13.Location = new System.Drawing.Point(741, 257);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(160, 23);
+            this.button13.TabIndex = 60;
+            this.button13.Text = "combine 2 albums to one";
+            this.button13.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(907, 257);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(160, 23);
+            this.button1.TabIndex = 59;
+            this.button1.Text = "MP3 Handling";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // button12
+            // 
+            this.button12.Location = new System.Drawing.Point(907, 228);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(160, 23);
+            this.button12.TabIndex = 58;
+            this.button12.Text = "backup files";
+            this.button12.UseVisualStyleBackColor = true;
+            // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(907, 199);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(160, 23);
+            this.button11.TabIndex = 57;
+            this.button11.Text = "async for functions";
+            this.button11.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Checked = true;
+            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox2.Location = new System.Drawing.Point(955, 163);
+            this.checkBox2.Margin = new System.Windows.Forms.Padding(2);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(241, 17);
+            this.checkBox2.TabIndex = 56;
+            this.checkBox2.Text = "don\'t add track from generated earlier playlists";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Location = new System.Drawing.Point(955, 142);
+            this.checkBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(128, 17);
+            this.checkBox1.TabIndex = 55;
+            this.checkBox1.Text = "do not duplicate Artist";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // button10
+            // 
+            this.button10.Location = new System.Drawing.Point(907, 116);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(160, 23);
+            this.button10.TabIndex = 54;
+            this.button10.Text = "shuffle playlist from range star ";
+            this.button10.UseVisualStyleBackColor = true;
             // 
             // button9
             // 
@@ -534,6 +607,7 @@
             this.tbxSearchAlbums.Name = "tbxSearchAlbums";
             this.tbxSearchAlbums.Size = new System.Drawing.Size(100, 20);
             this.tbxSearchAlbums.TabIndex = 27;
+            this.tbxSearchAlbums.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbxSearchAlbums_KeyDown);
             // 
             // btnFindAlbums
             // 
@@ -731,73 +805,9 @@
             this.btnReadSelected.UseVisualStyleBackColor = false;
             this.btnReadSelected.Click += new System.EventHandler(this.btnReadSelected_Click);
             // 
-            // button10
-            // 
-            this.button10.Location = new System.Drawing.Point(907, 116);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(160, 23);
-            this.button10.TabIndex = 54;
-            this.button10.Text = "shuffle playlist from range star ";
-            this.button10.UseVisualStyleBackColor = true;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(955, 142);
-            this.checkBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(128, 17);
-            this.checkBox1.TabIndex = 55;
-            this.checkBox1.Text = "do not duplicate Artist";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Checked = true;
-            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox2.Location = new System.Drawing.Point(955, 163);
-            this.checkBox2.Margin = new System.Windows.Forms.Padding(2);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(241, 17);
-            this.checkBox2.TabIndex = 56;
-            this.checkBox2.Text = "don\'t add track from generated earlier playlists";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // button11
-            // 
-            this.button11.Location = new System.Drawing.Point(907, 199);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(160, 23);
-            this.button11.TabIndex = 57;
-            this.button11.Text = "async for functions";
-            this.button11.UseVisualStyleBackColor = true;
-            // 
-            // button12
-            // 
-            this.button12.Location = new System.Drawing.Point(907, 228);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(160, 23);
-            this.button12.TabIndex = 58;
-            this.button12.Text = "backup files";
-            this.button12.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(907, 257);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(160, 23);
-            this.button1.TabIndex = 59;
-            this.button1.Text = "MP3 Handling";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
             // chbShowAll
             // 
             this.chbShowAll.AutoSize = true;
-            this.chbShowAll.Checked = true;
-            this.chbShowAll.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chbShowAll.Location = new System.Drawing.Point(380, 35);
             this.chbShowAll.Margin = new System.Windows.Forms.Padding(2);
             this.chbShowAll.Name = "chbShowAll";
@@ -959,6 +969,7 @@
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox chbShowAll;
+        private System.Windows.Forms.Button button13;
     }
 }
 

@@ -97,6 +97,7 @@ namespace MusicProjectLibrary_1
             if (writeIndex)
             {
                 writeTrackIndexToFile(uniqueDir, globalMusicFileDetailsList, progressBar);
+                boxListConsole.Add("All Index has been written.");
             }
             //
             //Process catalogs
@@ -323,10 +324,11 @@ namespace MusicProjectLibrary_1
             int idAlbum = 0;
             if (publicAlbumIndex > 0)
                 idAlbum = publicAlbumIndex;
-            for (int i = 0; i <= 4; i++) // 0 - sprawdzaj tag o typie Album; 1- sprawdzaj tag o typie Artist; 2 - sprawdzaj tag o typie Genre
+            for (int i = 0; i <= 5; i++) // 0 - sprawdzaj tag o typie Album; 1- sprawdzaj tag o typie Artist; 2 - sprawdzaj tag o typie Genre
             {
                 List<string> ListItem = new List<string>();
                 int AlbumReleaseYear = 0;
+                string fileType = "";
                 foreach (TagInformation itemTI in LTI)
                 {                        
                     switch (i)
@@ -353,6 +355,12 @@ namespace MusicProjectLibrary_1
                                 AlbumReleaseYear = 0;                                
                             }                            
                             break;
+                        case 5:
+                            {
+                                fileType = itemTI.trackFileExtension;
+                                break;
+                            }
+                            
                     }
                 }
 
@@ -412,7 +420,7 @@ namespace MusicProjectLibrary_1
                         
                         break;
 
-                    case 2:
+                    case 2: //GENRE
                         var tagGenreFilled = ListItem.Distinct().Count() == 1;
                         //
                         List<string> uniqueGenre = new List<string>();
@@ -430,7 +438,6 @@ namespace MusicProjectLibrary_1
                         {     
                             if(countGenres == 0)                            
                                 genreString = itemGenre;                            
-                            //if (uniqueGenre.IndexOf(itemGenre) == 1) // [przemy knowledge] szukanie indeksu w liscie     
                             else                            
                                 genreString = genreString + ", " + itemGenre;
 
@@ -483,6 +490,12 @@ namespace MusicProjectLibrary_1
                             idAlbum = updateAlbumsTableInDB(11, itemUQC, "", false, 0, AlbumReleaseYear);
                         else
                             updateAlbumsTableInDB(11, itemUQC, "", false, 0, AlbumReleaseYear);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja Index]
+                        break;
+                    case 5:                        
+                        if (publicAlbumIndex == 0)
+                            idAlbum = updateAlbumsTableInDB(12, itemUQC, fileType, false, 0, 0);
+                        else
+                            updateAlbumsTableInDB(12, itemUQC, fileType, false, 0, 0);//odnajdz rekord w bazie > zaktualizuj status ze jest ok [sekcja Index]
                         break;
                 }
                     
@@ -543,9 +556,7 @@ namespace MusicProjectLibrary_1
             mgt_SQLDatabase db = new mgt_SQLDatabase();
             DirectoryList = db.GetAlbumDirectory(itemUQC.uniqeDirectory);
             int DLcount = DirectoryList.Count;
-            if (DLcount == 1) //exist in sql => update [todo] sprawdzaj po INDEXALBUM jeżeli jest uzupełnione, trzeba aktualizować po id Album [problem ścieżki w pliku]
-                //pobierz ID
-                //pobierz 
+            if (DLcount == 1) 
             {
                 int idAlbum = updateAlbumsSwitch(db, updateCase, itemUQC, updateStringDB, checkValue, updateDecimalDB, updateIntDB);
                 return idAlbum;
@@ -591,6 +602,9 @@ namespace MusicProjectLibrary_1
                     return AlbumID;
                 case 11:
                     AlbumID = db.UpdateAlbumReleaseYear(itemUQC.uniqeDirectory, updateIntDB);
+                    return AlbumID;
+                case 12:
+                    AlbumID = db.UpdateAlbumFileType(itemUQC.uniqeDirectory, updateStringDB);
                     return AlbumID;
             }
             return 0;
@@ -748,7 +762,7 @@ namespace MusicProjectLibrary_1
             TI.trackGenre = MFD.trackGenre + " " + MFD.trackStyle;
             TI.trackName = MFD.trackName;
             TI.trackIndexLib = MFD.trackIndex;
-            //TI.track
+            TI.trackFileExtension = MFD.trackFileExtension;
             TI.pickedAFile = MFD.pickedAFile;
 
             ListTagInformation.Add(TI);

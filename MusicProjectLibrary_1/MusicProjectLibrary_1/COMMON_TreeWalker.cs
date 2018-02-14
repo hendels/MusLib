@@ -12,6 +12,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 
 //// ===========================================================================================================
@@ -282,32 +283,34 @@ namespace JAudioTags
         
         public void FileSearch(string CurrentDirectory)
         {
-            //string var = globalCurrentDirectory;
-            //globalCurrentDirectory = CurrentDirectory;
-            
-            foreach (string CurrentFile in Directory.GetFiles(CurrentDirectory))
+            if (Directory.Exists(CurrentDirectory))
             {
-                string CurrentExtension = Helpers.JGetExtension(CurrentFile);
-                if (Extensions.Contains("*") || Extensions.Contains(CurrentExtension))
+                foreach (string CurrentFile in Directory.GetFiles(CurrentDirectory))
                 {
-                    try
+                    string CurrentExtension = Helpers.JGetExtension(CurrentFile);
+                    if (Extensions.Contains("*") || Extensions.Contains(CurrentExtension))
                     {
-                        if (ProcessFile != null)
-                            ReturnValue += ProcessFile(CurrentFile, TheWriter);
-                    }
-                    catch (Exception Ex)
-                    {
-                        string Message = Ex.Message + "\n   " + CurrentDirectory + "\n   "
-                                + Path.GetFileName(CurrentFile);
-                        if (!(ErrorLog == null))
-                            ErrorLog.WriteLine(Message);
-                        else
-                            Console.WriteLine(Message);
+                        try
+                        {
+                            if (ProcessFile != null)
+                                ReturnValue += ProcessFile(CurrentFile, TheWriter);
+                        }
+                        catch (Exception Ex)
+                        {
+                            string Message = Ex.Message + "\n   " + CurrentDirectory + "\n   "
+                                    + Path.GetFileName(CurrentFile);
+                            if (!(ErrorLog == null))
+                                ErrorLog.WriteLine(Message);
+                            else
+                                Console.WriteLine(Message);
+                        }
                     }
                 }
+                foreach (string ChildDirectory in Directory.GetDirectories(CurrentDirectory))
+                    FileSearch(ChildDirectory);
             }
-            foreach (string ChildDirectory in Directory.GetDirectories(CurrentDirectory))
-                FileSearch(ChildDirectory);
+            else
+                MessageBox.Show($"Directory didn't exist {CurrentDirectory}");
         }
 
 

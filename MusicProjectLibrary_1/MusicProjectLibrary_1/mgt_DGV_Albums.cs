@@ -6,12 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static MusicProjectLibrary_1.MusicLibraryWindow;
 
 namespace MusicProjectLibrary_1
 {
     class mgt_DGV_Albums
     {
-        public static bool DoubleClickOnGridCallBack(DataGridView DGV, ListBox boxListConsole, int AlbumRowIndex, int AlbumColIndex)
+        public static bool DoubleClickOnGridCallBack(DataGridView DGV, ListBox boxListConsole, int AlbumRowIndex, int AlbumColIndex, AppSearchDefinitions AppSearchDef)
         {
             DGV.MultiSelect = false;
             mgt_SQLValidation.dataGridColumns DGC = new mgt_SQLValidation.dataGridColumns();
@@ -41,7 +42,7 @@ namespace MusicProjectLibrary_1
                 pickGenreForm.ShowDialog();
                 if (pickGenreForm.GeneratedGenreString != "")
                 {
-                    int countRecord = mgt_SQLDatabase.AutoSearchDatabaseAlbums(1, DGV, 1, 0, 0, 0, false, false);
+                    int countRecord = mgt_SQLDatabase.AutoSearchDatabaseAlbums(1, DGV, 1, 0, 0, 0, false, false, AppSearchDef.SAP.searchAlbumsString);
                     boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
                     boxListConsole.SelectedIndex = boxListConsole.Items.Count - 1;
                     return true;
@@ -90,7 +91,7 @@ namespace MusicProjectLibrary_1
 
                 if (pickArtistForm.ArtistSelected == true)
                 {
-                    int countRecord = mgt_SQLDatabase.AutoSearchDatabaseAlbums(1, DGV, 1, 0, 0, 0, false, false);
+                    int countRecord = mgt_SQLDatabase.AutoSearchDatabaseAlbums(1, DGV, 1, 0, 0, 0, false, false, AppSearchDef.SAP.searchAlbumsString);
                     boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
                     boxListConsole.SelectedIndex = boxListConsole.Items.Count - 1;
                     return true;
@@ -103,7 +104,7 @@ namespace MusicProjectLibrary_1
                 pickAlbumName.ShowDialog();
                 if (pickAlbumName.ArtistNameFilled == true)
                 {
-                    int countRecord = mgt_SQLDatabase.AutoSearchDatabaseAlbums(1, DGV, 1, 0, 0, 0, false, false);
+                    int countRecord = mgt_SQLDatabase.AutoSearchDatabaseAlbums(1, DGV, 1, 0, 0, 0, false, false, AppSearchDef.SAP.searchAlbumsString);
                     boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
                     boxListConsole.SelectedIndex = boxListConsole.Items.Count - 1;
                     return true;

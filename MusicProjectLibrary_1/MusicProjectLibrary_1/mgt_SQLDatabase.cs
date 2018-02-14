@@ -14,13 +14,13 @@ namespace MusicProjectLibrary_1
     {
         //[ALBUMS TABLE]
             //[GET from Albums table]
-        public List<SQLAlbumTable> GetAllAlbums(int RecordCountP, int selectAllP, int sortByP, int rangeValidateMinP, int rangeValidateMaxP, bool showProceedP, bool showFullyRatedP)
+        public List<SQLAlbumTable> GetAllAlbums(int RecordCountP, int selectAllP, int sortByP, int rangeValidateMinP, int rangeValidateMaxP, bool showProceedP, bool showFullyRatedP, string RegExP)
         {
             //throw new NotImplementedException();
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(mgt_Helper.CnnVal("MusicLibDB")))
             {
                 
-                var output = connection.Query<SQLAlbumTable>($"dbo.spAlbums_GetAll @RecordCount, @selectAll, @sortBy, @rangeValidateMin, @rangeValidateMax, @showProceed, @showFullyRated", new
+                var output = connection.Query<SQLAlbumTable>($"dbo.spAlbums_GetAll @RecordCount, @selectAll, @sortBy, @rangeValidateMin, @rangeValidateMax, @showProceed, @showFullyRated, @RegEx", new
                 {
                     RecordCount = RecordCountP,
                     selectAll = selectAllP,
@@ -28,7 +28,8 @@ namespace MusicProjectLibrary_1
                     rangeValidateMin = rangeValidateMinP,
                     rangeValidateMax = rangeValidateMaxP,
                     showProceed = showProceedP,
-                    showFullyRated = showFullyRatedP
+                    showFullyRated = showFullyRatedP,
+                    RegEx = RegExP
                 }).ToList();
                 GlobalChecker.TestSqlAlbumIdQuery += 1;
                 return output;
@@ -527,14 +528,14 @@ namespace MusicProjectLibrary_1
         }
         // [SEARCH functions]
         public static int AutoSearchDatabaseAlbums(int IdAlbum, DataGridView DGV, 
-            int showAll, int AlbumCount, int PointsMin, int PointsMax, bool ShowProcedure, bool ShowFullyRated)
+            int showAll, int AlbumCount, int PointsMin, int PointsMax, bool ShowProcedure, bool ShowFullyRated, string RegEx)
         {
             List<SQLAlbumTable> AlbumList = new List<SQLAlbumTable>(); //sqlprzemy - table : Albums
             mgt_SQLDatabase db = new mgt_SQLDatabase();
             if (IdAlbum != 0)
                 AlbumList = db.GetAlbumById(IdAlbum);
             else
-                AlbumList = db.GetAllAlbums(AlbumCount, showAll, 2, PointsMin, PointsMax, ShowProcedure, ShowFullyRated); //RecordCountP, selectAllP, sortByP, rangeValidateMinP, rangeValidateMaxP
+                AlbumList = db.GetAllAlbums(AlbumCount, showAll, 2, PointsMin, PointsMax, ShowProcedure, ShowFullyRated, RegEx); //RecordCountP, selectAllP, sortByP, rangeValidateMinP, rangeValidateMaxP
 
             UpdateBindingAlbums(DGV, AlbumList);
             int countRecord = AlbumList.Count;

@@ -7,15 +7,35 @@ using System.Windows.Forms;
 
 namespace MusicProjectLibrary_1
 {
+    public class SearchAlbumParameters
+    {
+        public string searchAlbumsString { get; set; }
+        public bool processedAlbums { get; set; }
+        public bool fullRated { get; set; }
+        public bool showAll { get; set; }
+        public int showAlbumLimiter { get; set; }
+        
+    }
+    public class SearchTrackParameters
+    {
+        public string searchTracksString { get; set; }
+        public int minTrackRating { get; set; }
+        public int maxTrackRating { get; set; }
+        public int showTracksLimiter { get; set; }
+    }
+    public class SearchArtistParameters
+    {
+        public string searchArtistsString { get; set; }
+    }
     class mgt_SearchAlbums
     {
-        public void MainSearch(DataGridView DGV, ListBox consoleListBox)
+        public void MainSearch(DataGridView dgvAlbums, DataGridView dgvTracks, DataGridView dgvArtists, SearchAlbumParameters searchAlbumsParameters, SearchTrackParameters searchTracksParameters, SearchArtistParameters searchArtistsParameters, ListBox consoleListBox)
         {
-            RefreshSpecificTable(1);
-            mgt_SQLValidation.ReadDataGridForAll(DGV, consoleListBox.Items);
+            RefreshSpecificTable(1, dgvAlbums, dgvTracks, dgvArtists, searchAlbumsParameters, searchTracksParameters, searchArtistsParameters);
+            mgt_SQLValidation.ReadDataGridForAll(dgvAlbums, consoleListBox.Items);
         }
 
-        private int RefreshSpecificTable(int RefreshTableNo)
+        public static int RefreshSpecificTable(int RefreshTableNo, DataGridView dgvAlbums, DataGridView dgvTracks, DataGridView dgvArtists, SearchAlbumParameters searchAlbumsParameters, SearchTrackParameters searchTracksParameters, SearchArtistParameters searchArtistsParameters)
         {
             int counter = 0;
             int subcounter = 0;
@@ -24,13 +44,13 @@ namespace MusicProjectLibrary_1
             switch (RefreshTableNo)
             {
                 case 1: // if something exist in search box (album ID)           
-                    if (Int32.TryParse(tbxSearchAlbums.Text, out x))
+                    if (Int32.TryParse(searchAlbumsParameters.searchAlbumsString, out x))
                     {
                         /*
-                         = show all Case
+                         = show Specific Album & Tracks Case - by Album ID
                         */
                         subcounter = mgt_SQLDatabase.AutoSearchDatabaseAlbums(x, dgvAlbums,
-                            1, 0, 0, 0, chbProceed.Checked, chb_ShowExceptRating.Checked);
+                            1, 0, 0, 0, searchAlbumsParameters.processedAlbums, searchAlbumsParameters.fullRated, searchAlbumsParameters.searchAlbumsString);
                         subcounter2 = mgt_SQLDatabase.AutoSearchDatabaseTracksByAlbumID(x, dgvTracks, 0, 0, 0);
                         counter = subcounter + subcounter2;
                     }
@@ -46,32 +66,41 @@ namespace MusicProjectLibrary_1
                          * par 5: showProceed; only for showAll = 0
                          * par 6: showFullyRated; only forShowAll = 0
                         */
-                        if (chbShowAll.Checked)
+                        if (searchAlbumsParameters.showAll)
                         {
                             counter = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums,
-                                1, 0, 0, 0, false, false);
+                                1, 0, 0, 0, false, false, searchAlbumsParameters.searchAlbumsString);
                         }
                         else
                         {
-                            int AlbumCount = 0;
-                            if (tbxAlbumCount.Text != "")
-                                AlbumCount = Convert.ToInt32(tbxAlbumCount.Text);
+                            int AlbumCount = searchAlbumsParameters.showAlbumLimiter;
+                            //if (searchAlbumsParameters.showAlbumLimiter != 0)
+                            //    AlbumCount = searchAlbumsParameters.showAlbumLimiter;
+                            if (Int32.TryParse(searchAlbumsParameters.searchAlbumsString, out x))
+                            {
 
-                            counter = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums,
-                                0, AlbumCount, Convert.ToInt32(tbxPointsMin.Text), Convert.ToInt32(tbxPointsMax.Text), chbProceed.Checked, chb_ShowExceptRating.Checked);
+                            }
+                            else if(searchAlbumsParameters.searchAlbumsString != "")
+                            {
+                                counter = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums,
+                                2, AlbumCount, searchTracksParameters.minTrackRating, searchTracksParameters.maxTrackRating, searchAlbumsParameters.processedAlbums, searchAlbumsParameters.fullRated, searchAlbumsParameters.searchAlbumsString);
+                            }
+                            else
+                                counter = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums,
+                                0, AlbumCount, searchTracksParameters.minTrackRating, searchTracksParameters.maxTrackRating, searchAlbumsParameters.processedAlbums, searchAlbumsParameters.fullRated, searchAlbumsParameters.searchAlbumsString);
                         }
 
                     }
 
                     return counter;
                 case 2:
-                    if (Int32.TryParse(tbxSearchTracks.Text, out x))
+                    if (Int32.TryParse(searchTracksParameters.searchTracksString, out x))
                         counter = mgt_SQLDatabase.AutoSearchDatabaseTracksByTrackIndex(x, dgvTracks, 0, 0, 0);
                     else
-                        counter = mgt_SQLDatabase.AutoSearchDatabaseTracksByTrackIndex(0, dgvTracks, Convert.ToInt32(tbxTrackCount.Text), Convert.ToInt32(tbxTrackRatingMin.Text), Convert.ToInt32(tbxTrackRatingMax.Text));
+                        counter = mgt_SQLDatabase.AutoSearchDatabaseTracksByTrackIndex(0, dgvTracks, searchTracksParameters.showTracksLimiter, searchTracksParameters.minTrackRating, searchTracksParameters.maxTrackRating);
                     return counter;
                 case 3:
-                    counter = mgt_SQLDatabase.AutoSearchDatabaseArtists(tbxSearchArtist.Text, dgvArtists);
+                    counter = mgt_SQLDatabase.AutoSearchDatabaseArtists(searchArtistsParameters.searchArtistsString, dgvArtists);
                     return counter;
             }
             return counter;

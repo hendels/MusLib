@@ -21,8 +21,18 @@ using static MusicProjectLibrary_1.mgt_SQLValidation;
 
 namespace MusicProjectLibrary_1
 {
+    
     public partial class MusicLibraryWindow : Form //MaterialSkin.Controls.MaterialForm
     {
+        public class AppSearchDefinitions
+        {
+            public SearchAlbumParameters SAP;
+
+            public AppSearchDefinitions()
+            {
+                SAP = defineSearchAlbumsParameters();
+            }
+        }
         List<SQLAlbumTable> AlbumList = new List<SQLAlbumTable>(); //sqlprzemy - table : Albums
         List<SQLTrackTable> TrackList = new List<SQLTrackTable>(); //sqlprzemy - table : Tracks
         mgt_XML info = new mgt_XML();
@@ -38,22 +48,6 @@ namespace MusicProjectLibrary_1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Functions.getPurgatoryPath(tbxPickedPath,true);
-            Functions.getMainDirectoryPath(tbxMusicPath, true);
-            Functions.getDriveGeneralPath(tbxDriveMainPath, true);
-
-            int countRecordTracks = RefreshSpecificTable(1);
-            BoxListConsole.Items.Add("Tracks count: " + countRecordTracks.ToString());
-            mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
-
-            int countRecordAlbums = RefreshSpecificTable(2);
-            BoxListConsole.Items.Add("Album count: " + countRecordAlbums.ToString());
-
-            int countRecordArtist = RefreshSpecificTable(3);
-            BoxListConsole.Items.Add("Artist table updated: " + countRecordArtist.ToString());
-
-            BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
-            GlobalVariables globalProcCatalog = new GlobalVariables();
             //
             //load config file
             //
@@ -72,20 +66,47 @@ namespace MusicProjectLibrary_1
                         chbProceed.Checked = info.ShowProceed;
                         tbxAlbumCount.Text = info.AlbumCount.ToString();
                         tbxTrackCount.Text = info.TrackCount.ToString();
+                        //checkboxes
+                        GlobalVariables.FullyRated = false;
+                        GlobalVariables.ShowProcessed = info.ShowProceed;
+                        GlobalVariables.showAll = false;
+                        //
+                        //textboxes
+                        GlobalVariables.SearchAlbumString = "";
+                        GlobalVariables.showAlbumLimiter = info.AlbumCount;
+                        //
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show("error while loading XML");
                     }
                 }
-                
+
             }
+            Functions.getPurgatoryPath(tbxPickedPath,true);
+            Functions.getMainDirectoryPath(tbxMusicPath, true);
+            Functions.getDriveGeneralPath(tbxDriveMainPath, true);
+
+            int countRecordTracks = mgt_SearchAlbums.RefreshSpecificTable(2, dgvAlbums, dgvTracks, dgvArtists, defineSearchAlbumsParameters(), defineSearchTracksParameters(), defineSearchArtistsParameters());
+            BoxListConsole.Items.Add("Tracks count: " + countRecordTracks.ToString());
+            mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
+
+            int countRecordAlbums = mgt_SearchAlbums.RefreshSpecificTable(1, dgvAlbums, dgvTracks, dgvArtists, defineSearchAlbumsParameters(), defineSearchTracksParameters(), defineSearchArtistsParameters());
+            BoxListConsole.Items.Add("Album count: " + countRecordAlbums.ToString());
+
+            int countRecordArtist = mgt_SearchAlbums.RefreshSpecificTable(3, dgvAlbums, dgvTracks, dgvArtists, defineSearchAlbumsParameters(), defineSearchTracksParameters(), defineSearchArtistsParameters());
+            BoxListConsole.Items.Add("Artist table updated: " + countRecordArtist.ToString());
+
+            BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
+            GlobalVariables globalProcCatalog = new GlobalVariables();
+            
             //
             //refresh
             //
-            RefreshSpecificTable(1);
+            //RefreshSpecificTable(1);
             mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
         }
+
         private void btnSaveXml_Click(object sender, EventArgs e)
         {
             try
@@ -124,8 +145,7 @@ namespace MusicProjectLibrary_1
             if (confirmResult == DialogResult.Yes)
             {
                 mgt_HddAnalyzer.readFiles(BoxListConsole.Items, progBar, pickedPath, "blah", lblProgress);
-                int countRecordAlbum = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums, 0,
-                    info.AlbumCount, Convert.ToInt32(info.PointsMin), Convert.ToInt32(info.PointsMax), chbProceed.Checked, chb_ShowExceptRating.Checked);
+                int countRecordAlbums = mgt_SearchAlbums.RefreshSpecificTable(1, dgvAlbums, dgvTracks, dgvArtists, defineSearchAlbumsParameters(), defineSearchTracksParameters(), defineSearchArtistsParameters());
 
                 BoxListConsole.Items.Add("..........processing path done.");
                 BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
@@ -140,11 +160,10 @@ namespace MusicProjectLibrary_1
             GlobalChecker.TestSqlAlbumIdQuery = 0;
             mgt_HddAnalyzer.readFiles(BoxListConsole.Items, progBar, tbxPickedPath.Text, tbxDriveMainPath.Text, lblProgress);
 
-            int countRecordAlbum = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums, 0,
-                info.AlbumCount, Convert.ToInt32(info.PointsMin), Convert.ToInt32(info.PointsMax), chbProceed.Checked, chb_ShowExceptRating.Checked);
-            int countRecordArtist = mgt_SQLDatabase.AutoSearchDatabaseArtists("", dgvArtists);
+            int countRecordAlbums = mgt_SearchAlbums.RefreshSpecificTable(1, dgvAlbums, dgvTracks, dgvArtists, defineSearchAlbumsParameters(), defineSearchTracksParameters(), defineSearchArtistsParameters());
+            int countRecordArtist = mgt_SearchAlbums.RefreshSpecificTable(3, dgvAlbums, dgvTracks, dgvArtists, defineSearchAlbumsParameters(), defineSearchTracksParameters(), defineSearchArtistsParameters());
 
-            BoxListConsole.Items.Add("Album table updated: " + countRecordAlbum.ToString());
+            BoxListConsole.Items.Add("Album table updated: " + countRecordAlbums.ToString());
             BoxListConsole.Items.Add("Artist table updated: " + countRecordArtist.ToString());
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
 
@@ -158,7 +177,7 @@ namespace MusicProjectLibrary_1
 
         private void CheckBoxProcessCatalogs_CheckedChanged(object sender, EventArgs e)
         {
-            if (CheckBoxProcessCatalogs.Checked == true)
+            if (CheckBoxProcessCatalogs.Checked)
                 GlobalVariables.globalProcessCatalog = true;            
             else            
                 GlobalVariables.globalProcessCatalog = false;
@@ -186,14 +205,14 @@ namespace MusicProjectLibrary_1
         }
         private void btnFindAlbums_Click(object sender, EventArgs e)
         {
-            RefreshSpecificTable(1);            
-            mgt_SQLValidation.ReadDataGridForAll(dgvAlbums, BoxListConsole.Items);
+            mgt_SearchAlbums.RefreshSpecificTable(1, dgvAlbums, dgvTracks, dgvArtists, defineSearchAlbumsParameters(), defineSearchTracksParameters(), defineSearchArtistsParameters());
+            mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
         }         
     
         private void btnFindTracks_Click(object sender, EventArgs e)
         {
-            int countRecord = RefreshSpecificTable(2);
+            int countRecord = mgt_SearchAlbums.RefreshSpecificTable(2, dgvAlbums, dgvTracks, dgvArtists, defineSearchAlbumsParameters(), defineSearchTracksParameters(), defineSearchArtistsParameters());
             BoxListConsole.Items.Add("Tracks count: " + countRecord.ToString());
             BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;            
         }
@@ -243,7 +262,7 @@ namespace MusicProjectLibrary_1
         }
         private void AlbumsDataGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            mgt_DGV_Albums.DoubleClickOnGridCallBack(dgvAlbums, BoxListConsole, AlbumRowIndex, dgvAlbums.CurrentCell.ColumnIndex);
+            mgt_DGV_Albums.DoubleClickOnGridCallBack(dgvAlbums, BoxListConsole, AlbumRowIndex, dgvAlbums.CurrentCell.ColumnIndex, new AppSearchDefinitions());
             mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
         }
         private void AlbumsDataGridView_SelectionChanged_1(object sender, EventArgs e)
@@ -260,9 +279,9 @@ namespace MusicProjectLibrary_1
         {
             //PickGenre pickGenreForm = new PickGenre();
             int masterRow = AlbumRowIndex;
-            if (mgt_DGV_Albums.DoubleClickOnGridCallBack(dgvAlbums, BoxListConsole, AlbumRowIndex, columnIndex))
+            if (mgt_DGV_Albums.DoubleClickOnGridCallBack(dgvAlbums, BoxListConsole, AlbumRowIndex, columnIndex, new AppSearchDefinitions()))
             {
-                RefreshSpecificTable(1);
+                mgt_SearchAlbums.RefreshSpecificTable(1, dgvAlbums, dgvTracks, dgvArtists, defineSearchAlbumsParameters(), defineSearchTracksParameters(), defineSearchArtistsParameters());
                 mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
                 try
                 {
@@ -301,6 +320,8 @@ namespace MusicProjectLibrary_1
             private void btnDeleteAlbum_Click(object sender, EventArgs e)
             {
                 mgt_Directory.DeleteAlbumFromAlbumDGV(dgvAlbums, AlbumRowIndex);
+                mgt_SearchAlbums.RefreshSpecificTable(1, dgvAlbums, dgvTracks, dgvArtists, defineSearchAlbumsParameters(), defineSearchTracksParameters(), defineSearchArtistsParameters());
+                mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
                 MessageBox.Show("Album & connected Tracks deleted");
             }
             private void btnDeclareGenre_Click_1(object sender, EventArgs e)
@@ -308,8 +329,8 @@ namespace MusicProjectLibrary_1
                 PickGenre pickGenreForm = new PickGenre();
                 pickGenreForm.ShowDialog();
 
-                int countRecord = RefreshSpecificTable(1);
-                dgvAlbums.Rows[AlbumRowIndex].Selected = true;
+                int countRecord = mgt_SearchAlbums.RefreshSpecificTable(1, dgvAlbums, dgvTracks, dgvArtists, defineSearchAlbumsParameters(), defineSearchTracksParameters(), defineSearchArtistsParameters());
+            dgvAlbums.Rows[AlbumRowIndex].Selected = true;
                 //
             }
         private void btnProcessSelected_Click(object sender, EventArgs e)
@@ -322,9 +343,8 @@ namespace MusicProjectLibrary_1
             //{
                 mgt_SQLValidation.ReadDataGrid(dgvAlbums, BoxListConsole.Items, tbxPickedPath, tbxMusicPath, AlbumRowIndex);
 
-                int countRecord = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums, 0,
-                    info.AlbumCount, Convert.ToInt32(info.PointsMin), Convert.ToInt32(info.PointsMax), chbProceed.Checked, chb_ShowExceptRating.Checked);
-                BoxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
+            int countRecordAlbums = mgt_SearchAlbums.RefreshSpecificTable(1, dgvAlbums, dgvTracks, dgvArtists, defineSearchAlbumsParameters(), defineSearchTracksParameters(), defineSearchArtistsParameters());
+            BoxListConsole.Items.Add("Album table updated: " + countRecordAlbums.ToString());
                 BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
 
                 dgvAlbums.ClearSelection();                                                //[przemy knowledge - zaznaczanie data grid view]
@@ -368,9 +388,35 @@ namespace MusicProjectLibrary_1
             BoxListConsole.Items.Add("Start checking...");
             mgt_SQLValidation.ReadDataGridForAll(dgvAlbums, BoxListConsole.Items);
         }
-        ////////////////////////////////////////////////////////INTERNAL FUNCTIONS////////////////////////////////////////
-        
+        ////////////////////////////////////////////////////////<<INTERNAL FUNCTIONS////////////////////////////////////////
+        private static SearchAlbumParameters defineSearchAlbumsParameters()
+        {            
+            SearchAlbumParameters SAP = new SearchAlbumParameters();
+            SAP.fullRated = GlobalVariables.FullyRated;
+            SAP.processedAlbums = GlobalVariables.ShowProcessed;
+            SAP.searchAlbumsString = GlobalVariables.SearchAlbumString;
+            SAP.showAlbumLimiter = GlobalVariables.showAlbumLimiter;
+            SAP.showAll = GlobalVariables.showAll;
 
+            return SAP;
+        }
+        private SearchTrackParameters defineSearchTracksParameters()
+        {
+            SearchTrackParameters STP = new SearchTrackParameters();
+            STP.maxTrackRating = Convert.ToInt32(tbxTrackRatingMax.Text);
+            STP.minTrackRating = Convert.ToInt32(tbxTrackRatingMin.Text);
+            STP.searchTracksString = tbxSearchTracks.Text;
+            STP.showTracksLimiter = Convert.ToInt32(tbxTrackCount.Text);
+            
+            return STP;
+        }
+        private SearchArtistParameters defineSearchArtistsParameters()
+        {
+            SearchArtistParameters SARP = new SearchArtistParameters();
+            SARP.searchArtistsString = tbxSearchArtist.Text;
+            return SARP;
+        }
+        ////////////////////////////////////////////////////////INTERNAL FUNCTIONS>>////////////////////////////////////////
         private void btnWriteIndexAlbum_Click(object sender, EventArgs e)
         {
             mgt_HddAnalyzer.writeAlbumIndexToFile(dgvAlbums, progBar);
@@ -435,6 +481,41 @@ namespace MusicProjectLibrary_1
             {
                 //enter key is down
             }
+        }
+
+        private void chb_ShowExceptRating_CheckedChanged(object sender, EventArgs e)
+        {
+            
+            if (chbShowExceptRating.Checked == true)
+                GlobalVariables.FullyRated = true;
+            else
+                GlobalVariables.FullyRated = false;
+        }
+
+        private void chbProceed_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chbProceed.Checked == true)
+                GlobalVariables.ShowProcessed = true;
+            else
+                GlobalVariables.ShowProcessed = false;
+        }
+
+        private void tbxSearchAlbums_Validated(object sender, EventArgs e)
+        {
+            GlobalVariables.SearchAlbumString = tbxSearchAlbums.Text;
+        }
+
+        private void tbxAlbumCount_Validated(object sender, EventArgs e)
+        {
+            GlobalVariables.showAlbumLimiter = Convert.ToInt32(tbxAlbumCount.Text);
+        }
+
+        private void chbShowAll_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chbShowAll.Checked == true)
+                GlobalVariables.showAll = true;
+            else
+                GlobalVariables.showAll = false;
         }
     }
 }

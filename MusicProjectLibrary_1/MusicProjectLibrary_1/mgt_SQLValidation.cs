@@ -363,7 +363,6 @@ namespace MusicProjectLibrary_1
                                 validationPoints += 1;
                             else if (col == DGC.colIndexAlbumCheck)
                                 validationPoints += 1;
-
                         }                           
                     }
                 }
@@ -381,9 +380,7 @@ namespace MusicProjectLibrary_1
                 else if(withoutGenre & validationPoints == DGC.expectedPoints - 1)
                 {
                     DGV.Rows[rows].DefaultCellStyle.BackColor = Color.PeachPuff;
-                }
-                //else
-                    //boxListConsole.Add($"=========[Test Failed IDX: {CurrentIndex}]=========");
+                }                
             }            
         }
     }

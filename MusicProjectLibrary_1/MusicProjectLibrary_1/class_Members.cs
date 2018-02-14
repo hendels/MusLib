@@ -59,6 +59,15 @@ namespace MusicProjectLibrary_1
     }
     public class GlobalVariables
     {
+        //checkboxes
+        public static bool FullyRated = false;
+        public static bool ShowProcessed = false;
+        public static bool showAll = false;
+        //
+        //textboxes
+        public static string SearchAlbumString = "";
+        public static int showAlbumLimiter = 0;
+        //
         private static bool ProcessCatalog = true;
         public static bool globalProcessCatalog
         {

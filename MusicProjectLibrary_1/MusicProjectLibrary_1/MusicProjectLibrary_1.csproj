@@ -156,6 +156,7 @@
     <Compile Include="mgt_DGV_Albums.cs" />
     <Compile Include="mgt_Duplicates.cs" />
     <Compile Include="mgt_SearchAlbums.cs" />
+    <Compile Include="mgt_SearchTracks.cs" />
     <Compile Include="mgt_SQLDatabase.cs" />
     <Compile Include="mgt_Directory.cs" />
     <Compile Include="mgt_Discogs.cs" />

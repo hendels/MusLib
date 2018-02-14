@@ -96,9 +96,10 @@
             this.tbxTrackCount = new System.Windows.Forms.TextBox();
             this.tbxAlbumCount = new System.Windows.Forms.TextBox();
             this.chbProceed = new System.Windows.Forms.CheckBox();
-            this.chb_ShowExceptRating = new System.Windows.Forms.CheckBox();
+            this.chbShowExceptRating = new System.Windows.Forms.CheckBox();
             this.btnReadSelected = new System.Windows.Forms.Button();
             this.chbShowAll = new System.Windows.Forms.CheckBox();
+            this.button14 = new System.Windows.Forms.Button();
             this.tabCtrTrackAlbums.SuspendLayout();
             this.tabAlbums.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlbums)).BeginInit();
@@ -320,6 +321,7 @@
             // 
             // tabSetup
             // 
+            this.tabSetup.Controls.Add(this.button14);
             this.tabSetup.Controls.Add(this.button13);
             this.tabSetup.Controls.Add(this.button1);
             this.tabSetup.Controls.Add(this.button12);
@@ -608,6 +610,7 @@
             this.tbxSearchAlbums.Size = new System.Drawing.Size(100, 20);
             this.tbxSearchAlbums.TabIndex = 27;
             this.tbxSearchAlbums.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbxSearchAlbums_KeyDown);
+            this.tbxSearchAlbums.Validated += new System.EventHandler(this.tbxSearchAlbums_Validated);
             // 
             // btnFindAlbums
             // 
@@ -768,6 +771,7 @@
             this.tbxAlbumCount.Size = new System.Drawing.Size(53, 20);
             this.tbxAlbumCount.TabIndex = 45;
             this.tbxAlbumCount.Text = "50";
+            this.tbxAlbumCount.Validated += new System.EventHandler(this.tbxAlbumCount_Validated);
             // 
             // chbProceed
             // 
@@ -779,19 +783,19 @@
             this.chbProceed.TabIndex = 46;
             this.chbProceed.Text = "Show Proceed";
             this.chbProceed.UseVisualStyleBackColor = true;
+            this.chbProceed.CheckedChanged += new System.EventHandler(this.chbProceed_CheckedChanged);
             // 
-            // chb_ShowExceptRating
+            // chbShowExceptRating
             // 
-            this.chb_ShowExceptRating.AutoSize = true;
-            this.chb_ShowExceptRating.Checked = true;
-            this.chb_ShowExceptRating.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chb_ShowExceptRating.Location = new System.Drawing.Point(310, 105);
-            this.chb_ShowExceptRating.Margin = new System.Windows.Forms.Padding(2);
-            this.chb_ShowExceptRating.Name = "chb_ShowExceptRating";
-            this.chb_ShowExceptRating.Size = new System.Drawing.Size(93, 17);
-            this.chb_ShowExceptRating.TabIndex = 47;
-            this.chb_ShowExceptRating.Text = "Except Rating";
-            this.chb_ShowExceptRating.UseVisualStyleBackColor = true;
+            this.chbShowExceptRating.AutoSize = true;
+            this.chbShowExceptRating.Location = new System.Drawing.Point(310, 105);
+            this.chbShowExceptRating.Margin = new System.Windows.Forms.Padding(2);
+            this.chbShowExceptRating.Name = "chbShowExceptRating";
+            this.chbShowExceptRating.Size = new System.Drawing.Size(93, 17);
+            this.chbShowExceptRating.TabIndex = 47;
+            this.chbShowExceptRating.Text = "Except Rating";
+            this.chbShowExceptRating.UseVisualStyleBackColor = true;
+            this.chbShowExceptRating.CheckedChanged += new System.EventHandler(this.chb_ShowExceptRating_CheckedChanged);
             // 
             // btnReadSelected
             // 
@@ -815,6 +819,16 @@
             this.chbShowAll.TabIndex = 49;
             this.chbShowAll.Text = "Show All";
             this.chbShowAll.UseVisualStyleBackColor = true;
+            this.chbShowAll.CheckedChanged += new System.EventHandler(this.chbShowAll_CheckedChanged);
+            // 
+            // button14
+            // 
+            this.button14.Location = new System.Drawing.Point(741, 37);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(160, 23);
+            this.button14.TabIndex = 61;
+            this.button14.Text = "check if location exists";
+            this.button14.UseVisualStyleBackColor = true;
             // 
             // MusicLibraryWindow
             // 
@@ -823,7 +837,7 @@
             this.ClientSize = new System.Drawing.Size(1246, 509);
             this.Controls.Add(this.chbShowAll);
             this.Controls.Add(this.btnReadSelected);
-            this.Controls.Add(this.chb_ShowExceptRating);
+            this.Controls.Add(this.chbShowExceptRating);
             this.Controls.Add(this.chbProceed);
             this.Controls.Add(this.tbxAlbumCount);
             this.Controls.Add(this.tbxTrackCount);
@@ -956,7 +970,7 @@
         private System.Windows.Forms.TextBox tbxPickedPath;
         private System.Windows.Forms.TextBox tbxBackupPath;
         private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.CheckBox chb_ShowExceptRating;
+        private System.Windows.Forms.CheckBox chbShowExceptRating;
         private System.Windows.Forms.Button btnReadSelected;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button button8;
@@ -970,6 +984,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox chbShowAll;
         private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Button button14;
     }
 }
 

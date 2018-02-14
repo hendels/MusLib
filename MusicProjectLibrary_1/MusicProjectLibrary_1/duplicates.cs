@@ -58,7 +58,7 @@ namespace MusicProjectLibrary_1
 
         private void dgvPaths_DoubleClick(object sender, EventArgs e)
         {
-            mgt_Directory.OpenPairOfFolders(dgvPaths, dgvPaths.SelectedCells[0].RowIndex);
+            mgt_Duplicates.OpenPairOfFolders(dgvPaths, dgvPaths.SelectedCells[0].RowIndex);
         }
 
         private void btnCheckDuplicates_Click(object sender, EventArgs e)

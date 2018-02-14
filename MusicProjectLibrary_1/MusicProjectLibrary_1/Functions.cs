@@ -359,36 +359,35 @@ namespace MusicProjectLibrary_1
             foreach (string ChildDirectory in Directory.GetDirectories(CurrentDirectory))
                 TreeFileSearch(ChildDirectory);
         }
-        public static void TreeDirectorySearch(string CurrentDirectory, string movedAlbumDirectory, ListBox.ObjectCollection boxListConsole) //[przemy knowledge - best tree search]
+        public static string baseDirectory { get; set; }
+        public static void FindFilesInTreeDirectory(bool dontMoveFile, string CurrentDirectory, string movedAlbumDirectory, ListBox.ObjectCollection boxListConsole) //[przemy knowledge - best tree search]
         {
             int foundIllegalFiles = 0;
             try
             {
                 foreach (string CurrentFile in Directory.GetFiles(CurrentDirectory))
                 {
-
-                    //if (GlobalVariables.IgnoreCurrentFolder > 0)
-                    //{
                     if (Path.GetExtension(CurrentFile) == ".flac" || Path.GetExtension(CurrentFile) == ".mp3")
                     {
                         foundIllegalFiles += 1;
                         boxListConsole.Add($"found illegal file in subfolder {CurrentFile} - manual action needed.");
                     }
 
-                    if ((Path.GetExtension(CurrentFile) == ".jpg" & GlobalVariables.IgnoreCurrentFolder == 0) || (Path.GetExtension(CurrentFile) == ".png" & GlobalVariables.IgnoreCurrentFolder == 0)
-                        || (Path.GetExtension(CurrentFile) == ".tif" & GlobalVariables.IgnoreCurrentFolder == 0) || (Path.GetExtension(CurrentFile) == ".jpeg" & GlobalVariables.IgnoreCurrentFolder == 0))
+                    if (!dontMoveFile)
                     {
-                        try
+                        if (Path.GetExtension(CurrentFile) == ".jpg" || Path.GetExtension(CurrentFile) == ".png" 
+                            || Path.GetExtension(CurrentFile) == ".tif" || Path.GetExtension(CurrentFile) == ".jpeg") 
                         {
-                            File.Move(CurrentFile, movedAlbumDirectory + @"\" + Path.GetFileName(CurrentFile));
-                        }
-                        catch (Exception ex)
-                        {
-                            //MessageBox.Show($"Error with file localization: /n {CurrentFile}");
-                            return;
+                            try
+                            {
+                                File.Move(CurrentFile, movedAlbumDirectory + @"\" + Path.GetFileName(CurrentFile));
+                            }
+                            catch (Exception ex)
+                            {
+                                throw;
+                            }
                         }
                     }
-                    //}              
                 }
             }
             catch (DirectoryNotFoundException ex1)
@@ -396,27 +395,43 @@ namespace MusicProjectLibrary_1
                 MessageBox.Show(ex1.ToString());
             }
 
-            if (foundIllegalFiles == 0)
+            if (foundIllegalFiles == 0 & Directory.Exists(CurrentDirectory))
             {
                 try
                 {
-                    foreach (string CurrentFile in Directory.GetFiles(CurrentDirectory))
+                    if (!dontMoveFile)
                     {
-                        File.Delete(CurrentFile);
-                        boxListConsole.Add($"deleting trash file: {CurrentFile}");
+                        foreach (string CurrentFile in Directory.GetFiles(CurrentDirectory))
+                        {
+                            File.Delete(CurrentFile);
+                            boxListConsole.Add($"deleting trash file: {CurrentFile}");
+                        }
+                    }   
+                    else
+                    {
+                        Directory.Delete(CurrentDirectory, dontMoveFile);
+                        try { Directory.Delete(Directory.GetParent(baseDirectory).ToString()); }
+                        catch { }
                     }
+                        
                 }
                 catch (Exception ex)
                 {
-                    return;
+                    throw;
                 }
             }
-            foreach (string ChildDirectory in Directory.GetDirectories(CurrentDirectory))
+            if (!dontMoveFile)
             {
-                GlobalVariables.IgnoreCurrentFolder += 1;
-                TreeDirectorySearch(ChildDirectory, movedAlbumDirectory, boxListConsole);
-            }
-                
+                foreach (string ChildDirectory in Directory.GetDirectories(CurrentDirectory))
+                {
+                    GlobalVariables.IgnoreCurrentFolder += 1;
+                    FindFilesInTreeDirectory(dontMoveFile, ChildDirectory, movedAlbumDirectory, boxListConsole);
+                }
+                //take care of primaryFolder after all moving - delete it
+                Directory.Delete(baseDirectory, true);
+                try { Directory.Delete(Directory.GetParent(baseDirectory).ToString()); }
+                catch { }
+            }     
         }
     }
 }

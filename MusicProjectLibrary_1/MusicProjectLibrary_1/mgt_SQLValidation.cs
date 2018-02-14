@@ -29,6 +29,7 @@ namespace MusicProjectLibrary_1
             public int colAlbumName = 6;
             public int colAlbumGeneralGenre = 7;
             public int colDirectoryGenre = 9;
+            public int colAlbumNumericRating = 13;
             public int colArtistCheck = 14;
             public int colAlbumCheck = 15;
             public int colGenreCheck = 16;
@@ -63,6 +64,7 @@ namespace MusicProjectLibrary_1
             string GridValueString = "";
             int GridValueInt = 0;
             bool GridValueBool = false;
+            bool ratingPositive = false;
 
             for (int rows = 0; rows < DGV.Rows.Count; rows++)
             {
@@ -152,6 +154,14 @@ namespace MusicProjectLibrary_1
                                 }
                                 else if (col == DGC.colIndexAlbumCheck)
                                     validationPoints += 1;
+                                else if (col == DGC.colRatingCheck)
+                                {       
+                                    decimal albumNumericRate = Convert.ToDecimal(DGV.Rows[rows].Cells[DGC.colAlbumNumericRating].Value);
+                                    if (albumNumericRate > 0)
+                                        ratingPositive = true;
+
+                                    validationPoints += 1;
+                                }
                                 else
                                     validationPoints += 1;
                             }
@@ -186,7 +196,7 @@ namespace MusicProjectLibrary_1
             //add validation points to SQL -> used for album find
             mgt_SQLDatabase db = new mgt_SQLDatabase();
             db.UpdateAlbumValidationPointsByAlbumID(CurrentIndex, validationPoints);
-            if (validationPoints == DGC.expectedPoints)
+            if (validationPoints == DGC.expectedPoints & ratingPositive)
             {
                 //tworz foldery gatunkowe - jeżeli ich nie ma na dysku docelowym
                 
@@ -213,6 +223,27 @@ namespace MusicProjectLibrary_1
                 {
                    
                 }
+            }
+            //delete Album Folder from Purgatory and Tracks, keep information about deleted album & tracks in Database
+            else if (validationPoints == DGC.expectedPoints & !ratingPositive) 
+            {
+                List<SQLTrackTable> LSQTT = new List<SQLTrackTable>();
+                //mgt_SQLDatabase db = new mgt_SQLDatabase();
+                LSQTT = db.GetTrackByAlbumId(CurrentIndex);
+
+                DateTime dateNow = DateTime.Now;
+                string dateString = String.Format("{0:MM/dd/yyyy}", dateNow);
+                string primaryPath = "";
+                foreach (SQLTrackTable item in LSQTT)
+                {
+                    string primarySongPath = item.TrackDirectory;                    
+                    primarySongPath = Functions.findProhibitedSigns(primarySongPath);
+                    mgt_Tracks.deleteOneStars(primarySongPath, dateString, boxListConsole);
+                    primaryPath = Path.GetDirectoryName(primarySongPath);
+                }
+                Functions.FindFilesInTreeDirectory(true, primaryPath, "", boxListConsole);
+                db.UpdateAlbumDirectoryPathByAlbumID(CurrentIndex, "deleted");
+                db.UpdateAlbumProceedDate(CurrentIndex, dateString, true);
             }
             else
                 boxListConsole.Add($"=========[Test Failed IDX: {CurrentIndex}]=========");

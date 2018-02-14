@@ -242,7 +242,7 @@ namespace MusicProjectLibrary_1
         private void AlbumsDataGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             //PickGenre pickGenreForm = new PickGenre();
-            mgt_Directory.DoubleClickOnGridCallBack(dgvAlbums, BoxListConsole, AlbumRowIndex, dgvAlbums.CurrentCell.ColumnIndex);
+            mgt_DGV_Albums.DoubleClickOnGridCallBack(dgvAlbums, BoxListConsole, AlbumRowIndex, dgvAlbums.CurrentCell.ColumnIndex);
             mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
         }
         private void AlbumsDataGridView_SelectionChanged_1(object sender, EventArgs e)
@@ -259,7 +259,7 @@ namespace MusicProjectLibrary_1
         {
             //PickGenre pickGenreForm = new PickGenre();
             int masterRow = AlbumRowIndex;
-            if (mgt_Directory.DoubleClickOnGridCallBack(dgvAlbums, BoxListConsole, AlbumRowIndex, columnIndex))
+            if (mgt_DGV_Albums.DoubleClickOnGridCallBack(dgvAlbums, BoxListConsole, AlbumRowIndex, columnIndex))
             {
                 RefreshSpecificTable(1);
                 mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
@@ -282,7 +282,7 @@ namespace MusicProjectLibrary_1
 
         private void AlbumsDataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
-            if (mgt_Directory.SingleClickOnGridCallBack(dgvAlbums, AlbumRowIndex))
+            if (mgt_DGV_Albums.SingleClickOnGridCallBack(dgvAlbums, AlbumRowIndex))
             {
 
             }
@@ -317,27 +317,29 @@ namespace MusicProjectLibrary_1
             //validuj SQL'a
             AlbumRowIndex = dgvAlbums.SelectedCells[0].RowIndex;
             int hardIndex = AlbumRowIndex;
-            mgt_SQLValidation.ReadDataGrid(dgvAlbums, BoxListConsole.Items, tbxPickedPath, tbxMusicPath, AlbumRowIndex);
+            //if (hardIndex != 0)
+            //{
+                mgt_SQLValidation.ReadDataGrid(dgvAlbums, BoxListConsole.Items, tbxPickedPath, tbxMusicPath, AlbumRowIndex);
 
-            int countRecord = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums, 0, 
-                info.AlbumCount, Convert.ToInt32(info.PointsMin), Convert.ToInt32(info.PointsMax), chbProceed.Checked, chb_ShowExceptRating.Checked);
-            BoxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
-            BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
+                int countRecord = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums, 0,
+                    info.AlbumCount, Convert.ToInt32(info.PointsMin), Convert.ToInt32(info.PointsMax), chbProceed.Checked, chb_ShowExceptRating.Checked);
+                BoxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
+                BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
 
-            dgvAlbums.ClearSelection();                                                //[przemy knowledge - zaznaczanie data grid view]
-            try
-            {
-                dgvAlbums.CurrentCell = dgvAlbums.Rows[hardIndex].Cells[0]; //[przemy knowledge - zaznaczanie data grid view]
-                dgvAlbums.Rows[hardIndex].Selected = true;                         //[przemy knowledge - zaznaczanie data grid view]
-            }
-            catch (Exception ex)
-            { }
-            
+                dgvAlbums.ClearSelection();                                                //[przemy knowledge - zaznaczanie data grid view]
+                try
+                {
+                    dgvAlbums.CurrentCell = dgvAlbums.Rows[hardIndex].Cells[0]; //[przemy knowledge - zaznaczanie data grid view]
+                    dgvAlbums.Rows[hardIndex].Selected = true;                         //[przemy knowledge - zaznaczanie data grid view]
+                }
+                catch (Exception ex)
+                { }
 
-            mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
-            // aktualizuj tabele tracks - ze usunieto plik / aktualizuj, również że istnieje plik
-            //rzuć info ile wyjebał MB z dysku
-
+                mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
+                //rzuć info ile wyjebał MB z dysku
+            //}
+            //else
+            //    BoxListConsole.Items.Add("Cancelled. Select album index!");
         }
         ////////////////////////////////////////////////////////DGV[2]////////////////////////////////////////
         private void TracksDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -397,12 +399,21 @@ namespace MusicProjectLibrary_1
                          * par 5: showProceed; only for showAll = 0
                          * par 6: showFullyRated; only forShowAll = 0
                         */
-                        int AlbumCount = 0;
-                        if (tbxAlbumCount.Text != "")
-                            AlbumCount = Convert.ToInt32(tbxAlbumCount.Text);
+                        if (chbShowAll.Checked)
+                        {
+                            counter = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums,
+                                1, 0, 0, 0, false, false);
+                        }
+                        else
+                        {
+                            int AlbumCount = 0;
+                            if (tbxAlbumCount.Text != "")
+                                AlbumCount = Convert.ToInt32(tbxAlbumCount.Text);
 
-                         counter = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums, 
-                             0, AlbumCount, Convert.ToInt32(tbxPointsMin.Text), Convert.ToInt32(tbxPointsMax.Text), chbProceed.Checked, chb_ShowExceptRating.Checked);
+                            counter = mgt_SQLDatabase.AutoSearchDatabaseAlbums(0, dgvAlbums,
+                                0, AlbumCount, Convert.ToInt32(tbxPointsMin.Text), Convert.ToInt32(tbxPointsMax.Text), chbProceed.Checked, chb_ShowExceptRating.Checked);
+                        }
+                        
                     }
                         
                     return counter;
@@ -455,6 +466,11 @@ namespace MusicProjectLibrary_1
             {
                 DgvAlbumsCellDoubleClick(sender, DGC.colAlbumGeneralGenre);
             }
+            if (e.KeyData == (Keys.Control | Keys.Q))
+            {
+                btnProcessSelected_Click(sender, e);
+            }
+            
         }
         protected override bool ProcessDialogKey(Keys keyData)
         {

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using DiscogsClient;
 using RestSharpHelper.OAuth1;
 using System.Reactive;
+using System.IO;
 
 namespace MusicProjectLibrary_1
 {
@@ -119,29 +120,37 @@ namespace MusicProjectLibrary_1
             MusicFileDetails MFD = new MusicFileDetails();
             foreach (SQLTrackTable itemTrack in queryGetAllTracksByAlbumID)
             {
-                mgt_HddAnalyzer.QuickRead(itemTrack.TrackDirectory, MFD);
-                if (updateCase == 1)
+                try
                 {
-                    buildString = itemSRD.genre;
-                    if (itemSRD.style != "")
-                        buildString = itemSRD.genre + "," + itemSRD.style;
-                    
-                    MFD.pickedAFile.GENRE = buildString;
-                    MFD.pickedAFile.Save(true);
-                    listBoxConsole.Add("......changed Genre in file:" + itemTrack.TrackDirectory);
+                    mgt_HddAnalyzer.QuickRead(itemTrack.TrackDirectory, MFD);
+                    if (updateCase == 1)
+                    {
+                        buildString = itemSRD.genre;
+                        if (itemSRD.style != "")
+                            buildString = itemSRD.genre + "," + itemSRD.style;
 
-                    db.UpdateAlbumGenreByAlbumID(AlbumID, buildString);
-                    db.UpdateTrackGenreByAlbumID(AlbumID, buildString);
-                    listBoxConsole.Add("...updated Album & Related Tracks");
-                    
+                        MFD.pickedAFile.GENRE = buildString;
+                        MFD.pickedAFile.Save(true);
+                        listBoxConsole.Add("......changed Genre in file:" + itemTrack.TrackDirectory);
+
+                        db.UpdateAlbumGenreByAlbumID(AlbumID, buildString);
+                        db.UpdateTrackGenreByAlbumID(AlbumID, buildString);
+                        listBoxConsole.Add("...updated Album & Related Tracks");
+
+                    }
+                    if (updateCase == 2)
+                    {
+                        MFD.pickedAFile.DATE = itemSRD.year.ToString();
+                        MFD.pickedAFile.Save(true);
+                        db.UpdateAlbumReleaseYearByAlbumId(AlbumID, itemSRD.year);
+                        listBoxConsole.Add($"...year on album {AlbumID} has been updated by value {itemSRD.year}.");
+                    }
                 }
-                if (updateCase == 2)
+                catch(FileNotFoundException)
                 {
-                    MFD.pickedAFile.DATE = itemSRD.year.ToString();
-                    MFD.pickedAFile.Save(true);
-                    db.UpdateAlbumReleaseYearByAlbumId(AlbumID, itemSRD.year);
-                    listBoxConsole.Add($"...year on album {AlbumID} has been updated by value {itemSRD.year}.");
-                }                
+                    listBoxConsole.Add(itemTrack.TrackDirectory + " - not exist!");
+                }
+                    
             }
             
         }

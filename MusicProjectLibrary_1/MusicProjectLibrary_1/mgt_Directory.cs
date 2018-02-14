@@ -12,143 +12,8 @@ namespace MusicProjectLibrary_1
 {
     class mgt_Directory
     {
-        public static bool DoubleClickOnGridCallBack(DataGridView DGV, ListBox boxListConsole, int AlbumRowIndex, int AlbumColIndex)
-        {
-            DGV.MultiSelect = false;
-            mgt_SQLValidation.dataGridColumns DGC = new mgt_SQLValidation.dataGridColumns();
-     
-            //int AlbumColIndex = DGV.CurrentCell.ColumnIndex; // [przemy knowledge - select column in data grid view]
-            string GridValueString = "";
-
-                
-            if (AlbumColIndex == DGC.colAlbumDirectory)
-            {
-                GridValueString = DGV.Rows[AlbumRowIndex].Cells[AlbumColIndex].Value.ToString();
-                try
-                {
-                    Process.Start(GridValueString);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("Can't reach this location!");
-                }
-                return false;
-            }
-            else if (AlbumColIndex == DGC.colDirectoryGenre) // show pick Genre Form
-            {
-                PickGenre pickGenreForm = new PickGenre();
-                string ArtistGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colArtistName].Value.ToString();
-                GlobalVariables.SelectedArtist = ArtistGrid;
-                pickGenreForm.ShowDialog();
-                if (pickGenreForm.GeneratedGenreString != "")
-                {
-                    int countRecord = mgt_SQLDatabase.AutoSearchDatabaseAlbums(1, DGV, 1, 0, 0, 0, false, false);
-                    boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
-                    boxListConsole.SelectedIndex = boxListConsole.Items.Count - 1;
-                    return true;
-                }          
-                
-            }   
-            else if (AlbumColIndex == DGC.colAlbumGeneralGenre)
-            {
-
-                string ArtistGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colArtistName].Value.ToString();
-                string ReleaseGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colAlbumName].Value.ToString();
-                int AlbumID = Convert.ToInt32(DGV.Rows[AlbumRowIndex].Cells[DGC.colIndexAlbum].Value);
-
-                PickAlbumGeneralGenre pickAlbumGenerealGenreForm = new PickAlbumGeneralGenre();
-                pickAlbumGenerealGenreForm.ShowDialog();
-                if (pickAlbumGenerealGenreForm.selectedDiscogs)
-                {
-                    mgt_Discogs.startDiscogs(1, boxListConsole.Items, ArtistGrid, ReleaseGrid, AlbumID);
-                }
-
-                return true;
-           
-            }
-            else if (AlbumColIndex == DGC.colAbumReleaseYear)
-            {
-                string ArtistGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colArtistName].Value.ToString();
-                string ReleaseGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colAlbumName].Value.ToString();
-                int AlbumID = Convert.ToInt32(DGV.Rows[AlbumRowIndex].Cells[DGC.colIndexAlbum].Value);
-
-                PickAlbumYear pickAlbumYearForm = new PickAlbumYear();
-                pickAlbumYearForm.ShowDialog();
-
-                if (pickAlbumYearForm.selectedDiscogs == true)
-                {
-                    mgt_Discogs.startDiscogs(2, boxListConsole.Items, ArtistGrid, ReleaseGrid, AlbumID);
-                }
-
-                return true;
-            }
-            else if (AlbumColIndex == DGC.colArtistName)
-            {
-                GlobalVariables.runPickArtist = true;
-                PickArtist pickArtistForm = new PickArtist();
-                pickArtistForm.ShowDialog();
-                GlobalVariables.runPickArtist = false;
-
-                if (pickArtistForm.ArtistSelected == true)
-                {
-                    int countRecord = mgt_SQLDatabase.AutoSearchDatabaseAlbums(1, DGV, 1, 0, 0, 0, false, false);
-                    boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
-                    boxListConsole.SelectedIndex = boxListConsole.Items.Count - 1;
-                    return true;
-                }
-            }
-            else if (AlbumColIndex == DGC.colAlbumName)
-            {
-                
-                PickAlbumName pickAlbumName = new PickAlbumName();
-                pickAlbumName.ShowDialog();
-                if (pickAlbumName.ArtistNameFilled == true)
-                {
-                    int countRecord = mgt_SQLDatabase.AutoSearchDatabaseAlbums(1, DGV, 1, 0, 0, 0, false, false);
-                    boxListConsole.Items.Add("Album table updated: " + countRecord.ToString());
-                    boxListConsole.SelectedIndex = boxListConsole.Items.Count - 1;
-                    return true;
-                }
-                
-                string ReleaseGrid = DGV.Rows[AlbumRowIndex].Cells[DGC.colAlbumName].Value.ToString();
-
-            }
-            return false;
-        }
-        public static bool SingleClickOnGridCallBack(DataGridView DGV, int AlbumRowIndex)
-        {
-            mgt_SQLValidation.dataGridColumns DGC = new mgt_SQLValidation.dataGridColumns();
-            mgt_SQLDatabase db = new mgt_SQLDatabase();
-            int AlbumColIndex = DGV.CurrentCell.ColumnIndex;
-            bool GridValueBool;
-
-            if (AlbumColIndex == DGC.colWriteIndex)
-            {
-                GridValueBool = Convert.ToBoolean(DGV.Rows[AlbumRowIndex].Cells[AlbumColIndex].Value);
-                int AlbumID = Convert.ToInt32(DGV.Rows[AlbumRowIndex].Cells[DGC.colIndexAlbum].Value);
-                if (GridValueBool)
-                {
-                    db.UpdateWriteIndex(AlbumID, true);                    
-                }          
-                else
-                {
-                    db.UpdateWriteIndex(AlbumID, false);                    
-                }
-                    
-            }
-            
-            return false;
-        }
-        public static void OpenPairOfFolders(DataGridView DGV, int AlbumRowIndex)
-        {
-            dataGridColumnsDuplicates DGCD = new dataGridColumnsDuplicates();
-
-            DGV.MultiSelect = false;
-            string GridValuePath1 = DGV.Rows[AlbumRowIndex].Cells[DGCD.colFirstPath].Value.ToString();
-            string GridValuePath2 = DGV.Rows[AlbumRowIndex].Cells[DGCD.colSecondPath].Value.ToString();
-            Process.Start(GridValuePath1);
-            Process.Start(GridValuePath2);
-        }
+        
+        
         
         public static void CreateDirectoryForAlbum(string path, string artistName, string albumName, ListBox.ObjectCollection boxListConsole, TextBox tbxPurgPath, TextBox tbxGeneralPath,int AlbumId, string AlbumDirectory, int AlbumRowIndex)
         {
@@ -192,8 +57,8 @@ namespace MusicProjectLibrary_1
                 string movedAlbumDirectory = "";
                 foreach (SQLTrackTable item in LSQTT)
                 {
-                    string prepareMoveString = item.TrackDirectory; // with file name
-                    prepareMoveString = Functions.findProhibitedSigns(prepareMoveString);
+                    string primaryPath = item.TrackDirectory; // with file name
+                    primaryPath = Functions.findProhibitedSigns(primaryPath);
                     trackDirectory = Path.GetDirectoryName(item.TrackDirectory);
                     int IndexLibTrack = Convert.ToInt32(item.IndexLib);
 
@@ -210,38 +75,40 @@ namespace MusicProjectLibrary_1
                                 {
                                     if (item.TrackRating != 1)
                                     {
-                                        File.Move(prepareMoveString, musicFileFullPath);
+                                        File.Move(primaryPath, musicFileFullPath);
                                         movedAlbumDirectory = Path.GetDirectoryName(musicFileFullPath);
                                         boxListConsole.Add($"...[File moved: {musicFileFullPath}]!");
                                     }
                                     else
                                     {
                                         //
-                                        movedAlbumDirectory = Path.GetDirectoryName(musicFileFullPath);
+                                        mgt_Tracks.deleteOneStars(primaryPath, dateString, boxListConsole);
+                                        /*
+                                        //movedAlbumDirectory = Path.GetDirectoryName(musicFileFullPath);
                                         MusicFileDetails MFD = new MusicFileDetails(); // deklaruj klase
-                                        mgt_HddAnalyzer.QuickRead(prepareMoveString, MFD);
+                                        mgt_HddAnalyzer.QuickRead(primaryPath, MFD);
                                         try
                                         {
                                             int TrackIndex = Convert.ToInt32(MFD.trackIndex);
                                             if (TrackIndex > 1)
                                             {
-                                                File.Delete(prepareMoveString); // delete all one star files   
+                                                File.Delete(primaryPath); // delete all one star files   
                                                 
-                                                db.UpdateTrackFileStatusByIndexLib(TrackIndex, "DELETED");
-                                                
+                                                db.UpdateTrackFileStatusByIndexLib(TrackIndex, "DELETED");                                                
                                                 db.UpdateTrackFileDateProceed(TrackIndex, dateString);
-                                                boxListConsole.Add($"...[File deleted (one star reason): {prepareMoveString}]!");
+                                                boxListConsole.Add($"...[File deleted (one star reason): {primaryPath}]!");
                                             }
                                             else
-                                                boxListConsole.Add($"...[No index file - error while deleting.): {prepareMoveString}]!");
+                                                boxListConsole.Add($"...[No index file - error while deleting.): {primaryPath}]!");
                                         }
                                         catch (Exception e)
                                         {
-                                            boxListConsole.Add($"...[No index file - error while deleting.): {prepareMoveString}]!");
+                                            boxListConsole.Add($"...[No index file - error while deleting.): {primaryPath}]!");
                                         }
+                                        */
 
 
-                                        
+
                                     }                                        
                                     //update album - one time
 
@@ -256,7 +123,6 @@ namespace MusicProjectLibrary_1
                                     db.UpdateTrackDirectoryPathByIndexLib(IndexLibTrack, musicFileFullPath);                                    
                                     db.UpdateTrackFileDateProceed(IndexLibTrack, dateString);
                                 }
-
                                 else
                                 {
                                     //override file
@@ -269,7 +135,7 @@ namespace MusicProjectLibrary_1
                                     {
                                         //show file compared view - tag in new form [todo]
                                         File.Delete(musicFileFullPath);
-                                        File.Move(prepareMoveString, musicFileFullPath);
+                                        File.Move(primaryPath, musicFileFullPath);
                                         //update album - one time
                                         AlbumTransaction += 1;
                                         if (AlbumTransaction == 1)
@@ -286,7 +152,7 @@ namespace MusicProjectLibrary_1
                             }
                             catch (FileNotFoundException e)
                             {
-                                boxListConsole.Add($"...[no File in: {prepareMoveString}]!");
+                                boxListConsole.Add($"...[no File in: {primaryPath}]!");
                             }               
                         }
                         else
@@ -306,7 +172,8 @@ namespace MusicProjectLibrary_1
                     if (trackDirectory != "")
                     {
                         GlobalVariables.IgnoreCurrentFolder = 0;
-                        Functions.TreeDirectorySearch(trackDirectory, movedAlbumDirectory, boxListConsole);
+                        Functions.baseDirectory = trackDirectory;
+                        Functions.FindFilesInTreeDirectory(false, trackDirectory, movedAlbumDirectory, boxListConsole);
                     }
                     else
                         boxListConsole.Add($"...track path is empty!: {AlbumId}");
@@ -318,6 +185,7 @@ namespace MusicProjectLibrary_1
                 boxListConsole.Add($"...purgatory path error while moving from: {AlbumDirectory}");
             
         }
+
         public static void DeleteAlbumFromAlbumDGV(DataGridView DGV, int AlbumRowIndex)
         {
             mgt_SQLValidation.dataGridColumns DGC = new mgt_SQLValidation.dataGridColumns();
@@ -332,8 +200,8 @@ namespace MusicProjectLibrary_1
             DialogResult res = MessageBox.Show($"Delete Album from SQL DB? \n Selected Album ID: {AlbumId} \n Album Name: {AlbumName} \n Artist: {AlbumArtist} \n Track Count to delete also: {LTT.Count}", "Delete Album & Tracks", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
             if (res == DialogResult.OK)
             {
-                mgt_SQLDatabase.DeleteAlbumByAlbumID(AlbumId);
                 mgt_SQLDatabase.DeleteTracksByAlbumID(AlbumId);
+                mgt_SQLDatabase.DeleteAlbumByAlbumID(AlbumId);                
             }
         }
         public static void DeleteAlbumFromDuplicates(int AlbumID)

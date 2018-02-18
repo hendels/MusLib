@@ -20,7 +20,7 @@ namespace MusicProjectLibrary_1.AppForms
 
         private void PickAlbumName_Load(object sender, EventArgs e)
         {
-            tbxSelectedAlbum.Text = GlobalVariables.SelectedAlbum;
+            tbxSelectedAlbum.Text = GlobalVariables.SelectedAlbumFullString;
         }
 
         private void btnAddName_Click(object sender, EventArgs e)

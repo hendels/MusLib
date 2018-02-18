@@ -545,7 +545,7 @@ namespace MusicProjectLibrary_1
         {
             DGV.DataSource = AlbumList;
         }
-        public static int AutoSearchDatabaseArtists(string ArtistName, DataGridView DGV)
+        public static List<SQLArtistTable> AutoSearchDatabaseArtists(string ArtistName, DataGridView DGV)
         {
             List<SQLArtistTable> ArtistList = new List<SQLArtistTable>(); //sqlprzemy - table : Albums
             mgt_SQLDatabase db = new mgt_SQLDatabase();
@@ -555,8 +555,8 @@ namespace MusicProjectLibrary_1
                 ArtistList = db.GetAllArtists();
 
             UpdateBindingArtists(DGV, ArtistList);
-            int countRecord = ArtistList.Count;
-            return countRecord;
+            //int countRecord = ArtistList.Count;
+            return ArtistList;
         }
         private static void UpdateBindingArtists(DataGridView DGV, List<SQLArtistTable> ArtistList)
         {

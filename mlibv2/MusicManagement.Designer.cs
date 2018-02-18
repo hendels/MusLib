@@ -47,6 +47,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.btnDiscogs = new System.Windows.Forms.Button();
             this.tabSetup = new System.Windows.Forms.TabPage();
+            this.button14 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
@@ -99,7 +100,12 @@
             this.chbShowExceptRating = new System.Windows.Forms.CheckBox();
             this.btnReadSelected = new System.Windows.Forms.Button();
             this.chbShowAll = new System.Windows.Forms.CheckBox();
-            this.button14 = new System.Windows.Forms.Button();
+            this.contextMenuAlbums = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.processAlbumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.playInFoobarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.writeIndexToAlbumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectWriteIdexOnPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteAlbumTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabCtrTrackAlbums.SuspendLayout();
             this.tabAlbums.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlbums)).BeginInit();
@@ -116,6 +122,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.albumBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.albumBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.musicLibraryDataSetBindingSource1)).BeginInit();
+            this.contextMenuAlbums.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnReadTag
@@ -220,6 +227,7 @@
             this.dgvAlbums.SelectionChanged += new System.EventHandler(this.AlbumsDataGridView_SelectionChanged_1);
             this.dgvAlbums.DoubleClick += new System.EventHandler(this.AlbumsDataGridView_DoubleClick);
             this.dgvAlbums.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvAlbums_KeyDown);
+            this.dgvAlbums.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dgvAlbums_MouseClick);
             // 
             // tabTracks
             // 
@@ -355,6 +363,15 @@
             this.tabSetup.TabIndex = 3;
             this.tabSetup.Text = "Setup";
             this.tabSetup.UseVisualStyleBackColor = true;
+            // 
+            // button14
+            // 
+            this.button14.Location = new System.Drawing.Point(741, 37);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(160, 23);
+            this.button14.TabIndex = 61;
+            this.button14.Text = "check if location exists";
+            this.button14.UseVisualStyleBackColor = true;
             // 
             // button13
             // 
@@ -821,14 +838,49 @@
             this.chbShowAll.UseVisualStyleBackColor = true;
             this.chbShowAll.CheckedChanged += new System.EventHandler(this.chbShowAll_CheckedChanged);
             // 
-            // button14
+            // contextMenuAlbums
             // 
-            this.button14.Location = new System.Drawing.Point(741, 37);
-            this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(160, 23);
-            this.button14.TabIndex = 61;
-            this.button14.Text = "check if location exists";
-            this.button14.UseVisualStyleBackColor = true;
+            this.contextMenuAlbums.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.contextMenuAlbums.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.processAlbumToolStripMenuItem,
+            this.playInFoobarToolStripMenuItem,
+            this.writeIndexToAlbumToolStripMenuItem,
+            this.selectWriteIdexOnPageToolStripMenuItem,
+            this.deleteAlbumTracksToolStripMenuItem});
+            this.contextMenuAlbums.Name = "contextMenuStrip1";
+            this.contextMenuAlbums.Size = new System.Drawing.Size(214, 136);
+            // 
+            // processAlbumToolStripMenuItem
+            // 
+            this.processAlbumToolStripMenuItem.Name = "processAlbumToolStripMenuItem";
+            this.processAlbumToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.processAlbumToolStripMenuItem.Text = "Process Album";
+            this.processAlbumToolStripMenuItem.Click += new System.EventHandler(this.processAlbumToolStripMenuItem_Click);
+            // 
+            // playInFoobarToolStripMenuItem
+            // 
+            this.playInFoobarToolStripMenuItem.Name = "playInFoobarToolStripMenuItem";
+            this.playInFoobarToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.playInFoobarToolStripMenuItem.Text = "Play in Foobar";
+            this.playInFoobarToolStripMenuItem.Click += new System.EventHandler(this.playInFoobarToolStripMenuItem_Click);
+            // 
+            // writeIndexToAlbumToolStripMenuItem
+            // 
+            this.writeIndexToAlbumToolStripMenuItem.Name = "writeIndexToAlbumToolStripMenuItem";
+            this.writeIndexToAlbumToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.writeIndexToAlbumToolStripMenuItem.Text = "Write Index to Album";
+            // 
+            // selectWriteIdexOnPageToolStripMenuItem
+            // 
+            this.selectWriteIdexOnPageToolStripMenuItem.Name = "selectWriteIdexOnPageToolStripMenuItem";
+            this.selectWriteIdexOnPageToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.selectWriteIdexOnPageToolStripMenuItem.Text = "Select Write Index on Page";
+            // 
+            // deleteAlbumTracksToolStripMenuItem
+            // 
+            this.deleteAlbumTracksToolStripMenuItem.Name = "deleteAlbumTracksToolStripMenuItem";
+            this.deleteAlbumTracksToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.deleteAlbumTracksToolStripMenuItem.Text = "Delete Album & Tracks";
             // 
             // MusicLibraryWindow
             // 
@@ -877,6 +929,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.albumBindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.albumBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.musicLibraryDataSetBindingSource1)).EndInit();
+            this.contextMenuAlbums.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -985,6 +1038,12 @@
         private System.Windows.Forms.CheckBox chbShowAll;
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.ContextMenuStrip contextMenuAlbums;
+        private System.Windows.Forms.ToolStripMenuItem processAlbumToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem playInFoobarToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem writeIndexToAlbumToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectWriteIdexOnPageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteAlbumTracksToolStripMenuItem;
     }
 }
 

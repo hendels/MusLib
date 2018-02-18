@@ -68,8 +68,8 @@ namespace MusicProjectLibrary_1
             List<string> uniquePartializedTitles = new List<string>();
             List<DuplicatesPaths> LDP = new List<DuplicatesPaths>();
 
-            Functions.createArtistsList(uniqueArtists);
-            Functions.checkTrackDuplicates(uniqueArtists, uniquePartializedTitles, LDP);
+            mgt_Artists.createArtistsList(uniqueArtists);
+            mgt_Duplicates.checkTrackDuplicates(uniqueArtists, uniquePartializedTitles, LDP);
 
             var source = new BindingSource();
             List<MyStruct> list = new List<MyStruct>();
@@ -89,11 +89,8 @@ namespace MusicProjectLibrary_1
                 if (intVal1 != intVal2 & intVal2 != 0)
                 {
                     dgvPaths.Rows[rows].DefaultCellStyle.BackColor = Color.Beige;
-                }
-                
-            }
-            
-
+                }                
+            }       
         }
 
         private void dgvPaths_SelectionChanged(object sender, EventArgs e)
@@ -140,7 +137,7 @@ namespace MusicProjectLibrary_1
             dataGridColumnsDuplicates DGCD = new dataGridColumnsDuplicates();
             foreach(var row in dgvPaths.SelectedRows)
             {
-                mgt_Directory.DeleteTracksFromDuplicates(dgvPaths, lbxConsole.Items, currentTrackID, currentAlbumID, TrackPurgatoryPath);
+                mgt_Duplicates.DeleteTracksFromDuplicates(dgvPaths, lbxConsole.Items, currentTrackID, currentAlbumID, TrackPurgatoryPath);
                 dgvPaths.Rows.RemoveAt(dgvPaths.SelectedCells[0].RowIndex);
 
             }

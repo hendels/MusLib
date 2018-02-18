@@ -104,7 +104,8 @@ namespace MusicProjectLibrary_1
         public static int IgnoreCurrentFolder = 0;
         public static string SelectedArtist = "";
         public static string LastUsedGenre = "";
-        public static string SelectedAlbum = "";
+        public static string SelectedAlbumFullString = "";
+        public static string SelectedAlbumName { get; set; }
     }
     public class uniqueCatalogs
     {

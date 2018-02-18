@@ -29,7 +29,7 @@ namespace MusicProjectLibrary_1.AppForms
         {
             selectedDiscogs = false;
             selectedYear = false;
-            tbxSelectedAlbum.Text = GlobalVariables.SelectedAlbum;
+            tbxSelectedAlbum.Text = GlobalVariables.SelectedAlbumFullString;
             cmbSelectYear.Items.Add(1992);
             cmbSelectYear.Items.Add(1993);
             cmbSelectYear.Items.Add(1994);

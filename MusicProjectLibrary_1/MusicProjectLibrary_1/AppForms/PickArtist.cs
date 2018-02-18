@@ -22,8 +22,38 @@ namespace MusicProjectLibrary_1.AppForms
 
         private void PickArtist_Load(object sender, EventArgs e)
         {
-            tbxSelectedAlbum.Text = GlobalVariables.SelectedAlbum;
-            mgt_SQLDatabase.AutoSearchDatabaseArtists("", dgvArtists);
+
+            List<SQLArtistTable> ArtistList = new List<SQLArtistTable>();
+            List<string> AlbumWords = new List<string>();
+            string FoundArtist = "";
+
+            tbxSelectedAlbum.Text = GlobalVariables.SelectedAlbumName;
+            ArtistList = mgt_SQLDatabase.AutoSearchDatabaseArtists("", dgvArtists);
+            AlbumWords = mgt_Artists.autoMatchArtists(GlobalVariables.SelectedAlbumName, 4);
+            foreach(SQLArtistTable Artist in ArtistList)
+            {
+                foreach(string word in AlbumWords)
+                {
+                    if (Artist.ArtistName.Contains(word))
+                    {
+                        FoundArtist = Artist.ArtistName;
+
+                        break;
+                    }
+                }
+            }
+            if (FoundArtist != "")
+                foreach(DataGridViewRow row in dgvArtists.Rows)
+                {
+                    if (row.Cells[1].Value.ToString().Equals(FoundArtist))
+                    {
+                        int rowIndex = row.Index;
+                        dgvArtists.ClearSelection();
+                        dgvArtists.CurrentCell = dgvArtists.Rows[rowIndex].Cells[0];
+                        dgvArtists.Rows[rowIndex].Selected = true;
+                        break;
+                    }
+                }
         }
         private void AddArtistToFile(int ArtistId, string ArtistName)
         {

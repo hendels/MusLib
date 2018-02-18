@@ -271,8 +271,9 @@ namespace MusicProjectLibrary_1
             {
                 AlbumRowIndex = dgvAlbums.SelectedCells[0].RowIndex; //[knowledge get row index from data grid view]
                 GlobalVariables.globalSelectedGridAlbumID = (int)dgvAlbums[0, AlbumRowIndex].Value; //[knowledge get value from specific column in datagrid view]  
-                GlobalVariables.SelectedAlbum = "[" + GlobalVariables.globalSelectedGridAlbumID + "] - " + dgvAlbums.Rows[AlbumRowIndex].Cells[publicDGC.colAlbumName].Value
+                GlobalVariables.SelectedAlbumFullString = "[" + GlobalVariables.globalSelectedGridAlbumID + "] - " + dgvAlbums.Rows[AlbumRowIndex].Cells[publicDGC.colAlbumName].Value
                     + " | " + dgvAlbums.Rows[AlbumRowIndex].Cells[publicDGC.colAlbumDirectory].Value;
+                GlobalVariables.SelectedAlbumName = dgvAlbums.Rows[AlbumRowIndex].Cells[publicDGC.colAlbumDirectory].Value.ToString();
             }
         }
         private void DgvAlbumsCellDoubleClick(object sender, int columnIndex)
@@ -516,6 +517,39 @@ namespace MusicProjectLibrary_1
                 GlobalVariables.showAll = true;
             else
                 GlobalVariables.showAll = false;
+        }
+
+        private void dgvAlbums_MouseClick(object sender, MouseEventArgs e)
+        {
+            
+            if (e.Button == MouseButtons.Right)
+            {
+                ContextMenuStrip m = contextMenuAlbums;
+
+                
+                int currentMouseOverRow = dgvAlbums.HitTest(e.X, e.Y).RowIndex;
+
+                if (currentMouseOverRow >= 0)
+                {
+                   // m.MenuItems.Add(new MenuItem(string.Format("Do something to row {0}", currentMouseOverRow.ToString())));
+                }
+
+                m.Show(dgvAlbums, new Point(e.X, e.Y));
+
+            }
+            
+        
+        }
+
+        private void processAlbumToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void playInFoobarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string albumPath = dgvAlbums.Rows[AlbumRowIndex].Cells[publicDGC.colAlbumDirectory].Value.ToString();
+            mgt_DGV_Albums.PlayAlbumInFoobar(albumPath);
         }
     }
 }

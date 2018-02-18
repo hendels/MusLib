@@ -299,11 +299,12 @@ namespace MusicProjectLibrary_1
                 */
                 foreach(TagInformation itemTI in ListTagInformation)
                 {
-                    if (itemTI.pickedAFile.INDEXALBUM != "" & itemTI.pickedAFile.INDEXALBUM != null)
-                    {
-                        publicAlbumIndex = Convert.ToInt32(itemTI.pickedAFile.INDEXALBUM);
-                        countAlbumIndex += 1;
-                    }
+                    if (itemTI.trackFileExtension == "FLAC")
+                        if (itemTI.pickedAFile.INDEXALBUM != "" & itemTI.pickedAFile.INDEXALBUM != null)
+                        {
+                            publicAlbumIndex = Convert.ToInt32(itemTI.pickedAFile.INDEXALBUM);
+                            countAlbumIndex += 1;
+                        }
                 }
                 if (countAlbumIndex == ListMfdAlbum.Count & publicAlbumIndex != 0)
                 {
@@ -777,39 +778,70 @@ namespace MusicProjectLibrary_1
             {
                 AFile = new FLACFile(Filename, false); // Read Only = true
                 MusicFileDetails MFD = new MusicFileDetails(); // deklaruj klase                
-                setFlacFile(AFile, MFD);
+                setFile(AFile, MFD, "FLAC");
                 globalMusicFileDetailsList.Add(MFD); 
             }
-                
+            if (Helpers.JGetExtension(Filename) == "MP3")
+            {
+                AFile = new MP3File(Filename, false); // Read Only = true
+                MusicFileDetails MFD = new MusicFileDetails(); // deklaruj klase                
+                setFile(AFile, MFD, "MP3");
+                globalMusicFileDetailsList.Add(MFD);
+            }
 
             return 0;
         }
-        private static void setFlacFile(AudioFile AFile, MusicFileDetails MFD)
+        private static void setFile(AudioFile AFile, MusicFileDetails MFD, string FileExtension)
         {
-            string onlyDir = Path.GetDirectoryName(AFile.AudioPath);
-            string TrackTitle = AFile.TITLE; //track NAME
-            string TrackRating = AFile.RATING;
-            string TrackModTagDate = AFile.MODTAGDATE;
-            string TrackArtist = AFile.ARTIST;
-            string TrackAlbum = AFile.ALBUM;
-            string TrackGenre = AFile.GENRE;
-            string TrackIndex = AFile.INDEXTRACK;
-            string TrackAudioPath = AFile.AudioPath;
-            string TrackExtension = "FLAC";
-            string TrackAlbumID = AFile.INDEXALBUM;
-            string TrackStyle = AFile.STYLE;
 
-            MFD.trackDirectory = onlyDir;
-            MFD.trackAudioPath = TrackAudioPath;
-            MFD.trackName = TrackTitle;
-            MFD.trackArtist = TrackArtist;
-            MFD.trackAlbum = TrackAlbum;
-            MFD.trackRating = TrackRating;
-            MFD.trackModDateTag = TrackModTagDate;
-            MFD.trackGenre = TrackGenre;
-            MFD.trackIndex = TrackIndex;
-            MFD.trackFileExtension = TrackExtension;
-            MFD.pickedAFile = AFile;
+            try
+            {
+                string TrackAlbumID = "";
+                string TrackStyle = "";
+                string TrackIndex = "";
+                string TrackRating = "";
+
+                string onlyDir = Path.GetDirectoryName(AFile.AudioPath);
+                string TrackTitle = AFile.TITLE; //track NAME
+                
+                //string TrackModTagDate = AFile.MODTAGDATE;
+                string TrackArtist = AFile.ARTIST;
+                string TrackAlbum = AFile.ALBUM;
+                string TrackGenre = AFile.GENRE;                
+                string TrackAudioPath = AFile.AudioPath;
+                string TrackExtension = FileExtension;
+                // added tags
+                if (FileExtension == "FLAC")
+                {
+                    try
+                    {
+                        TrackRating = AFile.RATING;
+                        TrackAlbumID = AFile.INDEXALBUM;
+                        TrackStyle = AFile.STYLE;
+                        TrackIndex = AFile.INDEXTRACK;
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }                
+                //
+                MFD.trackDirectory = onlyDir;
+                MFD.trackAudioPath = TrackAudioPath;
+                MFD.trackName = TrackTitle;
+                MFD.trackArtist = TrackArtist;
+                MFD.trackAlbum = TrackAlbum;
+                MFD.trackRating = TrackRating;
+                //MFD.trackModDateTag = TrackModTagDate;
+                MFD.trackGenre = TrackGenre;
+                MFD.trackIndex = TrackIndex;
+                MFD.trackFileExtension = TrackExtension;
+                MFD.pickedAFile = AFile;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
         public static void QuickRead(string FilePath, MusicFileDetails MFD)
         {
@@ -819,7 +851,13 @@ namespace MusicProjectLibrary_1
             {
                 AFile = new FLACFile(FilePath, false); // Read Only = true
 
-                setFlacFile(AFile, MFD);
+                setFile(AFile, MFD, "FLAC");
+            }
+            if (Helpers.JGetExtension(FilePath) == "MP3")
+            {
+                AFile = new MP3File(FilePath, false); // Read Only = true
+
+                setFile(AFile, MFD, "MP3");
             }
         }
         static int ChangeModDate(string Filename, LazySW SW)

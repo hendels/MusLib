@@ -28,7 +28,7 @@ namespace MusicProjectLibrary_1
             if (GlobalVariables.LastUsedGenre != "")
                 tbxWriteGenre.Text = GlobalVariables.LastUsedGenre;
 
-            tbxSelectedAlbum.Text = GlobalVariables.SelectedAlbum;
+            tbxSelectedAlbum.Text = GlobalVariables.SelectedAlbumFullString;
         }
         
         private  void callPickedGenre(CheckedListBox chlstBox)

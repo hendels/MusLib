@@ -225,34 +225,6 @@ namespace MusicProjectLibrary_1
 
             }
         }
-        public static void DeleteTracksFromDuplicates(DataGridView DGV, ListBox.ObjectCollection LBOX, int TrackID, int AlbumID, string purgatoryTrackPath)
-        {
-            mgt_SQLDatabase db = new mgt_SQLDatabase();
-            if (AlbumID != 0)
-            {
-                List<SQLTrackTable> LTT = new List<SQLTrackTable>();
-                LTT = db.GetTrackByAlbumId(AlbumID);
-                if (LTT.Count == 0)
-                {
-                    DialogResult res1 = MessageBox.Show($"There are no related tracks in Album ID: {AlbumID} Delete album from DB?", "Delete Album", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
-                    if (res1 == DialogResult.OK)
-                    {
-                        mgt_SQLDatabase.DeleteAlbumByAlbumID(AlbumID);
-                    }
-                }
-            }
-            if (TrackID != 0)
-            {
-                DialogResult res2 = MessageBox.Show($"Delete Track from SQL DB? \n Selected Track ID: {TrackID}", "Delete Tracks", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
-                if (res2 == DialogResult.OK)
-                {
-                    mgt_SQLDatabase.DeleteTracksByAlbumID(TrackID);
-                    File.Delete(purgatoryTrackPath);
-                    LBOX.Add($"DELETED from DB TRACK ID: {purgatoryTrackPath}");
-                    LBOX.Add($"DELETED FILE: {purgatoryTrackPath}");
-                }
-            }
-            
-        }
+        
     }
 }

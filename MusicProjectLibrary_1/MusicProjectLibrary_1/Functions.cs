@@ -93,177 +93,8 @@ namespace MusicProjectLibrary_1
             }
         }
 
-        public static void createArtistsList(List<string> uniqueArtists)
-        {
-            //List<string> uniqueArtists = new List<string>();
-            List<SQLAlbumTable> queryGetAllArtists = new List<SQLAlbumTable>();
-
-            mgt_SQLDatabase db = new mgt_SQLDatabase();
-            queryGetAllArtists = db.GetAlbumArtists();
-            foreach(SQLAlbumTable artist in queryGetAllArtists)
-            {
-                if (uniqueArtists.Any(uArtist => uArtist == artist.AlbumArtist)) // [przemy knowledge] szukanie duplikatów w liście > jeżeli istnieje duplikat nie dodawaj do listy ponownie
-                {
-
-                }
-                else
-                {
-                    uniqueArtists.Add(artist.AlbumArtist);
-                }
-            }            
-        }
-        public static void checkTrackDuplicates(List<string> uniqueArtists, List<string> uniquePartializedTitles, List<DuplicatesPaths> LDP)//, ListBox.ObjectCollection BoxListConsole)
-        {
-            int ByteTolerance = 1000;
-            int totalDuplicates = 0;
-            foreach (string artist in uniqueArtists)
-            {
-                //find all tracks 
-                
-                List<SQLTrackTable> queryGetAllTracksByArtist = new List<SQLTrackTable>();
-                List<TrackDuplicates> ListTrackDuplicates = new List<TrackDuplicates>();
-
-                mgt_SQLDatabase db = new mgt_SQLDatabase();
-                queryGetAllTracksByArtist = db.GetTrackByArtist(artist);
-                
-
-                foreach (SQLTrackTable itemTrack in queryGetAllTracksByArtist)
-                {
-                    int count = 0;
-                    char specialSign = ' ';
-                    int specialAppear = 0;
-                    string extractedString;
-                    string toExtract = itemTrack.TrackName;
-                    
-                    foreach (char special in toExtract)
-                        if (special == specialSign) count++;
-                    for (int i = 0; i <= count; i++)
-                    {
-                        int firstSign = toExtract.IndexOf(specialSign, specialAppear);
-                        if (firstSign == -1)
-                            extractedString = toExtract;
-                        else
-                        {
-                            extractedString = toExtract.Substring(specialAppear, firstSign);                            
-                        }
-                        toExtract = toExtract.Substring(firstSign + 1, toExtract.Length - firstSign - 1);
-
-                        if (extractedString.Length > 3)
-                        {
-                            if (uniquePartializedTitles.Any(uPartTrack => uPartTrack == extractedString)) ; // [przemy knowledge] szukanie duplikatów w liście > jeżeli istnieje duplikat nie dodawaj do listy ponownie                                
-                            else
-                            {
-                                TrackDuplicates TD = new TrackDuplicates();
-                                TD.partTrackName = extractedString;
-                                TD.fullTrackName = itemTrack.TrackName;
-                                TD.TrackPath = itemTrack.TrackDirectory;
-                                if(File.Exists(itemTrack.TrackDirectory))
-                                {
-                                    MusicFileDetails MFD = new MusicFileDetails();
-                                    mgt_HddAnalyzer.QuickRead(itemTrack.TrackDirectory, MFD);
-                                    TD.MFD = MFD;
-                                }
-                                
-                                ListTrackDuplicates.Add(TD);
-
-                                uniquePartializedTitles.Add(extractedString);
-                            }
-                        }
-                    }
-                }
-                foreach(TrackDuplicates itemTD in ListTrackDuplicates)
-                {
-                    int matchesPartName = 0;
-                    int matchesBytes = 0;
-                    bool firstTrigg = false;
-                    bool secondTrigg = false;
-                    foreach (SQLTrackTable itemTrack in queryGetAllTracksByArtist)
-                    {
-                        if (itemTrack.TrackName.Contains(itemTD.partTrackName))
-                        {
-                            matchesPartName += 1;
-                            if (matchesPartName > 1)
-                            {
-                                //
-                                //BoxListConsole.Add(itemTD.TrackPath);
-                                firstTrigg = true;
-                            }
-                            //check bytes
-                            if(File.Exists(itemTrack.TrackDirectory))
-                            {
-                                MusicFileDetails MFD = new MusicFileDetails();
-                                mgt_HddAnalyzer.QuickRead(itemTrack.TrackDirectory, MFD);
-                                try
-                                {
-                                    if (MFD.pickedAFile.NumberOfMusicBytes <= itemTD.MFD.pickedAFile.NumberOfMusicBytes + ByteTolerance & MFD.pickedAFile.NumberOfMusicBytes >= itemTD.MFD.pickedAFile.NumberOfMusicBytes - ByteTolerance)
-                                    {
-                                        matchesBytes += 1;
-                                        if (matchesPartName > 1)
-                                            secondTrigg = true;
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-
-                                }
-                                
-                            }
-                            
-                        }                 
-                        //check lenght in seconds [todo in future]
-                        if (firstTrigg & secondTrigg)
-                        {
-                            firstTrigg = false;
-                            secondTrigg = false;
-                            //BoxListConsole.Add($"duplicate: {itemTD.TrackPath} artist: {itemTrack.TrackDirectory} word: itemTD.partTrackName");
-                            totalDuplicates += 1;
-                            DuplicatesPaths DP = new DuplicatesPaths();
-                            DP.firstPath = itemTD.TrackPath;
-                            DP.secondPath = itemTrack.TrackDirectory;
-
-                            int x1 = 0;
-                            if (Int32.TryParse(itemTD.MFD.trackRating, out x1))
-                            {
-                                DP.ratingStarsFirstFile = x1;
-                            }
-                            else
-                                DP.ratingStarsFirstFile = 0;
-
-                            int x2 = 0;
-                            if (Int32.TryParse(itemTrack.TrackRating.ToString(), out x2))
-                            {
-                                DP.ratingStarsSecondFile = x2;
-                            }
-                            else
-                                DP.ratingStarsSecondFile = 0;
-                            int x3 = 0;
-                            if (Int32.TryParse(itemTD.MFD.trackIdAlbumIndex, out x3))
-                            {
-                                DP.firstIDAlbum = x3;
-                            }
-                            else
-                                DP.firstIDAlbum = 0;
-                            int x4 = 0;
-                            if (Int32.TryParse(itemTD.MFD.trackIndex, out x4))
-                            {
-                                DP.firstIDTrack = x4;
-                            }
-                            else
-                                DP.firstIDTrack = 0;
-
-                            DP.secondIDAlbum = itemTrack.IdAlbumIndex;
-                            DP.secondIDTrack = itemTrack.IndexLib;
-                            
-                            LDP.Add(DP);
-                        }
-                        
-                    }
-                    
-                }
-                
-            }
-            MessageBox.Show($"total duplicates: {totalDuplicates}");
-        }
+        
+        
                
         
         public static void getRelatedToArtistGenres()
@@ -273,8 +104,28 @@ namespace MusicProjectLibrary_1
             queryGetAllGenres = db.GetAlbumsGenre();
             //chlstSuggestedGenres
         }
-        
 
+        public static string findProhibitedSigns(string checkString, char changeToChar)
+        {
+            List<char> signs = new List<char>();
+            signs.Add('|');
+            signs.Add('"');
+            signs.Add('/');
+            signs.Add('<');
+            signs.Add('>');
+            signs.Add('\\');
+            //signs.Add(@".");
+            string modifiedString = checkString;
+            foreach (char itemList in signs)
+            {
+                if (checkString.Contains(itemList))
+                {
+                    modifiedString = modifiedString.Replace(itemList, changeToChar);
+                };
+
+            }
+            return modifiedString;
+        }
         public static string findProhibitedSigns(string checkString)
         {
             List<string> signs = new List<string>();
@@ -295,50 +146,7 @@ namespace MusicProjectLibrary_1
             }
             return modifiedString;
         }
-        public static void showFolderBrowserDialog(ListBox.ObjectCollection currentListBoxItems)
-        {
-
-            currentListBoxItems.Clear(); //to czyści listboxa
-
-            //string[] rootFiles = Directory.GetFiles(FBD.SelectedPath); //pobiera pliki
-            //string[] rootDirectories = Directory.GetDirectories(FBD.SelectedPath); //pobiera foldery ze ścieżki
-            string[] drives = Directory.GetLogicalDrives();
-
-            foreach (string dr in drives)
-            {
-                DriveInfo di = new DriveInfo(dr);
-                string driveString = Convert.ToString(di);
-                if (driveString == @"D:\")
-                {
-                    MessageBox.Show("yea " + driveString);
-                    DirectoryInfo rootDir = di.RootDirectory;
-                    
-
-                }
-            }
-            /*
-            foreach (string file in rootFiles)
-            {
-                ListBoxItems.Items.Add(Path.GetFileName(file)); // zostaw samo file zeby wyswietlic pełną ścieżkę pliku
-                ListBoxItems.Items.Add(Path.GetExtension(file)); //pobiera samo rozrzeszenie ze ścieżki
-            }
-            foreach (string dir in rootDirectories)
-            {
-                ListBoxItems.Items.Add(Path.GetFileName(dir)); // zostaw samo dir zeby wyswietlic pełną ścieżkę katalogu
-            }
-
-            foreach (string dir in rootDirectories)
-            {
-                int directoryCount = Directory.GetDirectories(FBD.SelectedPath).Length;
-                if (directoryCount > 0)
-                {
-                    //WalkDirectoryTree(rootDirectories);
-                }
-
-            }
-            */
-
-        } //unused
+  
         
         public static void TreeFileSearch(string CurrentDirectory)
         {            

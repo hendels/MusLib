@@ -21,7 +21,7 @@ namespace MusicProjectLibrary_1.AppForms
         private void PickAlbumGeneralGenre_Load(object sender, EventArgs e)
         {
             selectedDiscogs = false;
-            tbxSelectedAlbum.Text = GlobalVariables.SelectedAlbum;
+            tbxSelectedAlbum.Text = GlobalVariables.SelectedAlbumFullString;
             btnDiscogs.Focus();
         }
 

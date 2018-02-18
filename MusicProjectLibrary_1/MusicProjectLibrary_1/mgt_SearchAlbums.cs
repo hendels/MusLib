@@ -100,8 +100,8 @@ namespace MusicProjectLibrary_1
                         counter = mgt_SQLDatabase.AutoSearchDatabaseTracksByTrackIndex(0, dgvTracks, searchTracksParameters.showTracksLimiter, searchTracksParameters.minTrackRating, searchTracksParameters.maxTrackRating);
                     return counter;
                 case 3:
-                    counter = mgt_SQLDatabase.AutoSearchDatabaseArtists(searchArtistsParameters.searchArtistsString, dgvArtists);
-                    return counter;
+                    mgt_SQLDatabase.AutoSearchDatabaseArtists(searchArtistsParameters.searchArtistsString, dgvArtists);
+                    return 0;
             }
             return counter;
         }

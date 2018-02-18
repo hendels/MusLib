@@ -139,5 +139,10 @@ namespace MusicProjectLibrary_1
 
             return false;
         }
+        public static void PlayAlbumInFoobar(string albumPath)
+        {
+            
+            Process.Start(albumPath);
+        }
     }
 }

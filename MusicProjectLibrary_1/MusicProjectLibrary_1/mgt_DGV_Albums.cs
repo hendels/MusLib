@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -141,8 +142,11 @@ namespace MusicProjectLibrary_1
         }
         public static void PlayAlbumInFoobar(string albumPath)
         {
-            
-            Process.Start(albumPath);
+            foreach (string CurrentFile in Directory.GetFiles(albumPath))
+            {
+                if (Path.GetExtension(CurrentFile) == ".flac" || Path.GetExtension(CurrentFile) == ".mp3")
+                    Process.Start(CurrentFile);
+            }
         }
     }
 }

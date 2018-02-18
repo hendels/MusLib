@@ -325,43 +325,18 @@ namespace MusicProjectLibrary_1
                 mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
                 MessageBox.Show("Album & connected Tracks deleted");
             }
-            private void btnDeclareGenre_Click_1(object sender, EventArgs e)
-            {
-                PickGenre pickGenreForm = new PickGenre();
-                pickGenreForm.ShowDialog();
+        private void btnDeclareGenre_Click_1(object sender, EventArgs e)
+        {
+            PickGenre pickGenreForm = new PickGenre();
+            pickGenreForm.ShowDialog();
 
-                int countRecord = mgt_SearchAlbums.RefreshSpecificTable(1, dgvAlbums, dgvTracks, dgvArtists, defineSearchAlbumsParameters(), defineSearchTracksParameters(), defineSearchArtistsParameters());
-            dgvAlbums.Rows[AlbumRowIndex].Selected = true;
-                //
-            }
+            int countRecord = mgt_SearchAlbums.RefreshSpecificTable(1, dgvAlbums, dgvTracks, dgvArtists, defineSearchAlbumsParameters(), defineSearchTracksParameters(), defineSearchArtistsParameters());
+        dgvAlbums.Rows[AlbumRowIndex].Selected = true;
+            //
+        }
         private void btnProcessSelected_Click(object sender, EventArgs e)
         {
-
-            //validuj SQL'a
-            AlbumRowIndex = dgvAlbums.SelectedCells[0].RowIndex;
-            int hardIndex = AlbumRowIndex;
-            //if (hardIndex != 0)
-            //{
-                mgt_SQLValidation.ReadDataGrid(dgvAlbums, BoxListConsole.Items, tbxPickedPath, tbxMusicPath, AlbumRowIndex);
-
-            int countRecordAlbums = mgt_SearchAlbums.RefreshSpecificTable(1, dgvAlbums, dgvTracks, dgvArtists, defineSearchAlbumsParameters(), defineSearchTracksParameters(), defineSearchArtistsParameters());
-            BoxListConsole.Items.Add("Album table updated: " + countRecordAlbums.ToString());
-                BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
-
-                dgvAlbums.ClearSelection();                                                //[przemy knowledge - zaznaczanie data grid view]
-                try
-                {
-                    dgvAlbums.CurrentCell = dgvAlbums.Rows[hardIndex].Cells[0]; //[przemy knowledge - zaznaczanie data grid view]
-                    dgvAlbums.Rows[hardIndex].Selected = true;                         //[przemy knowledge - zaznaczanie data grid view]
-                }
-                catch (Exception ex)
-                { }
-
-                mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
-                //rzuć info ile wyjebał MB z dysku
-            //}
-            //else
-            //    BoxListConsole.Items.Add("Cancelled. Select album index!");
+            processAlbum(sender);
         }
         ////////////////////////////////////////////////////////DGV[2]////////////////////////////////////////
         private void TracksDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -418,6 +393,33 @@ namespace MusicProjectLibrary_1
             return SARP;
         }
         ////////////////////////////////////////////////////////INTERNAL FUNCTIONS>>////////////////////////////////////////
+        private void processAlbum(object sender)
+        {
+            //validate Data Grid View
+            AlbumRowIndex = dgvAlbums.SelectedCells[0].RowIndex;
+            int hardIndex = AlbumRowIndex;
+
+            mgt_SQLValidation.ReadDataGrid(dgvAlbums, BoxListConsole.Items, tbxPickedPath, tbxMusicPath, AlbumRowIndex);
+
+            int countRecordAlbums = mgt_SearchAlbums.RefreshSpecificTable(1, dgvAlbums, dgvTracks, dgvArtists, defineSearchAlbumsParameters(), defineSearchTracksParameters(), defineSearchArtistsParameters());
+            BoxListConsole.Items.Add("Album table updated: " + countRecordAlbums.ToString());
+            BoxListConsole.SelectedIndex = BoxListConsole.Items.Count - 1;
+
+            dgvAlbums.ClearSelection();
+            try
+            {
+                dgvAlbums.CurrentCell = dgvAlbums.Rows[hardIndex].Cells[0]; //[przemy knowledge - zaznaczanie data grid view]
+                dgvAlbums.Rows[hardIndex].Selected = true;                         //[przemy knowledge - zaznaczanie data grid view]
+            }
+            catch (Exception ex)
+            { }
+
+            mgt_SQLValidation.bw_ReadDataGridForAll(sender, dgvAlbums, BoxListConsole.Items);
+            //rzuć info ile wyjebał MB z dysku
+
+        }
+
+
         private void btnWriteIndexAlbum_Click(object sender, EventArgs e)
         {
             mgt_HddAnalyzer.writeAlbumIndexToFile(dgvAlbums, progBar);
@@ -533,7 +535,9 @@ namespace MusicProjectLibrary_1
                 {
                    // m.MenuItems.Add(new MenuItem(string.Format("Do something to row {0}", currentMouseOverRow.ToString())));
                 }
-
+                
+                dgvAlbums.CurrentCell = dgvAlbums.Rows[currentMouseOverRow].Cells[0]; //[przemy knowledge - zaznaczanie data grid view]
+                dgvAlbums.Rows[currentMouseOverRow].Selected = true;
                 m.Show(dgvAlbums, new Point(e.X, e.Y));
 
             }
@@ -543,7 +547,7 @@ namespace MusicProjectLibrary_1
 
         private void processAlbumToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            processAlbum(sender);
         }
 
         private void playInFoobarToolStripMenuItem_Click(object sender, EventArgs e)

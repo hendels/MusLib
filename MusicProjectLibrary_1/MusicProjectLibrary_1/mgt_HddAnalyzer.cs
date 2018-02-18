@@ -287,16 +287,7 @@ namespace MusicProjectLibrary_1
                 //
                 int countAlbumIndex = 0;
                 publicAlbumIndex = 0;
-                /*
-                foreach (MusicFileDetails iMFD in ListMfdAlbum)
-                {
-                    if (iMFD.trackIdAlbumIndex != "" & iMFD.trackIdAlbumIndex != null)
-                    {
-                        publicAlbumIndex = Convert.ToInt32(iMFD.trackIdAlbumIndex);
-                        countAlbumIndex += 1;
-                    }
-                }
-                */
+ 
                 foreach(TagInformation itemTI in ListTagInformation)
                 {
                     if (itemTI.trackFileExtension == "FLAC")
